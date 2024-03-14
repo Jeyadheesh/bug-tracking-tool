@@ -27,6 +27,15 @@ app.get("/healthCheck", (req, res) => {
   }
 });
 
+app.get("/me", (req, res) => {
+  try {
+    res.status(200).send({ result: "done" });
+  } catch (error) {
+    console.log(error.message);
+    res.status(400).send({ err: error.message });
+  }
+});
+
 const connectToDB = async () => {
   try {
     // console.log(process.env.ATLAS_URL);
@@ -38,10 +47,10 @@ const connectToDB = async () => {
 };
 connectToDB();
 
-// MainInFormal("roshan", "nkroshankumar@gmail.com");
-
 // Router
 app.use("/api/auth", require("./routes/auth.routes"));
+app.use("/api/test-request", require("./routes/test-request.routes"));
+app.use("/api/bug", require("./routes/bug.routes"));
 
 app.listen(port, () => {
   console.log(`Server Running at ${port}`);
