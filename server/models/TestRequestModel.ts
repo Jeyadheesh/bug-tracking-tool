@@ -27,6 +27,13 @@ const TestRequestSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    credientials: {
+      type: {
+        email: String,
+        password: String,
+      },
+      required: true,
+    },
     clientId: {
       type: String,
       required: true,
