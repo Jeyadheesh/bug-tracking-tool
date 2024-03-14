@@ -1,4 +1,5 @@
 "use client";
+import { uploadToS3 } from "@/utils/uploadToS3";
 import AWS from "aws-sdk";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -6,8 +7,13 @@ import { useEffect, useState } from "react";
 const S3 = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(event.target.files);
+    if (event.target.files) {
+      uploadToS3(event.target.files);
+    } else {
+      console.log("No file selected");
+    }
   };
 
   const handleUpload = () => {
@@ -17,12 +23,12 @@ const S3 = () => {
     }
 
     const s3 = new AWS.S3({
-      accessKeyId: "AKIA5PGIXYQNAI6PWA3M",
-      secretAccessKey: "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",
+      accessKeyId: process.env.NEXT_PUBLIC_S3_ACCESS_KEY,
+      secretAccessKey: process.env.NEXT_PUBLIC_S3_SECRET_ACCESS_KEY,
     });
 
     const params = {
-      Bucket: "bug-tracking-tool",
+      Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME as string,
       Key: selectedFile.name,
       Body: selectedFile,
       ContentType: selectedFile.type,
@@ -81,15 +87,12 @@ const S3 = () => {
   };
 
   useEffect(() => {
-    getBucketData();
+    // getBucketData();
   }, []);
 
   return (
-    <div>
-      <div>
-        <input type="file" onChange={handleFileChange} />
-        <button onClick={handleUpload}>Upload</button>
-      </div>
+    <div className="h-screen flex justify-center items-center">
+      <input type="file" onChange={handleFileChange} multiple />
     </div>
   );
 };
