@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
-import { MainInFormal } from "./lib/NodeMailer";
+import { MainInFormal } from "./utils/nodeMailer";
 import { config } from "dotenv";
 
 config({ path: ".env" });
@@ -18,26 +18,30 @@ app.use(
   })
 );
 
-app.get("/getUsers", (req, res) => {
+app.get("/healthCheck", (req, res) => {
   try {
-    res.send({ result: "done" });
+    res.status(200).send({ result: "done" });
   } catch (error) {
     console.log(error.message);
+    res.status(400).send({ err: error.message });
   }
 });
 
-async function checkConnection() {
+const connectToDB = async () => {
   try {
     // console.log(process.env.ATLAS_URL);
     await mongoose.connect(process.env.ATLAS_URL as string);
-    console.log("Connected");
+    console.log("DB Connected");
   } catch (error) {
-    console.log("Not Connected :", error.message);
+    console.log("DB Not Connected :", error.message);
   }
-}
-checkConnection();
+};
+connectToDB();
 
-// MainInFormal("jei", "njeyadheesh890@gmail.com");
+// MainInFormal("roshan", "nkroshankumar@gmail.com");
+
+// Router
+app.use("/api/auth", require("./routes/auth.routes"));
 
 app.listen(port, () => {
   console.log(`Server Running at ${port}`);
