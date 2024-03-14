@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 
-export const customerCheck = (
+export const checkCustomer = (
   req: Request,
   res: Response,
   next: NextFunction
@@ -15,7 +15,7 @@ export const customerCheck = (
   }
 };
 
-export const testerCheck = (
+export const checkTester = (
   req: Request,
   res: Response,
   next: NextFunction
@@ -30,7 +30,7 @@ export const testerCheck = (
   }
 };
 
-export const projectManagerCheck = (
+export const checkProjectManager = (
   req: Request,
   res: Response,
   next: NextFunction
