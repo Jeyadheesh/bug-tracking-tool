@@ -1,4 +1,26 @@
 import { Request, Response, NextFunction } from "express";
+// import { Collection } from "mongoose";
+// const jwt = require('jsonwebtoken');
+
+// exports.verifyToken = ( 
+//   req: Request,
+//   res: Response,
+//   next: NextFunction) => {
+//   const token = req.cookies.jwt;
+
+//   if (!token) {
+//     return res.status(401).json({ message: 'Unauthorized' });
+//   }
+
+//   jwt.verify(token, 'your_secret_key', (err:any, decodedToken: any) => {
+//     if (err) {
+//       return res.status(401).json({ message: 'Unauthorized' });
+//     }
+    
+//     req.userId = decodedToken.userId;
+//     next();
+//   });
+// };
 
 export const checkCustomer = (
   req: Request,
