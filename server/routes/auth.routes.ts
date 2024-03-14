@@ -5,12 +5,12 @@ import {
   test,
   updateCustomer,
 } from "../controllers/auth.controller";
-import { customerCheck } from "../middlewares/checkUserRole";
+import { checkCustomer } from "../middlewares/checkUserRole";
 const router = express.Router();
 
 router.post("/register", registerCustomer);
 router.put("/updatecustomer", updateCustomer);
 router.post("/getcustomer", getCustomer);
-router.get("/test", customerCheck, test);
+router.get("/test", checkCustomer, test);
 
 module.exports = router;
