@@ -48,12 +48,12 @@ const S3 = () => {
   const getBucketData = () => {
     try {
       const s3 = new AWS.S3({
-        accessKeyId: "AKIA5PGIXYQNAI6PWA3M",
-        secretAccessKey: "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",
+        accessKeyId: process.env.NEXT_PUBLIC_S3_ACCESS_KEY,
+        secretAccessKey: process.env.NEXT_PUBLIC_S3_SECRET_ACCESS_KEY,
       });
 
       const params = {
-        Bucket: "bug-tracking-tool",
+        Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME as string,
       };
 
       s3.listObjectsV2(params, (err, data) => {
@@ -68,7 +68,7 @@ const S3 = () => {
             // console.log(file.Key);
             s3.getSignedUrl(
               "getObject",
-              { Bucket: "bug-tracking-tool", Key: file.Key },
+              { Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME, Key: file.Key },
               (err, url) => {
                 if (err) {
                   console.error(err);
