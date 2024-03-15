@@ -62,8 +62,6 @@ const TestRequest = (props: Props) => {
     // Toast
   }, [bugError]);
 
-  const bugHeaders = ["name", "status", "priority", "comments"];
-
   return (
     <>
       <main className="min-h-[calc(100vh-4.5rem)] gap-3 bg-gray-50  flex flex-col p-6 lg:px-14">
@@ -247,7 +245,7 @@ const BugCard = ({ _id, comments, name, status, priority }: BugType) => {
           <FaExclamation className="text-violet-800 " />
           <p className="font-semibold ">Priority</p>
         </div>
-        <div className="text-sm font-medium capitalize flex gap-2">
+        <div className="font-medium capitalize flex gap-2">
           {priority === "high" ? (
             <FcHighPriority className="text-xl" />
           ) : priority === "medium" ? (
