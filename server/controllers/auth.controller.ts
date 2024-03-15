@@ -1,12 +1,12 @@
-import { Request, Response } from "express";
+import { CookieOptions, Request, Response } from "express";
 import { UserModel } from "../models/UserModel";
 import bcryptjs from "bcryptjs";
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
 
 export const registerCustomer = async (req: Request, res: Response) => {
   try {
     const { id, name, email, password, role, img } = req.body;
+    // console.log(id, name, email, password, role, img);
 
     const existingCustomer = await UserModel.find({
       email: email,
@@ -33,9 +33,11 @@ export const registerCustomer = async (req: Request, res: Response) => {
 
 export const loginCustomer = async (req: Request, res: Response) => {
   const { email, password } = req.body;
+  // console.log(email, password);
 
   try {
     const user = await UserModel.findOne({ email });
+    // console.log(user);
 
     if (!user) {
       return res.status(400).json({ message: "Invalid email or password" });
@@ -45,16 +47,31 @@ export const loginCustomer = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Please verify your email" });
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await bcryptjs.compare(password, user.password);
+    // console.log(isPasswordValid);
+
     if (!isPasswordValid) {
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
+    console.log(process.env.JWT_SECRET_KEY);
+
     const token = jwt.sign({ email }, process.env.JWT_SECRET_KEY, {
-      expiresIn: "1h",
+      expiresIn: process.env.JWT_EXPIRE_TIME,
     });
 
-    res.cookie("bug-tracker", token, { httpOnly: true });
+    const cookieOptions: CookieOptions = {
+      expires: new Date(
+        Date.now() +
+          Number(process.env.COOKIE_EXPIRE_TIME) * 1000 * 60 * 60 * 24
+      ),
+      httpOnly: true,
+      sameSite: process.env.MODE == "PRODUCTION" ? "none" : "strict",
+      path: "/",
+      secure: true,
+    };
+
+    res.cookie("bugTracker", token, cookieOptions);
     res.json({ message: "Logged in successfully" });
   } catch (error) {
     console.error(error);

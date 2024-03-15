@@ -16,7 +16,8 @@ app.use(express.json());
 app.use(
   cors({
     origin: process.env.CLIENT_PORT,
-    methods: "*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
   })
 );
 
@@ -43,10 +44,11 @@ app.get("/healthCheck", (req, res) => {
 
 app.get("/me", async (req, res) => {
   try {
+    console.log(JSON.stringify(req.cookies.bugTracker));
     if (req.cookies.bugTracker) {
       const data = jwt.verify(
         req.cookies.bugTracker,
-        process.env.JWT_SECRET as string
+        process.env.JWT_SECRET_KEY as string
       ) as jwt.JwtPayload;
 
       const userData = await UserModel.findOne({ email: data.email });
