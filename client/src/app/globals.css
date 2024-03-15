@@ -6,6 +6,10 @@
   background-image: url("../assets/4045.png");
 }
 
+.bg-2 {
+  background-image: url("../assets/bg-pattern-23.png");
+}
+
 .grd-bg-txt {
   background: linear-gradient(
     to right,
