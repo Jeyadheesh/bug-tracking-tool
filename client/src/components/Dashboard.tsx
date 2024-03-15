@@ -1,14 +1,14 @@
 import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
-import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { FaBug } from "react-icons/fa";
+import { FaUserShield } from "react-icons/fa6";
+import { FiLink } from "react-icons/fi";
+import { IoFlagSharp } from "react-icons/io5";
+import { MdOutlineAdd } from "react-icons/md";
 import useSWR from "swr";
 import NewRequest from "./NewRequest";
-import Image from "next/image";
-import { FaUserShield } from "react-icons/fa6";
-import { IoFlagSharp } from "react-icons/io5";
-import { FiLink } from "react-icons/fi";
-import { CgAdd } from "react-icons/cg";
-import { MdOutlineAdd } from "react-icons/md";
 
 type Props = {};
 
@@ -217,7 +217,11 @@ const RequestCard = ({
   tester,
 }: TestRequestType) => {
   return (
-    <div className="p-6 shadow-lg  bg-white  flex flex-col gap-2 rounded-md cursor-pointer hover:scale-95 transition-all ">
+    // <Link href={"/test_request/_id"}>
+    <Link
+      href={`/test_request/${_id}`}
+      className="p-6 relative shadow-lg  bg-white  flex flex-col gap-2 rounded-md cursor-pointer hover:scale-95 transition-all "
+    >
       <h4 className="text-2xl font-semibold text-gray-800 hover:underline underline-offset-2 w-max">
         {name}
       </h4>
@@ -226,14 +230,14 @@ const RequestCard = ({
       <div className="grid grid-cols-[auto,1fr] items-center gap-y-2 gap-x-4">
         {/* Tester */}
         <div className="flex items-center gap-1">
-          <FaUserShield className="" />
+          <FaUserShield className="text-violet-800" />
           <p className="font-semibold ">Tester</p>
         </div>
         <p className="text-sm font-medium">{tester?.name || "Not Assigned"}</p>
         {/* Status */}
         <div className="flex items-center gap-1">
-          <IoFlagSharp />
-          <p className="font-semibold ">Staus</p>
+          <IoFlagSharp className="text-pink-400" />
+          <p className="font-semibold ">Status</p>
         </div>
         <p
           className={`text-sm  ${
@@ -244,15 +248,20 @@ const RequestCard = ({
         </p>
         {/* URL */}
         <div className="flex items-center gap-1">
-          <FiLink />
+          <FiLink className="text-blue-600" />
           <p className="font-semibold ">URL</p>
         </div>
+
         <p
-          className={`text-sm  font-medium text-ellipsis overflow-hidden whitespace-nowrap `}
+          className={`text-sm text-blue-600  underline-offset-2 font-medium text-ellipsis overflow-hidden whitespace-nowrap `}
         >
           {url}
         </p>
       </div>
-    </div>
+      <div className="absolute opacity-5 rotate-45 top-0 right-0 ">
+        <FaBug className="text-9xl text-primary" />
+      </div>
+    </Link>
+    // </Link>
   );
 };
