@@ -66,139 +66,141 @@ const TestRequest = (props: Props) => {
 
   return (
     <>
-      <main className="min-h-[calc(100vh-4.5rem)] gap-3 bg-gray-50  flex flex-col p-6 lg:px-20">
-        <div className="flex items-center justify-between">
-          {/* Name */}
-          <h3 className="text-4xl font-semibold">{data?.data.name}</h3>
-          {/* Status */}
-          <h3
-            className={`text-lg  ${
-              testRequestColor[data?.data.status as TestRequestColorType]
-            } w-max p-1 capitalize font-medium rounded-md px-4 `}
-          >
-            {data?.data.status}
-          </h3>
-        </div>
-        {/* Date */}
-        <div className="gap-6 flex items-center font-semibold text-gray-500 ">
-          <div className="flex gap-3 items-center">
-            <div className="flex gap-1 items-center">
-              <CiCalendarDate className="text-xl" />
-              <p>Created At</p>
-            </div>
-            {data?.data.createdAt?.split("T")[0]}
+      <main className="min-h-[calc(100vh-4.5rem)] gap-3 bg-gray-50  flex flex-col p-6 lg:px-14">
+        <div className="flex flex-col gap-3 bg-white p-6 shadow-lg rounded-md">
+          <div className="flex items-center justify-between">
+            {/* Name */}
+            <h3 className="text-4xl font-semibold">{data?.data.name}</h3>
+            {/* Status */}
+            <h3
+              className={`text-lg  ${
+                testRequestColor[data?.data.status as TestRequestColorType]
+              } w-max p-1 capitalize font-medium rounded-md px-4 `}
+            >
+              {data?.data.status}
+            </h3>
           </div>
-          <div className="flex gap-3 items-center">
-            <div className="flex gap-1 items-center">
-              <RiEdit2Line className="text-xl" />
-              <p>Last Updated</p>
-            </div>
-            {data?.data.updatedAt?.split("T")[0]}
-          </div>
-        </div>
-        <div className="flex items-center justify-between border-b pb-4 border-black/30 gap-8">
-          <div className="flex flex-col gap-3">
-            {/* Comments */}
-            <p className="text-lg font-medium text-gray-700">
-              {data?.data.comments}
-            </p>
-            <div className="flex gap-2 items-start justify-between">
-              {/* Show URL , Credentials */}
-              <div className="grid grid-cols-[auto,1fr] items-center gap-y-1 gap-x-4">
-                {/* URL */}
-                <div className="flex items-center gap-1 text-lg">
-                  <FiLink className="text-blue-600" />
-                  <p className="font-semibold ">URL</p>
-                </div>
-
-                {data?.data.url ? (
-                  <Link
-                    href={data?.data.url}
-                    target="_blank"
-                    className={` text-blue-600 hover:underline text-lg underline-offset-2 font-medium text-ellipsis overflow-hidden whitespace-nowrap `}
-                  >
-                    {data?.data.url}
-                  </Link>
-                ) : (
-                  <p>{"-"}</p>
-                )}
-                {/* Email */}
-                <div className="flex items-center gap-1 text-lg">
-                  <MdOutlineMail className="text-amber-400" />
-                  <p className="font-semibold ">Email</p>
-                </div>
-
-                {data?.data.url ? (
-                  <p
-                    className={` text-lg underline-offset-2 font-medium text-ellipsis overflow-hidden whitespace-nowrap `}
-                  >
-                    {data?.data.credientials?.email}
-                  </p>
-                ) : (
-                  <p>{"-"}</p>
-                )}
-                {/* Password */}
-                <div className="flex items-center gap-1 text-lg">
-                  <MdOutlinePassword className="text-green-600" />
-                  <p className="font-semibold ">Password</p>
-                </div>
-
-                {data?.data.url ? (
-                  <p
-                    className={` text-lg underline-offset-2 font-medium text-ellipsis overflow-hidden whitespace-nowrap `}
-                  >
-                    {data?.data.credientials?.password}
-                  </p>
-                ) : (
-                  <p>{"-"}</p>
-                )}
+          {/* Date */}
+          <div className="gap-6 flex items-center font-semibold text-gray-500 ">
+            <div className="flex gap-3 items-center">
+              <div className="flex gap-1 items-center">
+                <CiCalendarDate className="text-xl" />
+                <p>Created At</p>
               </div>
+              {data?.data.createdAt?.split("T")[0]}
+            </div>
+            <div className="flex gap-3 items-center">
+              <div className="flex gap-1 items-center">
+                <RiEdit2Line className="text-xl" />
+                <p>Last Updated</p>
+              </div>
+              {data?.data.updatedAt?.split("T")[0]}
             </div>
           </div>
-          {/* ASSIGNED PEOPLE */}
-          <div className="flex flex-col gap-6">
-            {/* Tester */}
-            <div className="flex flex-col gap-2">
-              <div className="flex gap-4 items-center text-lg">
-                {/* <FaUserShield className="text-violet-800 text-xl" /> */}
-                <p className="font-semibold ">Tester</p>
-              </div>
-              <div className="flex gap-2 items-center">
-                {data?.data.testerId?.img && (
-                  <div className="w-10 h-10 relative rounded-full border border-gray-900 ">
-                    <Image
-                      alt="DP"
-                      src={data?.data.testerId?.img}
-                      fill
-                      className="object-cover rounded-full "
-                    />
+          <div className="flex items-center justify-between  gap-8">
+            <div className="flex flex-col gap-3">
+              {/* Comments */}
+              <p className="text-lg font-medium text-gray-700">
+                {data?.data.comments}
+              </p>
+              <div className="flex gap-2 items-start justify-between">
+                {/* Show URL , Credentials */}
+                <div className="grid grid-cols-[auto,1fr] items-center gap-y-1 gap-x-4">
+                  {/* URL */}
+                  <div className="flex items-center gap-1 text-lg">
+                    <FiLink className="text-blue-600" />
+                    <p className="font-semibold ">URL</p>
                   </div>
-                )}
-                <p className="text-lg ">
-                  {data?.data.testerId?.name || "Not Assigned"}
-                </p>
+
+                  {data?.data.url ? (
+                    <Link
+                      href={data?.data.url}
+                      target="_blank"
+                      className={` text-blue-600 hover:underline text-lg underline-offset-2 font-medium text-ellipsis overflow-hidden whitespace-nowrap `}
+                    >
+                      {data?.data.url}
+                    </Link>
+                  ) : (
+                    <p>{"-"}</p>
+                  )}
+                  {/* Email */}
+                  <div className="flex items-center gap-1 text-lg">
+                    <MdOutlineMail className="text-amber-400" />
+                    <p className="font-semibold ">Email</p>
+                  </div>
+
+                  {data?.data.url ? (
+                    <p
+                      className={` text-lg underline-offset-2 font-medium text-ellipsis overflow-hidden whitespace-nowrap `}
+                    >
+                      {data?.data.credientials?.email}
+                    </p>
+                  ) : (
+                    <p>{"-"}</p>
+                  )}
+                  {/* Password */}
+                  <div className="flex items-center gap-1 text-lg">
+                    <MdOutlinePassword className="text-green-600" />
+                    <p className="font-semibold ">Password</p>
+                  </div>
+
+                  {data?.data.url ? (
+                    <p
+                      className={` text-lg underline-offset-2 font-medium text-ellipsis overflow-hidden whitespace-nowrap `}
+                    >
+                      {data?.data.credientials?.password}
+                    </p>
+                  ) : (
+                    <p>{"-"}</p>
+                  )}
+                </div>
               </div>
             </div>
-            {/* Project Manager */}
-            <div className="flex flex-col gap-2">
-              <div className="flex gap-4 items-center text-lg">
-                {/* <FaUserTie className="text-red-500 text-xl" /> */}
-                <p className="font-semibold ">Project Manager</p>
+            {/* ASSIGNED PEOPLE */}
+            <div className="flex flex-col gap-6">
+              {/* Tester */}
+              <div className="flex flex-col gap-2">
+                <div className="flex gap-4 items-center text-lg">
+                  {/* <FaUserShield className="text-violet-800 text-xl" /> */}
+                  <p className="font-semibold ">Tester</p>
+                </div>
+                <div className="flex gap-2 items-center">
+                  {data?.data.testerId?.img && (
+                    <div className="w-10 h-10 relative rounded-full border border-gray-900 ">
+                      <Image
+                        alt="DP"
+                        src={data?.data.testerId?.img}
+                        fill
+                        className="object-cover rounded-full "
+                      />
+                    </div>
+                  )}
+                  <p className="text-lg ">
+                    {data?.data.testerId?.name || "Not Assigned"}
+                  </p>
+                </div>
               </div>
-              <div className="flex gap-2 items-center">
-                {data?.data.projectManagerId?.img && (
-                  <div className="w-10 h-10 relative rounded-full border border-gray-900 ">
-                    <Image
-                      alt="DP"
-                      src={data?.data.projectManagerId?.img}
-                      fill
-                      className="object-cover rounded-full "
-                    />
-                  </div>
-                )}
-                <p className="text-lg ">
-                  {data?.data.projectManagerId?.name || "Not Assigned"}
-                </p>
+              {/* Project Manager */}
+              <div className="flex flex-col gap-2">
+                <div className="flex gap-4 items-center text-lg">
+                  {/* <FaUserTie className="text-red-500 text-xl" /> */}
+                  <p className="font-semibold ">Project Manager</p>
+                </div>
+                <div className="flex gap-2 items-center">
+                  {data?.data.projectManagerId?.img && (
+                    <div className="w-10 h-10 relative rounded-full border border-gray-900 ">
+                      <Image
+                        alt="DP"
+                        src={data?.data.projectManagerId?.img}
+                        fill
+                        className="object-cover rounded-full "
+                      />
+                    </div>
+                  )}
+                  <p className="text-lg ">
+                    {data?.data.projectManagerId?.name || "Not Assigned"}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
