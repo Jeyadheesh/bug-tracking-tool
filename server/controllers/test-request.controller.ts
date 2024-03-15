@@ -4,7 +4,6 @@ import { Request, Response } from "express";
 export const createTestRequest = async (req: Request, res: Response) => {
   try {
     const {
-      id,
       name,
       url,
       projectManagerId,
@@ -15,7 +14,6 @@ export const createTestRequest = async (req: Request, res: Response) => {
       credientials,
     } = req.body;
     const testRequest = await TestRequestModel.create({
-      id,
       name,
       url,
       projectManagerId,

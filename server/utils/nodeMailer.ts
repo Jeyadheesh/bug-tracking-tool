@@ -2,7 +2,7 @@ import nodemailer from "nodemailer";
 import Mailgen from "mailgen";
 import { config } from "dotenv";
 config({ path: ".env" });
-console.log(process.env.EMAIL, process.env.EPASSWORD);
+// console.log(process.env.EMAIL, process.env.EPASSWORD);
 
 let mailConfig = {
   service: "gmail",

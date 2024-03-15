@@ -146,7 +146,7 @@ export const sendOtp = async (req: Request, res: Response) => {
         {
           $set: {
             otp: otp,
-            createdAt: new Date(new Date().getTime()),
+            createdAt: new Date(),
           },
         }
       );
