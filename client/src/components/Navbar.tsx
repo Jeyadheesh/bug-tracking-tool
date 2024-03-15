@@ -13,22 +13,22 @@ const Navbar = (props: Props) => {
   const pathname = usePathname();
   const route = useRouter();
   const fetcher = async (url: string) => {
-    const { data: resData } = await axios.get(`http://localhost:9000${url}`, {
-      withCredentials: true,
-    });
+    const { data: resData } = await axios.get<UserType | undefined>(
+      `http://localhost:9000${url}`,
+      {
+        withCredentials: true,
+      }
+    );
     console.log(resData);
-    if (resData.message == "authorized" && pathname === "/")
-      return route.push("/dashboard");
-    else if (resData.message == "authorized" && pathname !== "/") return null;
+    if (resData?._id && pathname === "/") {
+      route.push("/dashboard");
+      return resData;
+    } else if (resData?._id && pathname !== "/") return resData;
     else route.push("/");
 
     return resData;
   };
   const { data, isLoading } = useSWR("/api/me", fetcher);
-  // useEffect(() => {
-  //   console.log(data);
-
-  // }, [data]);
 
   const handleLogout = async () => {
     try {
@@ -52,7 +52,7 @@ const Navbar = (props: Props) => {
       {/* LOGO */}
       <h1 className="text-2xl font-bold">TrackDown</h1>
       <h1 onClick={handleLogout} className="cursor-pointer">
-        Logout
+        {data?.name || ""}
       </h1>
       {/* Action Buttons */}
     </nav>

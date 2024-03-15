@@ -43,7 +43,6 @@ app.get("/healthCheck", (req, res) => {
 
 app.get("/api/me", async (req, res) => {
   try {
-    console.log(JSON.stringify(req.cookies.bugTracker));
     if (req.cookies.bugTracker) {
       const data = jwt.verify(
         req.cookies.bugTracker,
@@ -54,8 +53,11 @@ app.get("/api/me", async (req, res) => {
         email: data.email,
         isVerified: true,
       });
+
       if (userData) {
-        return res.status(200).send({ message: "authorized" });
+        // omits password and additonal details
+        const { password, ...user } = userData.toJSON();
+        return res.status(200).send(user);
       }
       return res.status(200).send({ message: "unauthorized" });
     }
