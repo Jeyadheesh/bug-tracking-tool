@@ -1,3 +1,54 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.bg {
+  background-image: url("../assets/4045.png");
+}
+
+.grd-bg-txt {
+  background: linear-gradient(
+    to right,
+    #f9a8d4 10%,
+    #6366f1 30%,
+    #7dd3fc 50%,
+    #38bdf8 70%,
+    #4f46e5 90%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-fill-color: transparent;
+  background-size: 500% auto;
+  animation: textShine 7s ease-in-out infinite alternate;
+}
+
+.grd-bg {
+  background: linear-gradient(
+    to right,
+    #f9a8d4 10%,
+    #6366f1 30%,
+    #7dd3fc 50%,
+    #38bdf8 70%,
+    #4f46e5 90%
+  );
+  background-size: 500% auto;
+  animation: textShine2 7s ease-in-out infinite alternate;
+}
+
+@keyframes textShine {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+@keyframes textShine2 {
+  0% {
+    background-position: 0% 100%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
