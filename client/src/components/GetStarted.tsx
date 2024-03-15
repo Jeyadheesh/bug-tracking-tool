@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { MdOutlineMail } from "react-icons/md";
 import Image from "next/image";
+import Register from "./Register";
+import Login from "./Login";
 
 type Props = {
   setShow: (val: boolean) => void;
@@ -24,6 +26,7 @@ const carousalData = [
 
 const GetStarted = ({ setShow }: Props) => {
   const [carousalIndex, setCarousalIndex] = useState(0);
+  const [mode, setMode] = useState<"register" | "login">("register");
 
   useEffect(() => {
     const carousalInterval = setInterval(() => {
@@ -50,7 +53,7 @@ const GetStarted = ({ setShow }: Props) => {
         <div className="flex flex-col gap-2  items-center  w-full ">
           <h3 className="font-semibold text-3xl">TrackDown</h3>
           <div className="relative h-80 flex justify-center w-full overflow-hidden">
-            <AnimatePresence mode="sync">
+            <AnimatePresence>
               <motion.div
                 key={carousalIndex}
                 initial={{ x: 300, opacity: 0 }}
@@ -74,21 +77,11 @@ const GetStarted = ({ setShow }: Props) => {
           </div>
         </div>
         {/* Content */}
-        <div className=" w-full flex flex-col gap-4 justify-center items-center ">
-          <h4 className="font-semibold text-2xl">Get Started</h4>
-          {/* Email Field */}
-          <div className="flex items-center rounded-lg w-full border-2  px-2 py-1 gap-2">
-            <MdOutlineMail className="text-primary text-xl" />
-            <input
-              type="email"
-              className="w-full p-1 outline-0"
-              placeholder="Enter Email"
-            />
-          </div>
-          <button className="w-full  px-10 py-2 active:scale-95 transition-all rounded-lg font-semibold bg-gradient-to-br from-primary to-primary-varient text-white ">
-            Verify Email
-          </button>
-        </div>
+        {mode === "register" ? (
+          <Register setMode={setMode} />
+        ) : (
+          <Login setMode={setMode} />
+        )}
       </motion.div>
     </main>
   );
