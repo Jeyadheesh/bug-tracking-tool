@@ -6,12 +6,15 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { CiCalendarDate } from "react-icons/ci";
+import { FaExclamation } from "react-icons/fa";
+import { FaBug } from "react-icons/fa6";
 import {
   FcHighPriority,
   FcLowPriority,
   FcMediumPriority,
 } from "react-icons/fc";
 import { FiLink } from "react-icons/fi";
+import { IoFlagSharp } from "react-icons/io5";
 import { MdOutlineMail, MdOutlinePassword } from "react-icons/md";
 import { RiEdit2Line } from "react-icons/ri";
 import useSWR from "swr";
@@ -204,53 +207,19 @@ const TestRequest = (props: Props) => {
         {/*  ###### BUGS ####### */}
         <section className="flex flex-col gap-4">
           <h3 className="text-4xl font-semibold">{`Bugs`}</h3>
-          {/* Table */}
-          <div className="grid grid-cols-[1fr,minmax(100px,auto),minmax(100px,auto),1fr]">
-            {/* Header */}
-            {bugHeaders.map((header) => (
-              <div className="p-2 px-4 font-medium border-b border-b-gray-300 text-lg capitalize">
-                <p>{header}</p>
-              </div>
-            ))}
-            {bugs?.data
-              .filter((bug) => bug.testRequestId?._id === data?.data._id)
-              .map((bug) => (
-                <>
-                  <div className="p-2 px-4  border-b border-b-gray-200  capitalize">
-                    <Link
-                      href={`/bug/${bug._id}`}
-                      className=" hover:underline underline-offset-4"
-                    >
-                      {bug.name}
-                    </Link>
-                  </div>
-                  <div className="p-2 px-4  border-b border-b-gray-200  capitalize">
-                    <p
-                      className={`${
-                        bugColor[bug.status as BugColorType]
-                      } px-2 py-1 rounded-md font-medium `}
-                    >
-                      {bug.status}
-                    </p>
-                  </div>
-                  <div className="p-2 px-4  border-b border-b-gray-200 flex gap-2 items-center  capitalize">
-                    {bug.priority === "high" ? (
-                      <FcHighPriority className="text-xl" />
-                    ) : bug.priority === "medium" ? (
-                      <FcMediumPriority className="text-xl" />
-                    ) : (
-                      <FcLowPriority className="text-xl" />
-                    )}
-                    <p>{bug.priority}</p>
-                  </div>
-                  <div className="p-2 px-4  border-b border-b-gray-200  capitalize">
-                    <p>{`${bug.comments.slice(0, 100)}${
-                      bug.comments.length > 100 ? "..." : ""
-                    }`}</p>
-                  </div>
-                </>
+          {bugs?.data.length === 0 ? (
+            <div className=" rounded-lg p-6 py-10 bg-white  flex flex-col gap-3 justify-center items-center">
+              <h5 className="font-semibold text-xl">
+                This Test Request Doesn't Have Any Bugs
+              </h5>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {bugs?.data.map((bug) => (
+                <BugCard {...bug} />
               ))}
-          </div>
+            </div>
+          )}
         </section>
       </main>
     </>
@@ -258,3 +227,50 @@ const TestRequest = (props: Props) => {
 };
 
 export default TestRequest;
+
+const BugCard = ({ _id, comments, name, status, priority }: BugType) => {
+  return (
+    <Link
+      href={`/bug/${_id}`}
+      className="p-6 relative shadow-lg  bg-white  flex flex-col gap-2 rounded-md cursor-pointer hover:scale-95 transition-all "
+    >
+      <h4 className="text-2xl font-semibold text-gray-800 hover:underline underline-offset-2 w-max">
+        {name}
+      </h4>
+      {/* Comments */}
+      <p className="text-sm text-gray-500 ">{comments}</p>
+      <div className="grid grid-cols-[auto,1fr] items-center gap-y-2 gap-x-4">
+        {/* Priority */}
+        <div className="flex items-center gap-1">
+          <FaExclamation className="text-violet-800 " />
+          <p className="font-semibold ">Priority</p>
+        </div>
+        <div className="text-sm font-medium capitalize flex gap-2">
+          {priority === "high" ? (
+            <FcHighPriority className="text-xl" />
+          ) : priority === "medium" ? (
+            <FcMediumPriority className="text-xl" />
+          ) : (
+            <FcLowPriority className="text-xl" />
+          )}
+          <p>{priority}</p>
+        </div>
+        {/* Status */}
+        <div className="flex items-center gap-1">
+          <IoFlagSharp className="text-pink-400" />
+          <p className="font-semibold ">Status</p>
+        </div>
+        <p
+          className={`text-sm  ${
+            bugColor[status as BugColorType]
+          } w-max p-1 capitalize font-medium rounded-md px-2 `}
+        >
+          {status}
+        </p>
+      </div>
+      <div className="absolute opacity-5 -rotate-45 top-0 right-0 ">
+        <FaBug className="text-9xl text-primary" />
+      </div>
+    </Link>
+  );
+};
