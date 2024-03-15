@@ -5,6 +5,7 @@ import GetStarted from "./GetStarted";
 import IMG from "../assets/404.png";
 import BUG from "../assets/bug.webp";
 import CC from "../assets/cc.webp";
+import BUG2 from "../assets/fix-bug-for-you.png";
 import Err from "../assets/404.webp";
 
 type Props = {};
@@ -24,7 +25,8 @@ const LandingPage = (props: Props) => {
             <h3>Faster</h3>
           </div>
           {/* Subb */}
-          <p className="text-lg text-gray-500">{`Zero tolerance for bugs. Maximum love for your code.`}</p>
+          <p className="text-lg text-gray-500">{`From TrackDown to touchdown: Your bug-solving journey begins here
+`}</p>
           {/* Buttons */}
           <button
             onClick={() => setShowGetStarted(true)}
@@ -35,8 +37,8 @@ const LandingPage = (props: Props) => {
         </section>
         {/* Right Side */}
         <section className="">
-          <div className="w-[42rem] h-[38rem] relative scale-95">
-            <Image fill alt="hero_image" src={CC}></Image>
+          <div className="w-[43rem] h-[32rem] relative scale-95">
+            <Image fill alt="hero_image" src={BUG2}></Image>
           </div>
         </section>
       </main>
