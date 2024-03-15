@@ -33,7 +33,10 @@ export const createTestRequest = async (req: Request, res: Response) => {
 export const getTestRequestById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const testRequest = await TestRequestModel.findById(id);
+    const testRequest = await TestRequestModel.findById(id)
+      .populate("projectManagerId")
+      .populate("testerId")
+      .populate("clientId");
     console.log(testRequest);
     res.status(200).json(testRequest);
   } catch (error) {
@@ -43,7 +46,10 @@ export const getTestRequestById = async (req: Request, res: Response) => {
 
 export const getAllTestRequest = async (req: Request, res: Response) => {
   try {
-    const testRequest = await TestRequestModel.find();
+    const testRequest = await TestRequestModel.find()
+      .populate("clientId")
+      .populate("testerId")
+      .populate("projectManagerId");
     console.log(testRequest);
     res.status(200).json(testRequest);
   } catch (error) {
