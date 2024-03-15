@@ -18,7 +18,7 @@ let transporter = nodemailer.createTransport(mailConfig);
 let mailGenerator = new Mailgen({
   theme: "default", //cerberus , salted
   product: {
-    name: "Bug Tracking",
+    name: "TrackDown",
     link: process.env.CLIENT_PORT as string,
   },
 });
@@ -111,4 +111,31 @@ export const MainInFormal = (name: string, email: string): void => {
       console.log("Email Sent");
     }
   });
+};
+
+export const SendOtpMail = async (
+  email: string,
+  otp: string
+): Promise<string> => {
+  let response = {
+    body: {
+      name: "User",
+      intro: "Your OTP for verification is : <b>" + otp + "</b>",
+    },
+  };
+
+  let mail = mailGenerator.generate(response);
+
+  let message = {
+    from: process.env.EMAIL,
+    to: email,
+    subject: "OTP for Verification",
+    html: mail,
+  };
+
+  const ans = await transporter.sendMail(message);
+  if (ans.accepted) {
+    return "Email Sent";
+  }
+  return "Error to send email";
 };

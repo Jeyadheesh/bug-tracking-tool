@@ -51,7 +51,10 @@ app.get("/me", async (req, res) => {
         process.env.JWT_SECRET_KEY as string
       ) as jwt.JwtPayload;
 
-      const userData = await UserModel.findOne({ email: data.email });
+      const userData = await UserModel.findOne({
+        email: data.email,
+        isVerified: true,
+      });
       if (userData) {
         return res.status(200).send({ result: "authorized" });
       }

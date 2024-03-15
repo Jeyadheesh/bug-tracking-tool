@@ -1,31 +1,35 @@
 import mongoose from "mongoose";
 
 const UserSchema = new mongoose.Schema({
-  id: {
-    type: String,
-    required: true,
-  },
   name: {
     type: String,
-    required: true,
   },
   email: {
     type: String,
     required: true,
+    unique: true,
   },
   password: {
     type: String,
-    required: true,
   },
   role: {
     type: String,
-    required: true,
+    default: "customer",
   },
   isVerified: {
     type: Boolean,
     default: false,
   },
   img: String, // opt
+  otp: String,
+  createdAt: {
+    type: Date,
+    default: new Date(), // current time
+  },
+  otpExpiredAt: {
+    type: Date,
+    default: new Date(new Date().getTime() + 5 * 60 * 1000), // 5 minutes
+  },
 });
 
 export const UserModel = mongoose.model("UserModel", UserSchema);

@@ -9,13 +9,17 @@ const OtpSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  isVerified: {
+    type: Boolean,
+    default: false,
+  },
   createdAt: {
     type: Date,
-    default: new Date(new Date().getTime()),
+    default: new Date(new Date().getTime()), // current time
   },
   expiredAt: {
     type: Date,
-    default: new Date(new Date().getTime() + 5 * 60 * 1000),
+    default: new Date(new Date().getTime() + 5 * 60 * 1000), // 5 minutes
   },
 });
 
