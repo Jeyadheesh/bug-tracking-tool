@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { now } from "mongoose";
 
 const UserSchema = new mongoose.Schema({
   name: {
@@ -24,11 +24,11 @@ const UserSchema = new mongoose.Schema({
   otp: String,
   createdAt: {
     type: Date,
-    default: new Date(), // current time
+    default: new Date(Date.now()), // current time
   },
   otpExpiredAt: {
     type: Date,
-    default: new Date(new Date().getTime() + 5 * 60 * 1000), // 5 minutes
+    default: new Date(Date.now() + 5 * 60 * 1000), // 5 minutes
   },
 });
 

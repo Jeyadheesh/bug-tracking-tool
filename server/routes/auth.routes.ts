@@ -7,6 +7,8 @@ import {
   updateCustomer,
   sendOtp,
   verifyOtp,
+  checkVerified,
+  logout,
 } from "../controllers/auth.controller";
 import { checkCustomer } from "../middlewares/checkUserRole";
 const router = express.Router();
@@ -18,5 +20,7 @@ router.post("/getcustomer", getUser);
 router.post("/send-otp", sendOtp);
 router.post("/verify-otp", verifyOtp);
 router.get("/test", checkCustomer, test);
+router.post("/checkVerified", checkVerified);
+router.get("/logout", logout);
 
 module.exports = router;

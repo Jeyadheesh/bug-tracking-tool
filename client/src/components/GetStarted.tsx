@@ -62,12 +62,12 @@ const GetStarted = ({ setShow }: Props) => {
                 className="flex flex-col gap-2  items-center bg-white absolute "
               >
                 <div className="relative w-60 h-60">
-                  <Image
+                  {/* <Image
                     fill
-                    className="w-full h-full object-contain"
+                    className="w-full hidden h-full object-contain"
                     src={carousalData[carousalIndex].url}
                     alt={carousalData[carousalIndex].title}
-                  />
+                  /> */}
                 </div>
                 <h5 className="font-medium text-xl ">
                   {carousalData[carousalIndex].title}
