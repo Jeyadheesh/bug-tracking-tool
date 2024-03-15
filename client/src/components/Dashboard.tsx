@@ -88,7 +88,7 @@ const Dashboard = (props: Props) => {
   };
 
   const { data, error, isValidating } = useSWR("api/test-request", fetcher, {
-    dedupingInterval: 50000, //50s
+    dedupingInterval: 50000, // 50 seconds
   });
 
   useEffect(() => {
@@ -128,8 +128,8 @@ const Dashboard = (props: Props) => {
             </div>
           ) : (
             <div className="grid grid-cols-4 gap-8">
-              {openTestRequests.map((test) => (
-                <RequestCard {...test} />
+              {openTestRequests.map((test, i) => (
+                <RequestCard key={i} {...test} />
               ))}
               {/* Add New Request */}
               <div className="p-6 rounded-md bg-gray-100 hover:scale-95 transition-all shadow-lg flex flex-col justify-center cursor-not-allowed items-center">
@@ -150,8 +150,8 @@ const Dashboard = (props: Props) => {
             </div>
           ) : (
             <div className="grid grid-cols-4 gap-8">
-              {closedRequests.map((test) => (
-                <RequestCard {...test} />
+              {closedRequests.map((test, i) => (
+                <RequestCard key={i} {...test} />
               ))}
             </div>
           )}

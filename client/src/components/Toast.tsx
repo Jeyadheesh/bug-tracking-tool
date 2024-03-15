@@ -9,7 +9,7 @@ const Toast = () => {
     showToast: state.showToast,
   }));
 
-  console.log(msg, variant, showToast);
+  // console.log(msg, variant, showToast);
 
   return (
     <div

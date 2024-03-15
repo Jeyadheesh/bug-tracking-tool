@@ -6,6 +6,7 @@ type Props = {
   setValue: (val: string) => void;
   placeholder: string;
   type?: React.HTMLInputTypeAttribute;
+  disabled?: boolean;
 };
 
 const InputTextFiled = ({
@@ -14,11 +15,17 @@ const InputTextFiled = ({
   value,
   placeholder,
   type = "text",
+  disabled = false,
 }: Props) => {
   return (
-    <div className="flex items-center rounded-lg w-full border-2  px-2 py-1 gap-2">
+    <div
+      className={`${
+        disabled ? "bg-gray-200 text-gray-400" : ""
+      } flex items-center rounded-lg w-full border-2  px-2 py-1 gap-2 `}
+    >
       {icon}
       <input
+        disabled={disabled}
         type={type}
         className="w-full p-1 outline-0"
         placeholder={placeholder}

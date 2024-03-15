@@ -10,8 +10,8 @@ config({ path: ".env" });
 const port = process.env.PORT || 9000;
 const app = express();
 
-app.use(cookieParser());
 app.use(express.json());
+app.use(cookieParser());
 app.use(
   cors({
     origin: process.env.CLIENT_PORT,
@@ -34,14 +34,14 @@ connectToDB();
 
 app.get("/healthCheck", (req, res) => {
   try {
-    res.status(200).send({ result: "done" });
+    res.status(200).send({ message: "done" });
   } catch (error) {
     console.log(error.message);
     res.status(400).send({ err: error.message });
   }
 });
 
-app.get("/me", async (req, res) => {
+app.get("/api/me", async (req, res) => {
   try {
     console.log(JSON.stringify(req.cookies.bugTracker));
     if (req.cookies.bugTracker) {
@@ -55,12 +55,12 @@ app.get("/me", async (req, res) => {
         isVerified: true,
       });
       if (userData) {
-        return res.status(200).send({ result: "authorized" });
+        return res.status(200).send({ message: "authorized" });
       }
-      return res.status(200).send({ result: "unauthorized" });
+      return res.status(200).send({ message: "unauthorized" });
     }
 
-    return res.status(200).send({ result: "cookie not found" });
+    return res.status(200).send({ message: "cookie not found" });
   } catch (error) {
     console.log(error.message);
     res.status(400).send({ err: error.message });
