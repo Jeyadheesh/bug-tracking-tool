@@ -1,17 +1,23 @@
 "use client";
 import React from "react";
 import Toast from "./Toast";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import axios from "axios";
 import { usePathname, useRouter } from "next/navigation";
 import useToast from "@/store/useToast";
+import useUser from "@/store/useUser";
+import { BiLogOut, BiLogOutCircle } from "react-icons/bi";
+import { CgLogOut } from "react-icons/cg";
+import { MdLogout } from "react-icons/md";
 
 type Props = {};
 
 const Navbar = (props: Props) => {
   const { setToast } = useToast();
+  const setUser = useUser((state) => state.setUser);
   const pathname = usePathname();
   const route = useRouter();
+
   const fetcher = async (url: string) => {
     const { data: resData } = await axios.get<UserType | undefined>(
       `http://localhost:9000${url}`,
@@ -19,12 +25,14 @@ const Navbar = (props: Props) => {
         withCredentials: true,
       }
     );
-    console.log(resData);
     if (resData?._id && pathname === "/") {
       route.push("/dashboard");
+      setUser(resData);
       return resData;
-    } else if (resData?._id && pathname !== "/") return resData;
-    else route.push("/");
+    } else if (resData?._id && pathname !== "/") {
+      setUser(resData);
+      return resData;
+    } else route.push("/");
 
     return resData;
   };
@@ -40,6 +48,7 @@ const Navbar = (props: Props) => {
       );
       console.log(data);
       setToast({ msg: "Logged Out", variant: "success" });
+      mutate("/api/me");
       route.push("/");
     } catch (error) {
       console.log(error.message);
@@ -51,10 +60,18 @@ const Navbar = (props: Props) => {
       <Toast />
       {/* LOGO */}
       <h1 className="text-2xl font-bold">TrackDown</h1>
-      <h1 onClick={handleLogout} className="cursor-pointer">
-        {data?.name || ""}
-      </h1>
-      {/* Action Buttons */}
+      <div className="flex items-center gap-6">
+        <h1 className="capitalize">{data?.name || ""}</h1>
+        {/* Action Buttons */}
+        {data?._id && (
+          <button
+            onClick={handleLogout}
+            className="hover:bg-black/20 p-2 rounded-full transition-all"
+          >
+            <MdLogout />
+          </button>
+        )}
+      </div>
     </nav>
   );
 };
