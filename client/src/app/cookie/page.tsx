@@ -1,12 +1,15 @@
 "use client";
 import React, { useEffect } from "react";
 import axios from "axios";
+import useToast from "@/store/useToast";
+import Toast from "@/components/Toast";
 
 type Props = {};
 axios.defaults.withCredentials = true;
 const Cookie = (props: Props) => {
   const [password, setPassword] = React.useState("");
   const [email, setEmail] = React.useState("");
+  const { toast, setToast } = useToast();
 
   const handleSubmit = async () => {
     try {
@@ -40,6 +43,14 @@ const Cookie = (props: Props) => {
     fetchData();
   }, []);
 
+  const handleToast = async () => {
+    try {
+      console.log("This is a toast");
+      setToast({ msg: "This is a toast", variant: "success" });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
   return (
     <div>
       <input
@@ -55,6 +66,7 @@ const Cookie = (props: Props) => {
         placeholder="Email"
       />
       <button onClick={handleSubmit}>Submit</button>
+      <button onClick={handleToast}>Get Toast</button>
     </div>
   );
 };

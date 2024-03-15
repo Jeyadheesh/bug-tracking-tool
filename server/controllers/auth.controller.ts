@@ -21,7 +21,7 @@ export const registerCustomer = async (req: Request, res: Response) => {
     console.log(existingCustomer);
 
     if (existingCustomer?.password) {
-      return res.status(400).json({ message: "User already exists" });
+      return res.status(400).send({ message: "User already exists" });
     }
 
     // if (existingCustomer.length > 0) {
@@ -41,7 +41,7 @@ export const registerCustomer = async (req: Request, res: Response) => {
         },
       }
     );
-    res.status(201).json(customer);
+    res.status(200).json({ message: "User Created" });
   } catch (error) {
     res.status(400).send(error.message);
   }
@@ -60,10 +60,15 @@ export const loginCustomer = async (req: Request, res: Response) => {
     }
 
     if (user.isVerified === false) {
-      return res.status(400).json({ message: "Please verify your email" });
+      return res
+        .status(400)
+        .json({ message: "Please verify your email with otp" });
     }
 
-    const isPasswordValid = bcryptjs.compare(password, user.password as string);
+    const isPasswordValid = await bcryptjs.compare(
+      password,
+      user.password as string
+    );
     // console.log(isPasswordValid);
 
     if (!isPasswordValid) {
@@ -88,7 +93,7 @@ export const loginCustomer = async (req: Request, res: Response) => {
     };
 
     res.cookie("bugTracker", token, cookieOptions);
-    res.json({ message: "Logged in successfully" });
+    res.send({ message: "Logged In" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
@@ -137,7 +142,12 @@ export const sendOtp = async (req: Request, res: Response) => {
     });
 
     console.log(existingCustomer);
-
+    if (existingCustomer?.password && existingCustomer?.isVerified) {
+      return res.send({ message: "User Exists" });
+    }
+    if (existingCustomer?.isVerified) {
+      return res.send({ message: "Verified Email" });
+    }
     if (existingCustomer) {
       let otp = Math.floor(1000 + Math.random() * 9000).toString();
       // console.log("updated Otp");
@@ -151,8 +161,8 @@ export const sendOtp = async (req: Request, res: Response) => {
         }
       );
       // return res.status(400).json({ message: "New OTP Sent" });
-      const status = SendOtpMail(email, otp);
-      return res.send({ message: "OTP Updated and " + status });
+      const status = await SendOtpMail(email, otp);
+      return res.send({ message: status });
     }
 
     const customer = await UserModel.create({
@@ -162,7 +172,7 @@ export const sendOtp = async (req: Request, res: Response) => {
     console.log(customer);
 
     const status = await SendOtpMail(email, otp);
-    res.send({ message: status });
+    return res.send({ message: status });
   } catch (error) {
     res.status(400).send(error.message);
   }
@@ -186,7 +196,7 @@ export const verifyOtp = async (req: Request, res: Response) => {
       return res.send({ message: "OTP Expired or Invalid Email" });
     }
 
-    if (customer.otpExpiredAt < new Date()) {
+    if (customer.otpExpiredAt < new Date(Date.now())) {
       await UserModel.deleteOne({ email });
       return res.send({ message: "OTP Expired" });
     }
@@ -200,4 +210,22 @@ export const verifyOtp = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(400).send(error.message);
   }
+};
+
+export const checkVerified = async (req: Request, res: Response) => {
+  try {
+    const { email } = req.body;
+    const customer = await UserModel.findOne({ email, isVerified: true });
+    if (!customer) {
+      return res.send({ message: "Not Verified" });
+    }
+    return res.send({ message: "Verified" });
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
+
+export const logout = async (req: Request, res: Response) => {
+  res.clearCookie("bugTracker");
+  res.send({ message: "Logged Out" });
 };

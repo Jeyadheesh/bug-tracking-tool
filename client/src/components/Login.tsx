@@ -1,6 +1,10 @@
+"use client";
 import React, { useState } from "react";
 import { MdOutlineMail, MdOutlinePassword } from "react-icons/md";
 import InputTextFiled from "./InputTextFiled";
+import useToast from "@/store/useToast";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 type Props = {
   setMode: (mode: "register") => void;
@@ -9,6 +13,39 @@ type Props = {
 const Login = ({ setMode }: Props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { toast, setToast } = useToast();
+  const route = useRouter();
+
+  const handleLogin = async () => {
+    try {
+      if (email.trim() === "" || password.trim() === "")
+        return setToast({
+          msg: "Please fill all the fields",
+          variant: "error",
+        });
+
+      const { data } = await axios.post(
+        "http://localhost:9000/api/auth/login",
+        {
+          email,
+          password,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      console.log(data);
+      if (data.message === "Logged In") {
+        setToast({ msg: "Logged In", variant: "success" });
+        return route.push("/dashboard");
+      } else {
+        setToast({ msg: data.message, variant: "error" });
+      }
+    } catch (error) {
+      console.log(error.response.data);
+      setToast({ msg: error.response.data.message, variant: "error" });
+    }
+  };
 
   return (
     <div className=" w-full flex flex-col gap-4 justify-center items-center ">
@@ -33,7 +70,7 @@ const Login = ({ setMode }: Props) => {
       </>
 
       <button
-        onClick={() => null}
+        onClick={() => handleLogin()}
         className="w-full  px-10 py-2 active:scale-95 transition-all rounded-lg font-semibold bg-gradient-to-br from-primary to-primary-varient text-white "
       >
         Login
