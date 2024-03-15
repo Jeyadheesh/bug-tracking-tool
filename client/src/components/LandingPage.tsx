@@ -3,7 +3,7 @@ import Image from "next/image";
 import React, { useState } from "react";
 import GetStarted from "./GetStarted";
 import IMG from "../assets/404.png";
-import BUG from "../assets/bug.webp";
+import BUG from "../assets/fix-bug1.png";
 import CC from "../assets/cc.webp";
 import BUG2 from "../assets/fix-bug-for-you.png";
 import Err from "../assets/404.webp";
@@ -38,7 +38,7 @@ const LandingPage = (props: Props) => {
         {/* Right Side */}
         <section className="">
           <div className="w-[43rem] h-[32rem] relative scale-95">
-            <Image fill alt="hero_image" src={BUG2}></Image>
+            <Image fill alt="hero_image" src={BUG}></Image>
           </div>
         </section>
       </main>
