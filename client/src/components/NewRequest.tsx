@@ -7,6 +7,8 @@ import { BiRename } from "react-icons/bi";
 import { LiaCommentSolid } from "react-icons/lia";
 import { BsFillSafe2Fill } from "react-icons/bs";
 import axios from "axios";
+import useToast from "@/store/useToast";
+import { set } from "zod";
 
 type Props = {
   setShow: (show: boolean) => void;
@@ -18,18 +20,39 @@ const NewRequest = ({ setShow }: Props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [comments, setComments] = useState("");
+  const { toast, setToast } = useToast();
 
   const handleCreateRequest = async () => {
     try {
-      await axios.post(`http://localhost:9000/api/test-request`, {
-        name,
-        url: URL,
-        credentials: { email, password },
-        comments,
-      });
+      if (
+        name.trim() === "" ||
+        URL.trim() === "" ||
+        email.trim() === "" ||
+        password.trim() === "" ||
+        comments.trim() === ""
+      )
+        return setToast({ msg: "All Fields Required", variant: "error" });
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email))
+        return setToast({ msg: "Invalid Email", variant: "error" });
+
+      const { data } = await axios.post(
+        `http://localhost:9000/api/test-request`,
+        {
+          name,
+          url: URL,
+          credentials: { email, password },
+          comments,
+        }
+      );
+      console.log(data);
+      setToast({ msg: "Test Request Created", variant: "success" });
+
       // Toast
     } catch (err) {
       // Toast
+      setToast({ msg: err.message, variant: "error" });
     }
   };
 

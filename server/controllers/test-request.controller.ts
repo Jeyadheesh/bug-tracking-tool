@@ -3,28 +3,16 @@ import { Request, Response } from "express";
 
 export const createTestRequest = async (req: Request, res: Response) => {
   try {
-    const {
-      name,
-      url,
-      projectManagerId,
-      testerId,
-      status,
-      comments,
-      clientId,
-      credientials,
-    } = req.body;
+    const { name, url, status, comments, clientId, credentials } = req.body;
     const testRequest = await TestRequestModel.create({
       name,
       url,
-      projectManagerId,
-      testerId,
       status,
       comments,
-      clientId,
-      credientials,
+      credentials,
     });
     console.log(testRequest);
-    res.status(201).json(testRequest);
+    res.status(201).json({ message: "Test Request created" });
   } catch (error) {
     res.status(400).send(error.message);
   }
