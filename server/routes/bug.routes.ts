@@ -5,11 +5,13 @@ import {
   deleteBug,
   getAllBug,
   getBugById,
-  updateBug,
+  updateBugStatus,
+  updateBugDetails,
 } from "../controllers/bug.controller";
 
 router.post("/", createBug);
-router.put("/", updateBug);
+router.patch("/", updateBugStatus);
+router.patch("/edit-details", updateBugDetails);
 router.get("/:id", getBugById);
 router.get("/", getAllBug);
 router.delete("/:id", deleteBug);
