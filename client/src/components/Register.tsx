@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FaRegUser } from "react-icons/fa";
 import { MdOutlineMail, MdOutlinePassword } from "react-icons/md";
+import InputTextFiled from "./InputTextFiled";
 
 type Props = {
   setMode: (mode: "login") => void;
@@ -29,28 +30,23 @@ const Register = ({ setMode }: Props) => {
       {tab === 0 || tab === 1 ? (
         <>
           {/* Email Field */}
-          <div className="flex items-center rounded-lg w-full border-2  px-2 py-1 gap-2">
-            <MdOutlineMail className="text-primary text-xl" />
-            <input
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              type="email"
-              className="w-full p-1 outline-0"
-              placeholder="Enter Email"
-            />
-          </div>
+          <InputTextFiled
+            icon={<MdOutlineMail className="text-primary text-xl" />}
+            placeholder="Enter Email"
+            setValue={setEmail}
+            value={email}
+            type="email"
+          />
+
           {/* OTP Field */}
           {tab === 1 && (
-            <div className="flex items-center rounded-lg w-full border-2  px-2 py-1 gap-2">
-              <MdOutlinePassword className="text-primary text-xl" />
-              <input
-                value={OTP}
-                onChange={(e) => setOTP(e.target.value)}
-                type="number"
-                className="w-full p-1 outline-0"
-                placeholder="Enter 4 Digit OTP"
-              />
-            </div>
+            <InputTextFiled
+              icon={<MdOutlinePassword className="text-primary text-xl" />}
+              placeholder="Enter 4 Digit OTP"
+              setValue={setOTP}
+              value={OTP}
+              type="number"
+            />
           )}
         </>
       ) : (
@@ -59,36 +55,29 @@ const Register = ({ setMode }: Props) => {
       {/* Password & Details */}
       {tab === 2 && (
         <>
-          <div className="flex items-center rounded-lg w-full border-2  px-2 py-1 gap-2">
-            <MdOutlineMail className="text-primary text-xl" />
-            <input
-              type="email"
-              className="w-full p-1 outline-0"
-              placeholder="Enter Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          <div className="flex items-center rounded-lg w-full border-2  px-2 py-1 gap-2">
-            <MdOutlinePassword className="text-primary text-xl" />
-            <input
-              type="password"
-              className="w-full p-1 outline-0"
-              placeholder="Enter Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <div className="flex items-center rounded-lg w-full border-2  px-2 py-1 gap-2">
-            <FaRegUser className="text-primary text-xl" />
-            <input
-              type="text"
-              className="w-full p-1 outline-0"
-              placeholder="Enter Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </div>
+          {/* Email Field */}
+          <InputTextFiled
+            icon={<MdOutlineMail className="text-primary text-xl" />}
+            placeholder="Enter Email"
+            setValue={setEmail}
+            value={email}
+            type="email"
+          />
+          {/* Password Field */}
+          <InputTextFiled
+            icon={<MdOutlinePassword className="text-primary text-xl" />}
+            placeholder="Enter Password"
+            setValue={setPassword}
+            value={password}
+            type="password"
+          />
+          {/* Username Field */}
+          <InputTextFiled
+            icon={<FaRegUser className="text-primary text-xl" />}
+            placeholder="Enter Username"
+            setValue={setUsername}
+            value={username}
+          />
         </>
       )}
 
