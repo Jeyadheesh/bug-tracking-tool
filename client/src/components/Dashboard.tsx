@@ -9,75 +9,87 @@ import { IoFlagSharp } from "react-icons/io5";
 import { MdOutlineAdd } from "react-icons/md";
 import useSWR from "swr";
 import NewRequest from "./NewRequest";
+import CardBg from "../assets/test-request-bg.jpg";
+import Image from "next/image";
 
 type Props = {};
 
 const Dashboard = (props: Props) => {
   const [openTestRequests, setOpenTestRequests] = useState<TestRequestType[]>([
     {
-      _id: "345",
+      _id: "65f44a841c0a6c138c24c75e",
       comments:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos, pariatur!",
       name: "Test Request 1",
       status: "request under review",
       url: "https://react-icons.github.io/react-icons/search/#q=flag",
-      tester: undefined,
+      testerId: undefined,
     },
   ]);
   const [closedRequests, setClosedRequests] = useState<TestRequestType[]>([
     {
-      _id: "345",
+      _id: "65f44a841c0a6c138c24c75e",
       comments:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos, pariatur!",
       name: "Test Request 1",
       status: "testing completed",
       url: "https://react-icons.github.io/react-icons/search/#q=flag",
-      tester: {
+      testerId: {
         name: "P. Ramanujam",
+        _id: "65f4489baa6f72212e3dce26",
+        email: "ram@gmail.com",
       },
     },
     {
-      _id: "345",
+      _id: "65f44a841c0a6c138c24c75e",
       comments:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos, pariatur!",
       name: "Test Request 1",
       status: "testing completed",
       url: "https://react-icons.github.io/react-icons/search/#q=flag",
-      tester: {
+      testerId: {
         name: "P. Ramanujam",
+        _id: "65f4489baa6f72212e3dce26",
+        email: "ram@gmail.com",
       },
     },
     {
-      _id: "345",
+      _id: "65f44a841c0a6c138c24c75e",
       comments:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos, pariatur!",
       name: "Test Request 1",
       status: "testing completed",
       url: "https://react-icons.github.io/react-icons/search/#q=flag",
-      tester: {
+      testerId: {
         name: "P. Ramanujam",
+        _id: "65f4489baa6f72212e3dce26",
+        email: "ram@gmail.com",
       },
     },
     {
-      _id: "345",
+      _id: "65f44a841c0a6c138c24c75e",
       comments:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos, pariatur!",
       name: "Test Request 1",
       status: "testing completed",
       url: "https://react-icons.github.io/react-icons/search/#q=flag",
-      tester: {
+      testerId: {
         name: "P. Ramanujam",
+        _id: "65f4489baa6f72212e3dce26",
+        email: "ram@gmail.com",
       },
     },
     {
-      _id: "345",
+      _id: "65f44a841c0a6c138c24c75e",
       comments:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos, pariatur!",
       name: "Test Request 1",
       status: "testing completed",
       url: "https://react-icons.github.io/react-icons/search/#q=flag",
-      tester: {
+      testerId: {
         name: "P. Ramanujam",
+        _id: "65f4489baa6f72212e3dce26",
+        email: "ram@gmail.com",
       },
     },
   ]);
@@ -127,7 +139,7 @@ const Dashboard = (props: Props) => {
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {openTestRequests.map((test) => (
                 <RequestCard {...test} />
               ))}
@@ -149,7 +161,7 @@ const Dashboard = (props: Props) => {
               </h5>
             </div>
           ) : (
-            <div className="grid grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {closedRequests.map((test) => (
                 <RequestCard {...test} />
               ))}
@@ -174,23 +186,10 @@ const Dashboard = (props: Props) => {
 
 export default Dashboard;
 
-interface TestRequestType {
-  _id: string;
-  name: string;
-  status: string;
-  url: string;
-  comments: string;
-  tester:
-    | {
-        name: string;
-      }
-    | undefined;
-}
+export type TestRequestColorType = keyof typeof testRequestColor;
+export type BugColorType = keyof typeof bugColor;
 
-type TestRequestColorType = keyof typeof testRequestColor;
-type BugColorType = keyof typeof bugColor;
-
-const testRequestColor = {
+export const testRequestColor = {
   "request under review": "bg-amber-50 text-amber-500",
   "request accepted": "bg-sky-100 text-sky-500",
   "testing in progress": "bg-indigo-100 text-indigo-500",
@@ -198,14 +197,14 @@ const testRequestColor = {
   "testing blocked": "bg-red-100 text-red-500",
 } as const;
 
-const bugColor = {
-  "Under Triage": "bg-yellow-50 text-yellow-500",
-  Accepted: "bg-cyan-100 text-cyan-500",
-  "Need More Info": "bg-blue-100 text-blue-500",
-  "Not Reproducible": "bg-orange-100 text-orange-500",
-  Invalid: "bg-red-100 text-red-500",
-  Fixed: "bg-green-100 text-green-500",
-  "Validated and Closed": "bg-indigo-100 text-indigo-500",
+export const bugColor = {
+  "under triage": "bg-yellow-50 text-yellow-500",
+  accepted: "bg-cyan-100 text-cyan-500",
+  "need more info": "bg-blue-100 text-blue-500",
+  "not reproducible": "bg-orange-100 text-orange-500",
+  invalid: "bg-red-100 text-red-500",
+  fixed: "bg-green-100 text-green-500",
+  "validated and closed": "bg-indigo-100 text-indigo-500",
 } as const;
 
 const RequestCard = ({
@@ -214,7 +213,7 @@ const RequestCard = ({
   name,
   status,
   url,
-  tester,
+  testerId,
 }: TestRequestType) => {
   return (
     // <Link href={"/test_request/_id"}>
@@ -233,7 +232,9 @@ const RequestCard = ({
           <FaUserShield className="text-violet-800" />
           <p className="font-semibold ">Tester</p>
         </div>
-        <p className="text-sm font-medium">{tester?.name || "Not Assigned"}</p>
+        <p className="text-sm font-medium">
+          {testerId?.name || "Not Assigned"}
+        </p>
         {/* Status */}
         <div className="flex items-center gap-1">
           <IoFlagSharp className="text-pink-400" />
@@ -258,8 +259,9 @@ const RequestCard = ({
           {url}
         </p>
       </div>
-      <div className="absolute opacity-5 rotate-45 top-0 right-0 ">
-        <FaBug className="text-9xl text-primary" />
+      <div className="absolute opacity-5 -rotate-12 top-5 right-5 ">
+        <Image alt="bg" src={CardBg} width={170} height={80} />
+        {/* <FaBug className="text-9xl text-primary" /> */}
       </div>
     </Link>
     // </Link>
