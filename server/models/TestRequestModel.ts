@@ -17,7 +17,6 @@ const TestRequestSchema = new mongoose.Schema(
     testerId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "UserModel",
-      required: true,
     },
     status: {
       type: String,

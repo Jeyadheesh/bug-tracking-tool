@@ -71,6 +71,7 @@ app.get("/me", async (req, res) => {
 app.use("/api/auth", require("./routes/auth.routes"));
 app.use("/api/test-request", require("./routes/test-request.routes"));
 app.use("/api/bug", require("./routes/bug.routes"));
+app.use("/api/notification", require("./routes/notification.routes"));
 
 app.listen(port, () => {
   console.log(`Server Running at ${port}`);
