@@ -42,7 +42,7 @@ export const getAllBug = async (req: Request, res: Response) => {
   }
 };
 
-export const updateBug = async (req: Request, res: Response) => {
+export const updateBugStatus = async (req: Request, res: Response) => {
   try {
     const { id, status } = req.body;
     const bug = await BugModel.findByIdAndUpdate(
@@ -51,7 +51,22 @@ export const updateBug = async (req: Request, res: Response) => {
       { new: true }
     );
     console.log(bug);
-    res.status(200).json(bug);
+    res.status(200).json({ message: "Bug status updated" });
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
+
+export const updateBugDetails = async (req: Request, res: Response) => {
+  try {
+    const { id, name, comments, status, priority, image } = req.body;
+    const bug = await BugModel.findByIdAndUpdate(
+      id,
+      { $set: { name, comments, status, priority, image } },
+      { new: true }
+    );
+    console.log(bug);
+    res.status(200).json({ message: "Bug details updated" });
   } catch (error) {
     res.status(400).send(error.message);
   }
@@ -62,7 +77,7 @@ export const deleteBug = async (req: Request, res: Response) => {
     const { id } = req.params;
     const bug = await BugModel.findByIdAndDelete(id);
     console.log(bug);
-    res.status(200).json(bug);
+    res.status(200).json({ message: "Bug deleted" });
   } catch (error) {
     res.status(400).send(error.message);
   }
