@@ -1,22 +1,25 @@
 "use client";
-import React, { use, useEffect } from "react";
+import React from "react";
 import Toast from "./Toast";
 import useSWR from "swr";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import useToast from "@/store/useToast";
 
 type Props = {};
 
 const Navbar = (props: Props) => {
   const { setToast } = useToast();
+  const pathname = usePathname();
   const route = useRouter();
   const fetcher = async (url: string) => {
     const { data: resData } = await axios.get(`http://localhost:9000${url}`, {
       withCredentials: true,
     });
     console.log(resData);
-    if (resData.message == "authorized") return route.push("/dashboard");
+    if (resData.message == "authorized" && pathname === "/")
+      return route.push("/dashboard");
+    else if (resData.message == "authorized" && pathname !== "/") return null;
     else route.push("/");
 
     return resData;
