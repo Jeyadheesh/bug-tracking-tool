@@ -2,7 +2,6 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
-import { MainInFormal } from "./utils/nodeMailer";
 import { config } from "dotenv";
 import jwt from "jsonwebtoken";
 import { UserModel } from "./models/UserModel";

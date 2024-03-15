@@ -2,10 +2,6 @@ import mongoose from "mongoose";
 
 const BugSchema = new mongoose.Schema(
   {
-    id: {
-      type: String,
-      required: true,
-    },
     name: {
       type: String,
       required: true,
@@ -15,7 +11,8 @@ const BugSchema = new mongoose.Schema(
       required: true,
     },
     testRequestId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "TestRequestModel",
       required: true,
     },
     status: {

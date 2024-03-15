@@ -2,10 +2,6 @@ import mongoose from "mongoose";
 
 const TestRequestSchema = new mongoose.Schema(
   {
-    id: {
-      type: String,
-      required: true,
-    },
     name: {
       type: String,
       required: true,
@@ -14,9 +10,13 @@ const TestRequestSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    projectManagerId: String, // opt
+    projectManagerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "UserModel",
+    }, // opt
     testerId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "UserModel",
       required: true,
     },
     status: {
@@ -35,7 +35,8 @@ const TestRequestSchema = new mongoose.Schema(
       required: true,
     },
     clientId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "UserModel",
       required: true,
     },
   },
