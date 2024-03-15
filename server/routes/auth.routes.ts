@@ -1,6 +1,6 @@
 import express from "express";
 import {
-  getCustomer,
+  getUser,
   registerCustomer,
   loginCustomer,
   test,
@@ -12,7 +12,7 @@ const router = express.Router();
 router.post("/register", registerCustomer);
 router.post("/login", loginCustomer);
 router.put("/updatecustomer", updateCustomer);
-router.post("/getcustomer", getCustomer);
+router.post("/getcustomer", getUser);
 router.get("/test", checkCustomer, test);
 
 module.exports = router;

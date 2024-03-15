@@ -69,7 +69,7 @@ export const updateCustomer = async (req: Request, res: Response) => {
     const hashpass = await bcryptjs.hash(password, 10);
     const customer = await UserModel.findOneAndUpdate(
       { email: email },
-      { $set: { name, password: hashpass, role, img } },
+      { $set: { name, password: hashpass, img } },
       { new: true }
     );
     console.log(customer);
@@ -79,7 +79,7 @@ export const updateCustomer = async (req: Request, res: Response) => {
   }
 };
 
-export const getCustomer = async (req: Request, res: Response) => {
+export const getUser = async (req: Request, res: Response) => {
   try {
     const { email } = req.body;
     const customer = await UserModel.findOne({ email: email });

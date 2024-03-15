@@ -5,11 +5,13 @@ import {
   deleteTestRequest,
   getAllTestRequest,
   getTestRequestById,
-  updateTestRequest,
+  updateTestRequestDetails,
+  updateTestRequestStatus,
 } from "../controllers/test-request.controller";
 
 router.post("/", createTestRequest);
-router.put("/", updateTestRequest);
+router.patch("/", updateTestRequestStatus);
+router.patch("/edit-details", updateTestRequestDetails);
 router.get("/:id", getTestRequestById);
 router.get("/", getAllTestRequest);
 router.delete("/:id", deleteTestRequest);
