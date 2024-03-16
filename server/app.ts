@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import { config } from "dotenv";
 import jwt from "jsonwebtoken";
 import { UserModel } from "./models/UserModel";
+import { TestRequestModel } from "./models/TestRequestModel";
 
 config({ path: ".env" });
 const port = process.env.PORT || 9000;
@@ -38,6 +39,23 @@ app.get("/healthCheck", (req, res) => {
   } catch (error) {
     console.log(error.message);
     res.status(400).send({ err: error.message });
+  }
+});
+
+app.get("/api/free-testers", async (req, res) => {
+  // res.send("Tester");
+  try {
+    const uniqueTestersId = await TestRequestModel.find({
+      status: { $ne: "testing completed" },
+    }).distinct("testerId");
+
+    const freeTesters = await UserModel.find({
+      _id: { $nin: uniqueTestersId },
+      role: "tester",
+    });
+    res.send(freeTesters);
+  } catch (error) {
+    res.send(error.message);
   }
 });
 

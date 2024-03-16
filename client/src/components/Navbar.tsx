@@ -1,5 +1,5 @@
 "use client";
-import React, { use, useEffect, useState } from "react";
+import React, { use, useEffect, useRef, useState } from "react";
 import Toast from "./Toast";
 import useSWR, { mutate } from "swr";
 import axios from "axios";
@@ -26,6 +26,7 @@ const Navbar = (props: Props) => {
   const pathname = usePathname();
   const route = useRouter();
   const { sendNotification } = useNotification();
+  const refEle = useRef(null);
 
   const fetcher = async (url: string) => {
     const { data: resData } = await axios.get<UserType | undefined>(
@@ -56,8 +57,10 @@ const Navbar = (props: Props) => {
         }
       );
       console.log(data);
+      setUser(null);
       setToast({ msg: "Logged Out", variant: "success" });
       mutate("/api/me");
+
       route.push("/");
     } catch (error) {
       console.log(error.message);
@@ -101,6 +104,23 @@ const Navbar = (props: Props) => {
     // );
   }, [user]);
 
+  useEffect(() => {
+    const handleClickOutside = (event: any) => {
+      console.log(refEle.current, event.target);
+
+      if (refEle.current && !refEle.current.contains(event.target as Node)) {
+        console.log("clicked outside");
+        setShowNotification(false);
+      }
+      console.log("clicked inside");
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <nav className="relative px-6  h-[4.5rem] border-b flex justify-between items-center">
       <Toast />
@@ -111,6 +131,7 @@ const Navbar = (props: Props) => {
       <AnimatePresence mode="popLayout">
         {showNotification && (
           <motion.div
+            ref={refEle}
             initial={{ opacity: 0, scale: 0 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0 }}
@@ -139,16 +160,20 @@ const Navbar = (props: Props) => {
                   className="cursor-pointer hover:bg-gray-50 transition-all  flex flex-col *:pt-1 *:border-b *:border-b-gray-300"
                 >
                   <div>
-                    <div className="flex gap-2">
-                      <h1 className=" font-semibold">{notification.title}</h1>
-                      <span className="text-xs text-gray-400 my-auto">
+                    <div
+                      className={`${
+                        !notification.isSeen ? "font-semibold" : "font-normal"
+                      } flex gap-2`}
+                    >
+                      <h1 className={""}>{notification.title}</h1>
+                      <span className=" text-xs text-gray-400 my-auto">
                         by name
                       </span>
-                      {!notification.isSeen && (
+                      {/* {!notification.isSeen && (
                         <span className="bg-primary text-xs px-1 text-gray-100 rounded-full my-auto h-2 w-2"></span>
-                      )}
+                      )} */}
                     </div>
-                    <p className="text-sm pb-2">
+                    <p className="text-sm pb-2 ">
                       {notification.message.length > 50
                         ? `${notification.message.slice(0, 50)}...`
                         : notification.message}
@@ -163,7 +188,7 @@ const Navbar = (props: Props) => {
 
       {/* Action Buttons */}
       <div className="flex items-center gap-6">
-        {data?._id && (
+        {user?._id && (
           <button
             onClick={() => setShowNotification((prev) => !prev)}
             className="relative hover:bg-black/20 rounded-full p-1.5 transition-all"
@@ -174,9 +199,9 @@ const Navbar = (props: Props) => {
             )}
           </button>
         )}
-        <h1 className="capitalize">{data?.name || ""}</h1>
+        <h1 className="capitalize">{user?.name || ""}</h1>
         {/* Action Buttons */}
-        {data?._id && (
+        {user?._id && (
           <button
             onClick={handleLogout}
             className="hover:bg-black/20 p-2 rounded-full transition-all"
