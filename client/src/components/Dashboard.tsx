@@ -39,6 +39,8 @@ const Dashboard = (props: Props) => {
         .filter((testRequest) =>
           user?.role === "customer"
             ? testRequest.clientId?._id === user._id
+            : user?.role === "tester"
+            ? testRequest.testerId?._id === user._id
             : testRequest._id
         )
         .forEach((testRequest) =>
@@ -162,7 +164,6 @@ const RequestCard = ({
   testerId,
 }: TestRequestType) => {
   return (
-    // <Link href={"/test_request/_id"}>
     <Link
       href={`/test_request/${_id}`}
       className="p-6 relative shadow-lg  bg-white  flex flex-col gap-2 rounded-md cursor-pointer hover:scale-95 transition-all "
@@ -207,9 +208,7 @@ const RequestCard = ({
       </div>
       <div className="absolute opacity-5 -rotate-12 top-5 right-5 ">
         <Image alt="bg" src={CardBg} width={170} height={80} />
-        {/* <FaBug className="text-9xl text-primary" /> */}
       </div>
     </Link>
-    // </Link>
   );
 };

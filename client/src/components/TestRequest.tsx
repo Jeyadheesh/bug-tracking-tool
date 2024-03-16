@@ -4,7 +4,7 @@ import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { CiCalendarDate } from "react-icons/ci";
 import { FaExclamation } from "react-icons/fa";
 import { FaBug } from "react-icons/fa6";
@@ -24,11 +24,18 @@ import {
   bugColor,
   testRequestColor,
 } from "./Dashboard";
+import CardBg from "../assets/test-request-bg.jpg";
+import useUser from "@/store/useUser";
+import { AnimatePresence, motion } from "framer-motion";
+import AssignTester from "./AssignTester";
+import Button from "./Button";
 
 type Props = {};
 
 const TestRequest = (props: Props) => {
   const { id } = useParams();
+  const user = useUser((state) => state.user);
+  const [showAssignModal, setShowAssignModal] = useState(false);
 
   const fetcher = ([url, id]: string[]) => {
     return axios.get<TestRequestType>(`http://localhost:9000/${url}/${id}`);
@@ -65,7 +72,8 @@ const TestRequest = (props: Props) => {
   return (
     <>
       <main className="min-h-[calc(100vh-4.5rem)] gap-3 bg-gray-50  flex flex-col p-6 lg:px-14">
-        <div className="flex flex-col gap-3 bg-white p-6 shadow-lg rounded-md">
+        {/* Card */}
+        <div className="flex flex-col relative gap-3 bg-white p-6 shadow-lg rounded-md">
           <div className="flex items-center justify-between">
             {/* Name */}
             <h3 className="text-4xl font-semibold">{data?.data.name}</h3>
@@ -173,10 +181,18 @@ const TestRequest = (props: Props) => {
                       />
                     </div>
                   )}
-                  <p className="text-lg ">
+                  <p className=" ">
                     {data?.data.testerId?.name || "Not Assigned"}
                   </p>
                 </div>
+                {user?.role === "projectManager" && (
+                  <button
+                    onClick={() => setShowAssignModal(true)}
+                    className="px-6 py-1 bg-primary text-white font-semibold rounded-md"
+                  >
+                    Assign Tester
+                  </button>
+                )}
               </div>
               {/* Project Manager */}
               <div className="flex flex-col gap-2">
@@ -195,18 +211,33 @@ const TestRequest = (props: Props) => {
                       />
                     </div>
                   )}
-                  <p className="text-lg ">
+                  <p className=" ">
                     {data?.data.projectManagerId?.name || "Not Assigned"}
                   </p>
                 </div>
               </div>
             </div>
           </div>
+          <div className="absolute opacity-5 z-0 select-none  -rotate-12 top-5 right-[20%] ">
+            <Image alt="bg" src={CardBg} width={340} height={270} />
+          </div>{" "}
         </div>
         {/* #####  END TEST REQUEST #### */}
         {/*  ###### BUGS ####### */}
         <section className="flex flex-col gap-4">
-          <h3 className="text-4xl font-semibold">{`Bugs`}</h3>
+          <div className="flex items-center justify-between">
+            <h3 className="text-3xl font-semibold">{`Bugs`}</h3>
+            {user?.role === "tester" && (
+              <Button
+                disabled={
+                  data?.data.status === "request under review" ||
+                  data?.data.status === "request accepted"
+                }
+              >
+                Raise Bug
+              </Button>
+            )}
+          </div>
           {bugs?.data.length === 0 ? (
             <div className=" rounded-lg p-6 py-10 bg-white  flex flex-col gap-3 justify-center items-center">
               <h5 className="font-semibold text-xl">
@@ -222,6 +253,21 @@ const TestRequest = (props: Props) => {
           )}
         </section>
       </main>
+      {/* Assign Tester */}
+      <AnimatePresence>
+        {showAssignModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <AssignTester
+              testRequest={data?.data}
+              setShow={setShowAssignModal}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 };
@@ -268,7 +314,7 @@ const BugCard = ({ _id, comments, name, status, priority }: BugType) => {
           {status}
         </p>
       </div>
-      <div className="absolute opacity-5 -rotate-45 top-0 right-0 ">
+      <div className="absolute opacity-5 rotate-45 top-0 right-0 ">
         <FaBug className="text-9xl text-primary" />
       </div>
     </Link>
