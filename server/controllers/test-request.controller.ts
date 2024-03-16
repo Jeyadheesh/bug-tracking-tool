@@ -1,15 +1,22 @@
 import { TestRequestModel } from "../models/TestRequestModel";
+import { UserModel } from "../models/UserModel";
 import { Request, Response } from "express";
 
 export const createTestRequest = async (req: Request, res: Response) => {
   try {
-    const { name, url, status, comments, clientId, credentials } = req.body;
+    const { name, url, testerId, status, comments, clientId, credientials } =
+      req.body;
+    // Get Project Manager
+    const project = await UserModel.findOne({ role: "projectManager" });
     const testRequest = await TestRequestModel.create({
       name,
       url,
+      testerId,
       status,
       comments,
-      credentials,
+      clientId,
+      credientials,
+      projectManagerId: project?._id,
     });
     console.log(testRequest);
     res.status(201).json({ message: "Test Request created" });

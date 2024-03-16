@@ -8,6 +8,8 @@ import { LiaCommentSolid } from "react-icons/lia";
 import { BsFillSafe2Fill } from "react-icons/bs";
 import axios from "axios";
 import useToast from "@/store/useToast";
+import useUser from "@/store/useUser";
+import { mutate } from "swr";
 import { set } from "zod";
 
 type Props = {
@@ -20,7 +22,9 @@ const NewRequest = ({ setShow }: Props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [comments, setComments] = useState("");
-  const { toast, setToast } = useToast();
+
+  const setToast = useToast((state) => state.setToast);
+  const user = useUser((state) => state.user);
 
   const handleCreateRequest = async () => {
     try {
@@ -42,17 +46,24 @@ const NewRequest = ({ setShow }: Props) => {
         {
           name,
           url: URL,
-          credentials: { email, password },
+          credientials: { email, password },
           comments,
+          clientId: user?._id,
+          status: "request under review",
         }
       );
       console.log(data);
-      setToast({ msg: "Test Request Created", variant: "success" });
 
       // Toast
+      setToast({
+        msg: "Test Request Created",
+        variant: "success",
+      });
+      setShow(false);
+      mutate(["api/test-request", user?._id]);
     } catch (err) {
       // Toast
-      setToast({ msg: err.message, variant: "error" });
+      setToast({ msg: err.response.data, variant: "error" });
     }
   };
 
