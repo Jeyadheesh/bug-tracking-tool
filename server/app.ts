@@ -16,7 +16,7 @@ app.use(cookieParser());
 app.use(
   cors({
     origin: process.env.CLIENT_PORT,
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true,
   })
 );
@@ -92,8 +92,8 @@ app.use("/api/auth", require("./routes/auth.routes"));
 app.use("/api/test-request", require("./routes/test-request.routes"));
 app.use("/api/bug", require("./routes/bug.routes"));
 app.use("/api/notification", require("./routes/notification.routes"));
-app.use("/api/tester",require("./routes/tester.routes"));
-app.use("/api/product-manager",require("./routes/product-manager.routes"));
+app.use("/api/tester", require("./routes/tester.routes"));
+app.use("/api/product-manager", require("./routes/product-manager.routes"));
 
 app.listen(port, () => {
   console.log(`Server Running at ${port}`);

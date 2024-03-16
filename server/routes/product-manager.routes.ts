@@ -4,9 +4,8 @@ const router = express.Router();
 import {
   getProductManagerById,
   getProductManager,
-  getAllProductManager
+  getAllProductManager,
 } from "../controllers/product-manager.controller";
-
 
 router.get("/:id", getProductManagerById);
 router.post("/", getProductManager); // Get a specific PM by email

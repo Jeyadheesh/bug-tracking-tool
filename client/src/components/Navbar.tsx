@@ -13,12 +13,14 @@ import { IoMdNotificationsOutline } from "react-icons/io";
 import { AnimatePresence, motion } from "framer-motion";
 import { sendNotification } from "@/utils/sendNotification";
 import useNotification from "@/hooks/useNotification";
+import Loader from "./Loader";
 
 type Props = {};
 
 const Navbar = (props: Props) => {
   const [showNotification, setShowNotification] = useState(false);
-  const [isNotificationLoading, setIsNotificationLoading] = useState(false);
+  const [isNotificationLoading, setIsNotificationLoading] = useState(true);
+  const [isNotification, setIsNotification] = useState(false);
   const [notifications, setNotifications] = useState<NotificationType[]>([]);
   const { setToast } = useToast();
   const setUser = useUser((state) => state.setUser);
@@ -70,23 +72,31 @@ const Navbar = (props: Props) => {
 
   const getNotification = async () => {
     try {
+      setIsNotificationLoading(true);
       const { data: notificationData } = await axios.get<NotificationType[]>(
         `http://localhost:9000/api/notification/getByReceiverId/${user?._id}`
       );
       console.log(notificationData);
       setNotifications(notificationData);
       notificationData.some((notification) => !notification.isSeen) &&
-        setIsNotificationLoading(true);
+        setIsNotification(true);
+
+      setIsNotificationLoading(false);
     } catch (error) {
       console.log(error.message);
     }
   };
 
-  const updateIsSeen = async (id: string) => {
+  // const { data: notificationData, isLoading:isNotificationLoading } = useSWR(
+  //   ``,
+  //   getNotification
+  // );
+
+  const updateIsSeen = async () => {
     try {
-      const { data } = await axios.put(
-        "http://localhost:9000/api/notification/updateIsSeen",
-        { id }
+      const { data } = await axios.patch(
+        "http://localhost:9000/api/notification/updateIsSeenAll",
+        { receiverId: user?._id }
       );
       console.log(data);
       getNotification();
@@ -143,7 +153,11 @@ const Navbar = (props: Props) => {
             <h1 className="text-xl font-semibold border-b border-gray-300 pb-2">
               Notifications
             </h1>
-            {notifications.length <= 0 ? (
+            {isNotificationLoading ? (
+              <div className="mx-auto w-fit mt-[45%]">
+                <Loader size="lg" type="primary" />
+              </div>
+            ) : notifications.length <= 0 ? (
               <div className="flex mt-[48%] justify-center items-center flex-col gap-2">
                 <div className="flex gap-2 items-center">
                   <h1 className="font-semibold">
@@ -190,11 +204,14 @@ const Navbar = (props: Props) => {
       <div className="flex items-center gap-6">
         {user?._id && (
           <button
-            onClick={() => setShowNotification((prev) => !prev)}
+            onClick={() => {
+              setShowNotification((prev) => !prev);
+              updateIsSeen();
+            }}
             className="relative hover:bg-black/20 rounded-full p-1.5 transition-all"
           >
             <IoMdNotificationsOutline className="text-[1.3rem]" />
-            {isNotificationLoading && (
+            {isNotification && (
               <span className="absolute top-[0.1rem] right-[0.1rem] bg-primary text-white rounded-full w-2.5 h-2.5 flex justify-center items-center text-xs "></span>
             )}
           </button>
