@@ -131,14 +131,21 @@ const TestRequest = (props: Props) => {
                     <Link
                       href={img}
                       target="_blank"
-                      className="relative w-60 h-40 rounded-md shadow-lg border bg-white"
+                      className="relative w-60 h-40 rounded-md shadow-lg border overflow-hidden bg-white"
                     >
-                      <Image
-                        alt="attachment"
-                        fill
-                        src={img}
-                        className="object-cover "
-                      />
+                      {img.includes(".mp4") ? (
+                        <video
+                          src={img}
+                          className="object-cover absolute w-full h-full"
+                        />
+                      ) : (
+                        <Image
+                          alt="attachment"
+                          fill
+                          src={img}
+                          className="object-cover "
+                        />
+                      )}
                     </Link>
                   ))}
                 </div>

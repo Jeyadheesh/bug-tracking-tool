@@ -43,6 +43,18 @@ export const getAllBug = async (req: Request, res: Response) => {
   }
 };
 
+export const getAllBugOfTestRequest = async (req: Request, res: Response) => {
+  try {
+    const bug = await BugModel.find({ testRequestId: req.params.id }).populate(
+      "testRequestId"
+    );
+    console.log(bug);
+    res.status(200).json(bug);
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
+
 export const updateBugStatus = async (req: Request, res: Response) => {
   try {
     const { id, status } = req.body;

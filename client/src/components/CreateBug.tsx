@@ -29,13 +29,31 @@ const CreateBug = ({ setShow, testRequest }: Props) => {
   const [summary, setSummary] = useState("");
   const [workflow, setWorkflow] = useState("");
   const [steps, setSteps] = useState("");
-  const [attachments, setAttachments] = useState<FileList>();
+  const [attachments, setAttachments] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
   const setToast = useToast((state) => state.setToast);
   const user = useUser((state) => state.user);
 
+  function filterImageVideoFiles(files: File[]) {
+    const filteredFiles = [];
+    const maxSize = 20 * 1024 * 1024; // 20MB in bytes (20 * 1024 KB/MB * 1024 bytes/KB)
+
+    for (const file of files) {
+      const validType =
+        file.type.startsWith("image/") || file.type.startsWith("video/");
+      const validSize = file.size <= maxSize;
+
+      if (validType && validSize) {
+        filteredFiles.push(file);
+      }
+    }
+
+    return filteredFiles;
+  }
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.target.files && setAttachments(e.target.files);
+    const uploadedFiles = Array.from(e.target.files as ArrayLike<File>);
+    setAttachments(filterImageVideoFiles(uploadedFiles));
   };
 
   const handleCreateBug = async () => {
@@ -58,7 +76,7 @@ const CreateBug = ({ setShow, testRequest }: Props) => {
         testRequestId: testRequest?._id,
       });
       setToast({ msg: "Bug Created", variant: "success" });
-      mutate("api/bug/");
+      mutate(["api/bug/test-request/", testRequest?._id]);
       setShow(false);
     } catch (err) {
       setToast({
@@ -149,18 +167,30 @@ const CreateBug = ({ setShow, testRequest }: Props) => {
             />
           </div>
           {/* Attachment */}
-          <div className=" border-primary/60 hover:bg-primary/10 transition-all border-dashed border-2 rounded-md relative">
-            <div className="absolute top-1/2 left-1/2 z-0 -translate-x-1/2 -translate-y-1/2">
-              <FaFolder className="text-3xl mx-auto  text-primary" />
-              <p className="text-sm font-medium text-primary/60">{`Upload Screenshots & Videos of Bug`}</p>
+          {attachments?.length === 0 ? (
+            <div className=" border-primary/60 hover:bg-primary/10 transition-all border-dashed border-2 rounded-md relative">
+              <div className="absolute top-1/2 left-1/2 z-0 -translate-x-1/2 -translate-y-1/2">
+                <FaFolder className="text-3xl mx-auto  text-primary" />
+                <p className="text-sm whitespace-nowrap font-medium text-primary/60">{`Upload Screenshots & Videos of Bug (20 MB)`}</p>
+              </div>
+              <input
+                onChange={(e) => handleChange(e)}
+                multiple
+                accept="image/*,video/*"
+                type="file"
+                className=" w-full h-16 opacity-0 cursor-pointer z-30"
+              />
             </div>
-            <input
-              onChange={(e) => handleChange(e)}
-              multiple
-              type="file"
-              className=" w-full h-16 opacity-0 cursor-pointer z-30"
-            />
-          </div>
+          ) : (
+            <>
+              <h3 className="font-semibold">Attached Files</h3>
+              <div className="-mt-3 max-h-[5rem] overflow-auto">
+                {attachments?.map((att) => (
+                  <p className="text-sm">{att.name}</p>
+                ))}
+              </div>
+            </>
+          )}
           <Button
             loading={loading}
             onClick={handleCreateBug}

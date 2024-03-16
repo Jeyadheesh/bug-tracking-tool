@@ -1,6 +1,6 @@
 import AWS from "aws-sdk";
 
-export const uploadToS3 = async (files: FileList) => {
+export const uploadToS3 = async (files: File[]) => {
   try {
     const s3 = new AWS.S3({
       accessKeyId: process.env.NEXT_PUBLIC_S3_ACCESS_KEY,
@@ -25,6 +25,6 @@ export const uploadToS3 = async (files: FileList) => {
 
     return imageUrls;
   } catch (error) {
-    console.log(error.message);
+    throw error;
   }
 };

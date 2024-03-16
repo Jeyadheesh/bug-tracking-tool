@@ -10,7 +10,11 @@ function Button({ children, disabled, loading, className, ...props }: Props) {
     <button
       disabled={disabled || loading}
       className={twMerge(
-        " w-max px-10 py-2 justify-center shadow-md disabled:cursor-not-allowed flex gap-4 active:scale-95 transition-all rounded-lg font-semibold bg-gradient-to-br from-primary to-primary-varient text-white ",
+        ` w-max px-10 py-2 justify-center shadow-md disabled:cursor-not-allowed flex gap-4 active:scale-95 transition-all rounded-lg font-semibold  disable text-white ${
+          disabled || loading
+            ? "bg-gradient-to-tr from-primary/20 to-primary-varient/20"
+            : "bg-gradient-to-tr from-primary to-primary-varient"
+        } `,
         className
       )}
       {...props}
@@ -18,7 +22,7 @@ function Button({ children, disabled, loading, className, ...props }: Props) {
       {children}
       {/* Spinner */}
       {loading && (
-        <div className="m-auto ml-4 h-5 w-5 animate-spin rounded-full border border-white border-t-primary" />
+        <div className=" h-5 w-5 animate-spin rounded-full border border-white border-t-primary" />
       )}
     </button>
   );

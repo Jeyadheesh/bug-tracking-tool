@@ -55,15 +55,15 @@ const TestRequest = (props: Props) => {
     // Toast
   }, [error]);
 
-  const bugFetcher = (url: string) => {
-    return axios.get<BugType[]>(`http://localhost:9000/${url}`);
+  const bugFetcher = ([url, id]: string[]) => {
+    return axios.get<BugType[]>(`http://localhost:9000/${url}${id}`);
   };
 
   const {
     data: bugs,
     error: bugError,
     isValidating: bugIsValidating,
-  } = useSWR("api/bug/", bugFetcher, {
+  } = useSWR(["api/bug/test-request/", data?.data._id], bugFetcher, {
     dedupingInterval: 10000, //10s
   });
 
@@ -257,17 +257,14 @@ const TestRequest = (props: Props) => {
             {user?.role === "tester" && (
               <Button
                 onClick={() => setShowBugModal(true)}
-                disabled={
-                  data?.data.status === "request under review" ||
-                  data?.data.status === "request accepted"
-                }
+                disabled={data?.data.status !== "testing in progress"}
               >
                 Raise Bug
               </Button>
             )}
           </div>
           {bugs?.data.length === 0 ? (
-            <div className=" rounded-lg p-6 py-10 bg-white  flex flex-col gap-3 justify-center items-center">
+            <div className=" rounded-lg p-6 py-10 bg-white shadow-lg  flex flex-col gap-3 justify-center items-center">
               <h5 className="font-semibold text-xl">
                 This Test Request Doesn't Have Any Bugs
               </h5>
