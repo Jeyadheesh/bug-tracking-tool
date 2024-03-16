@@ -29,6 +29,7 @@ import useUser from "@/store/useUser";
 import { AnimatePresence, motion } from "framer-motion";
 import AssignTester from "./AssignTester";
 import Button from "./Button";
+import CreateBug from "./CreateBug";
 
 type Props = {};
 
@@ -36,13 +37,14 @@ const TestRequest = (props: Props) => {
   const { id } = useParams();
   const user = useUser((state) => state.user);
   const [showAssignModal, setShowAssignModal] = useState(false);
+  const [showBugModal, setShowBugModal] = useState(false);
 
   const fetcher = ([url, id]: string[]) => {
     return axios.get<TestRequestType>(`http://localhost:9000/${url}/${id}`);
   };
 
   const { data, error, isValidating } = useSWR(
-    ["api/test-request/", id as string],
+    ["api/test-request", id as string],
     fetcher,
     {
       dedupingInterval: 10000, //10s
@@ -185,7 +187,7 @@ const TestRequest = (props: Props) => {
                     {data?.data.testerId?.name || "Not Assigned"}
                   </p>
                 </div>
-                {user?.role === "projectManager" && (
+                {user?.role === "projectManager" && !data?.data.testerId && (
                   <button
                     onClick={() => setShowAssignModal(true)}
                     className="px-6 py-1 bg-primary text-white font-semibold rounded-md"
@@ -229,6 +231,7 @@ const TestRequest = (props: Props) => {
             <h3 className="text-3xl font-semibold">{`Bugs`}</h3>
             {user?.role === "tester" && (
               <Button
+                onClick={() => setShowBugModal(true)}
                 disabled={
                   data?.data.status === "request under review" ||
                   data?.data.status === "request accepted"
@@ -265,6 +268,15 @@ const TestRequest = (props: Props) => {
               testRequest={data?.data}
               setShow={setShowAssignModal}
             />
+          </motion.div>
+        )}
+        {showBugModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <CreateBug setShow={setShowBugModal} />
           </motion.div>
         )}
       </AnimatePresence>

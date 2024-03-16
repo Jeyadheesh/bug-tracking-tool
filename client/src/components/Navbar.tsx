@@ -26,7 +26,7 @@ const Navbar = (props: Props) => {
   const pathname = usePathname();
   const route = useRouter();
   const { sendNotification } = useNotification();
-  const refEle = useRef(null);
+  const refEle = useRef<HTMLDivElement | null>(null);
 
   const fetcher = async (url: string) => {
     const { data: resData } = await axios.get<UserType | undefined>(
@@ -56,7 +56,6 @@ const Navbar = (props: Props) => {
           withCredentials: true,
         }
       );
-      console.log(data);
       setUser(null);
       setToast({ msg: "Logged Out", variant: "success" });
       mutate("/api/me");
@@ -72,7 +71,6 @@ const Navbar = (props: Props) => {
       const { data: notificationData } = await axios.get<NotificationType[]>(
         `http://localhost:9000/api/notification/getByReceiverId/${user?._id}`
       );
-      console.log(notificationData);
       setNotifications(notificationData);
       notificationData.some((notification) => !notification.isSeen) &&
         setIsNotificationLoading(true);
@@ -87,7 +85,6 @@ const Navbar = (props: Props) => {
         "http://localhost:9000/api/notification/updateIsSeen",
         { id }
       );
-      console.log(data);
       getNotification();
     } catch (error) {
       console.log(error.message);
@@ -109,10 +106,8 @@ const Navbar = (props: Props) => {
       console.log(refEle.current, event.target);
 
       if (refEle.current && !refEle.current.contains(event.target as Node)) {
-        console.log("clicked outside");
         setShowNotification(false);
       }
-      console.log("clicked inside");
     };
 
     document.addEventListener("mousedown", handleClickOutside);

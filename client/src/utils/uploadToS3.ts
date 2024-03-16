@@ -1,6 +1,6 @@
 import AWS from "aws-sdk";
 
-export const uploadToS3 = (files: FileList) => {
+export const uploadToS3 = async (files: FileList) => {
   try {
     const s3 = new AWS.S3({
       accessKeyId: process.env.NEXT_PUBLIC_S3_ACCESS_KEY,
@@ -8,10 +8,9 @@ export const uploadToS3 = (files: FileList) => {
       region: process.env.NEXT_PUBLIC_S3_REGION,
     });
     // AWS.config.update({  });
-
+    const imageUrls: string[] = [];
     for (let index = 0; index < files.length; index++) {
       const file = files[index];
-      // console.log(file);
 
       const params = {
         Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME as string,
@@ -20,16 +19,11 @@ export const uploadToS3 = (files: FileList) => {
         ContentType: file.type,
       };
 
-      s3.upload(params, (err: Error, data: AWS.S3.ManagedUpload.SendData) => {
-        if (err) {
-          console.error("File upload error : ", err.message);
-          // alert("Error uploading file.");
-        } else {
-          console.log("File uploaded successfully.", data);
-          // alert("File uploaded successfully.");
-        }
-      });
+      const data = await s3.upload(params).promise();
+      imageUrls.push(data.Location);
     }
+
+    return imageUrls;
   } catch (error) {
     console.log(error.message);
   }

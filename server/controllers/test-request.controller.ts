@@ -72,7 +72,7 @@ export const updateTestRequestDetails = async (req: Request, res: Response) => {
     const { id, name, url, comments, credientials, status } = req.body;
     const testRequest = await TestRequestModel.findByIdAndUpdate(
       id,
-      { $set: { name, url, comments, credientials, status } },
+      { $set: req.body },
       { new: true }
     );
     console.log(testRequest);

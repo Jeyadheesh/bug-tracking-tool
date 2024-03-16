@@ -1,8 +1,10 @@
 import useToast from "@/store/useToast";
+import axios from "axios";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
+import Button from "./Button";
 
 type Props = {
   setShow: (val: boolean) => void;
@@ -13,27 +15,47 @@ const AssignTester = ({ setShow, testRequest }: Props) => {
   const setToast = useToast((state) => state.setToast);
 
   const fetcher = (url: string) => {
-    // return axios.get(`http://localhost:9000/${url}`);
+    return axios.get<TesterType[]>(`http://localhost:9000/${url}`);
   };
 
-  const { data, error, isValidating } = useSWR("api/tester", fetcher);
-  const [tester, setTester] = useState<TesterType[]>([
-    {
-      _id: "65f4489baa6f72212e3dce26",
-      name: "tester1",
-      email: "tester1@gmail.com",
-      role: "tester",
-      isVerified: true,
-      img: "https://firebasestorage.googleapis.com/v0/b/pokemondetectorapp.appspot.com/o/tester.png?alt=media&token=f708246a-c988-4081-81e6-a6d03835dcc1",
-      createdAt: "2024-03-15T13:07:40.030Z",
-    },
-  ]);
+  const [loading, setLoading] = useState(false);
+
+  const { data, error, isValidating } = useSWR("api/free-testers", fetcher);
+  // const [tester, setTester] = useState<TesterType[]>([
+  //   {
+  //     _id: "65f4489baa6f72212e3dce26",
+  //     name: "tester1",
+  //     email: "tester1@gmail.com",
+  //     role: "tester",
+  //     isVerified: true,
+  //     img: "https://firebasestorage.googleapis.com/v0/b/pokemondetectorapp.appspot.com/o/tester.png?alt=media&token=f708246a-c988-4081-81e6-a6d03835dcc1",
+  //     createdAt: "2024-03-15T13:07:40.030Z",
+  //   },
+  // ]);
 
   useEffect(() => {
     if (error) {
       setToast({ msg: error, variant: "error" });
     }
   }, [error]);
+
+  const handleAssign = (id: string) => {
+    setLoading(true);
+    axios
+      .patch(`http://localhost:9000/api/test-request/edit-details`, {
+        id: testRequest?._id,
+        testerId: id,
+      })
+      .then(() => {
+        setToast({ msg: "Tester Assigned", variant: "success" });
+        setShow(false);
+        mutate(["api/test-request", testRequest?._id]);
+      })
+      .catch((err: any) => {
+        setToast({ msg: err, variant: "error" });
+      })
+      .finally(() => setLoading(false));
+  };
 
   return (
     <main
@@ -48,13 +70,13 @@ const AssignTester = ({ setShow, testRequest }: Props) => {
       >
         <div className=" w-full flex flex-col gap-4 justify-center ">
           <h4 className="font-semibold text-2xl text-center">Assign Tester</h4>
-          {tester.length === 0 ? (
+          {data?.data.length === 0 ? (
             <h3 className="font-semibold text-center text-lg">
               No Available Testers
             </h3>
           ) : (
             <div className="grid grid-cols-2 gap-5 max-h-[70vh] overflow-y-auto px-5">
-              {tester.map((test) => (
+              {data?.data.map((test) => (
                 <div
                   key={test._id}
                   className="flex gap-2 items-center border-2 border-primary-varient flex-col p-2 py-3 relative overflow-hidden shadow-md rounded-md group"
@@ -76,9 +98,12 @@ const AssignTester = ({ setShow, testRequest }: Props) => {
                   <div className="flex flex-col gap-1 ">
                     <h3 className="text-lg font-medium">{test.name}</h3>
                     <h3 className="">{test.email}</h3>
-                    <button className="w-full py-1 bg-primary font-medium text-white rounded-md">
+                    <Button
+                      loading={loading}
+                      onClick={() => handleAssign(test._id)}
+                    >
                       Assign
-                    </button>
+                    </Button>
                   </div>
                 </div>
               ))}

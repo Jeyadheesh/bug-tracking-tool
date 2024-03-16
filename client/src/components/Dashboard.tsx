@@ -44,7 +44,7 @@ const Dashboard = (props: Props) => {
             : testRequest._id
         )
         .forEach((testRequest) =>
-          testRequest.status.toLowerCase() === "testRequesting completed"
+          testRequest.status.toLowerCase() === "testing completed"
             ? completed.push(testRequest)
             : open.push(testRequest)
         );
