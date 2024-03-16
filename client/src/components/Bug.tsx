@@ -84,9 +84,7 @@ const TestRequest = (props: Props) => {
           <div className="flex items-center justify-between  gap-8">
             <div className="flex flex-col gap-3">
               {/* Comments */}
-              <p className="text-lg font-medium text-gray-700">
-                {data?.data.comments}
-              </p>
+              <p className="text-lg font-medium text-gray-700">"dsf"</p>
               <div className="flex gap-2 items-start justify-between">
                 <div className="grid grid-cols-[auto,1fr] items-center gap-y-1 gap-x-4">
                   {/* Priority */}

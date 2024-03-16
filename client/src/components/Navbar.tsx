@@ -78,8 +78,9 @@ const Navbar = (props: Props) => {
       );
       console.log(notificationData);
       setNotifications(notificationData);
-      notificationData.some((notification) => !notification.isSeen) &&
-        setIsNotification(true);
+      notificationData.some((notification) => !notification.isSeen)
+        ? setIsNotification(true)
+        : setIsNotification(false);
 
       setIsNotificationLoading(false);
     } catch (error) {
@@ -99,7 +100,8 @@ const Navbar = (props: Props) => {
         { receiverId: user?._id }
       );
       console.log(data);
-      getNotification();
+
+      // getNotification();
     } catch (error) {
       console.log(error.message);
     }
@@ -110,8 +112,8 @@ const Navbar = (props: Props) => {
     // sendNotification(
     //   "title",
     //   "message",
-    //   user?._id || "",
-    //   "65f30ff3ff32896b8946059e"
+    //   "65f30ff3ff32896b8946059e",
+    //   user?._id || ""
     // );
   }, [user]);
 
@@ -179,9 +181,9 @@ const Navbar = (props: Props) => {
                         } flex gap-2`}
                       >
                         <h1 className={""}>{notification.title}</h1>
-                        <span className=" text-xs text-gray-400 my-auto">
+                        {/* <span className=" text-xs text-gray-400 my-auto">
                           by name
-                        </span>
+                        </span> */}
                         {/* {!notification.isSeen && (
                         <span className="bg-primary text-xs px-1 text-gray-100 rounded-full my-auto h-2 w-2"></span>
                       )} */}

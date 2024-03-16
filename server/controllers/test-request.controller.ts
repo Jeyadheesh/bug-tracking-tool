@@ -4,7 +4,7 @@ import { Request, Response } from "express";
 
 export const createTestRequest = async (req: Request, res: Response) => {
   try {
-    const { name, url, testerId, status, comments, clientId, credientials } =
+    const { name, url, testerId, status, comments, clientId, credentials } =
       req.body;
     // Get Project Manager
     const project = await UserModel.findOne({ role: "projectManager" });
@@ -15,7 +15,7 @@ export const createTestRequest = async (req: Request, res: Response) => {
       status,
       comments,
       clientId,
-      credientials,
+      credentials,
       projectManagerId: project?._id,
     });
     console.log(testRequest);
@@ -69,7 +69,7 @@ export const updateTestRequestStatus = async (req: Request, res: Response) => {
 
 export const updateTestRequestDetails = async (req: Request, res: Response) => {
   try {
-    const { id, name, url, comments, credientials, status } = req.body;
+    const { id, name, url, comments, credentials, status } = req.body;
     const testRequest = await TestRequestModel.findByIdAndUpdate(
       id,
       { $set: req.body },
