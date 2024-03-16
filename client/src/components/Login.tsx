@@ -5,6 +5,7 @@ import InputTextFiled from "./InputTextFiled";
 import useToast from "@/store/useToast";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import Button from "./Button";
 
 type Props = {
   setMode: (mode: "register") => void;
@@ -68,13 +69,10 @@ const Login = ({ setMode }: Props) => {
           type="password"
         />
       </>
-
-      <button
-        onClick={() => handleLogin()}
-        className="w-full  px-10 py-2 active:scale-95 transition-all rounded-lg font-semibold bg-gradient-to-br from-primary to-primary-varient text-white "
-      >
+      <Button className="w-full" onClick={handleLogin}>
         Login
-      </button>
+      </Button>
+
       <div className="flex gap-1 items-center">
         <p className="text-lg">{`Don't have a account? `}</p>
         <p

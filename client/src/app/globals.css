@@ -56,3 +56,18 @@
     background-position: 100% 50%;
   }
 }
+
+/* Scroll Bar CSS */
+.overflow-x-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px; /* horizontal scrollbar */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+}

@@ -7,6 +7,7 @@ import BUG from "../assets/fix-bug1.png";
 import CC from "../assets/cc.webp";
 import BUG2 from "../assets/fix-bug-for-you.png";
 import Err from "../assets/404.webp";
+import Button from "./Button";
 
 type Props = {};
 
@@ -28,12 +29,10 @@ const LandingPage = (props: Props) => {
           <p className="text-lg text-gray-500">{`From TrackDown to touchdown: Your bug-solving journey begins here
 `}</p>
           {/* Buttons */}
-          <button
-            onClick={() => setShowGetStarted(true)}
-            className=" w-max px-10 py-3 active:scale-95 transition-all rounded-lg font-semibold bg-gradient-to-br from-primary to-primary-varient text-white "
-          >
+
+          <Button className="py-3" onClick={() => setShowGetStarted(true)}>
             Get Started
-          </button>
+          </Button>
         </section>
         {/* Right Side */}
         <section className="">
