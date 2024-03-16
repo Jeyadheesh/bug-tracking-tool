@@ -5,6 +5,7 @@ import InputTextFiled from "./InputTextFiled";
 import useToast from "@/store/useToast";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import useUser from "@/store/useUser";
 
 type Props = {
   setMode: (mode: "register") => void;
@@ -15,6 +16,7 @@ const Login = ({ setMode }: Props) => {
   const [password, setPassword] = useState("");
   const { toast, setToast } = useToast();
   const route = useRouter();
+  const { setUser } = useUser();
 
   const handleLogin = async () => {
     try {
@@ -37,6 +39,7 @@ const Login = ({ setMode }: Props) => {
       console.log(data);
       if (data.message === "Logged In") {
         setToast({ msg: "Logged In", variant: "success" });
+        setUser(data.loggedUser);
         return route.push("/dashboard");
       } else {
         setToast({ msg: data.message, variant: "error" });
