@@ -77,7 +77,7 @@ export const loginCustomer = async (req: Request, res: Response) => {
 
     console.log(process.env.JWT_SECRET_KEY);
 
-    const token = jwt.sign({ email }, process.env.JWT_SECRET_KEY, {
+    const token = jwt.sign({ email ,userId:user._id}, process.env.JWT_SECRET_KEY, {
       expiresIn: process.env.JWT_EXPIRE_TIME,
     });
 
