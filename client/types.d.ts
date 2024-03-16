@@ -5,7 +5,11 @@ interface TestRequestType {
   name: string;
   status: string;
   url: string;
-  comments: string;
+  comments: {
+    name: string;
+    image: string;
+    message: string;
+  };
   testerId?: TesterType | undefined;
   projectManagerId?: ProjectManagerType | undefined;
   clientId?: CustomerType | undefined;
@@ -15,6 +19,7 @@ interface TestRequestType {
   };
   createdAt?: string; // 2024-03-15T13:17:56.183Z
   updatedAt?: string; // 2024-03-15T13:17:56.183Z
+  summary?: string;
 }
 
 interface BugType {
@@ -25,7 +30,11 @@ interface BugType {
   feature?: string;
   stepsToReproduce?: string;
   summary?: string;
-  comments?: string;
+  comments: {
+    name: string;
+    image: string;
+    message: string;
+  };
   priority: string;
   testRequestId?: TestRequestType | undefined;
   createdAt?: string; // 2024-03-15T13:17:56.183Z

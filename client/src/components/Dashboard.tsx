@@ -1,3 +1,4 @@
+"use client";
 import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
@@ -172,7 +173,7 @@ const RequestCard = ({
         {name}
       </h4>
       {/* Comments */}
-      <p className="text-sm text-gray-500 ">{comments}</p>
+      <p className="text-sm text-gray-500 ">{comments.message}</p>
       <div className="grid grid-cols-[auto,1fr] items-center gap-y-2 gap-x-4">
         {/* Tester */}
         <div className="flex items-center gap-1">

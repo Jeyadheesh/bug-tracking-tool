@@ -65,14 +65,14 @@ export const MailInTable = (productData: any, productStatus: string): void => {
 
   let mail = mailGenerator.generate(response);
 
-  let message = {
+  let content = {
     from: process.env.EMAIL,
     to: productData[0].userEmail,
     subject: "EBuddy Product Status 😄",
     html: mail,
   };
 
-  transporter.sendMail(message, (err, info) => {
+  transporter.sendMail(content, (err, info) => {
     if (err) console.log("Error to send mail", err);
     else {
       console.log("Email Sent");
@@ -80,17 +80,21 @@ export const MailInTable = (productData: any, productStatus: string): void => {
   });
 };
 
-export const MainInFormal = (name: string, email: string): void => {
+export const sendMail = (
+  name: string,
+  email: string,
+  message: string
+): void => {
   let response = {
     body: {
       name: name,
-      intro: " Intro For Mail",
+      intro: message,
       action: {
-        instructions: "Instruction for below button",
+        instructions: "You can check your message by clicking the button :",
         button: {
           color: "#A033CE",
-          text: "Button Name",
-          link: process.env.CLIENT_PORT + "/link",
+          text: "Go to website",
+          link: process.env.CLIENT_PORT + "/dashboard",
         },
       },
     },
@@ -98,14 +102,14 @@ export const MainInFormal = (name: string, email: string): void => {
 
   let mail = mailGenerator.generate(response);
 
-  let message = {
+  let content = {
     from: process.env.EMAIL,
     to: email,
-    subject: "Subject Name",
+    subject: "From TrackDown",
     html: mail,
   };
 
-  transporter.sendMail(message, (err, info) => {
+  transporter.sendMail(content, (err, info) => {
     if (err) console.log("Error to send mail", err);
     else {
       console.log("Email Sent");
@@ -135,7 +139,9 @@ export const SendOtpMail = async (
 
   const ans = await transporter.sendMail(message);
   if (ans.accepted) {
+    console.log("Email Sent");
     return "Email Sent";
   }
+  console.log("Error to send email");
   return "Error to send email";
 };

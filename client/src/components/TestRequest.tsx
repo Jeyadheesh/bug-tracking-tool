@@ -109,7 +109,7 @@ const TestRequest = (props: Props) => {
             <div className="flex flex-col gap-3">
               {/* Comments */}
               <p className="text-lg font-medium text-gray-700">
-                {data?.data.comments}
+                {data?.data.comments?.message}
               </p>
               <div className="flex gap-2 items-start justify-between">
                 {/* Show URL , Credentials */}
@@ -249,8 +249,8 @@ const TestRequest = (props: Props) => {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {bugs?.data.map((bug) => (
-                <BugCard {...bug} />
+              {bugs?.data.map((bug, i) => (
+                <BugCard keyy={i} {...bug} />
               ))}
             </div>
           )}
@@ -286,9 +286,17 @@ const TestRequest = (props: Props) => {
 
 export default TestRequest;
 
-const BugCard = ({ _id, comments, name, status, priority }: BugType) => {
+const BugCard = ({
+  _id,
+  comments,
+  name,
+  status,
+  priority,
+  keyy,
+}: BugType & { keyy: number }) => {
   return (
     <Link
+      key={keyy}
       href={`/bug/${_id}`}
       className="p-6 relative shadow-lg  bg-white  flex flex-col gap-2 rounded-md cursor-pointer hover:scale-95 transition-all "
     >
@@ -296,7 +304,7 @@ const BugCard = ({ _id, comments, name, status, priority }: BugType) => {
         {name}
       </h4>
       {/* Comments */}
-      <p className="text-sm text-gray-500 ">{comments}</p>
+      <p className="text-sm text-gray-500 ">{comments?.message}</p>
       <div className="grid grid-cols-[auto,1fr] items-center gap-y-2 gap-x-4">
         {/* Priority */}
         <div className="flex items-center gap-1">

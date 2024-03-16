@@ -20,7 +20,9 @@ export const createNotification = async (req: Request, res: Response) => {
 export const getByReceiverId = async (req: Request, res: Response) => {
   try {
     const { receiverId } = req.params;
-    const notifications = await NotificationModel.find({ receiverId });
+    const notifications = await NotificationModel.find({ receiverId }).sort({
+      createdAt: -1,
+    });
     console.log(notifications);
     res.status(200).json(notifications);
   } catch (error) {

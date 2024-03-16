@@ -51,7 +51,11 @@ const NewRequest = ({ setShow }: Props) => {
           name,
           url: URL,
           credientials: { email, password },
-          comments,
+          comments: {
+            name: user?.name,
+            image: user?.img,
+            message: comments,
+          },
           clientId: user?._id,
           status: "request under review",
         }
