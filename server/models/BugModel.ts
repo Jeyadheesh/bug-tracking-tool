@@ -7,7 +7,7 @@ const BugSchema = new mongoose.Schema(
       required: true,
     },
     comments: {
-      type: String,
+      type: [String],
       required: true,
     },
     testRequestId: {
@@ -19,10 +19,13 @@ const BugSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    priority: String, // opt
+    priority: String,
     images: {
       type: [String],
-    }, // opt
+    },
+    summary: String,
+    feature: String,
+    stepsToReproduce: String,
   },
   {
     timestamps: true,
