@@ -15,12 +15,15 @@ import { uploadToS3 } from "@/utils/uploadToS3";
 import Button from "./Button";
 import useToast from "@/store/useToast";
 import axios from "axios";
+import { mutate } from "swr";
+import useUser from "@/store/useUser";
 
 type Props = {
   setShow: (val: false) => void;
+  testRequest?: TestRequestType;
 };
 
-const CreateBug = ({ setShow }: Props) => {
+const CreateBug = ({ setShow, testRequest }: Props) => {
   const [name, setName] = useState("");
   const [priority, setPriority] = useState("medium");
   const [summary, setSummary] = useState("");
@@ -29,6 +32,7 @@ const CreateBug = ({ setShow }: Props) => {
   const [attachments, setAttachments] = useState<FileList>();
   const [loading, setLoading] = useState(false);
   const setToast = useToast((state) => state.setToast);
+  const user = useUser((state) => state.user);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.target.files && setAttachments(e.target.files);
@@ -42,11 +46,20 @@ const CreateBug = ({ setShow }: Props) => {
         // upload images to s3
         links = await uploadToS3(attachments);
       }
-      axios.post(`https://localhost:9000/api/bug`, {
+      await axios.post(`http://localhost:9000/api/bug/`, {
         name,
         priority,
         summary,
+        feature: workflow,
+        images: links || [],
+        stepsToReproduce: steps,
+        status: "under triage",
+        testerId: user?._id,
+        testRequestId: testRequest?._id,
       });
+      setToast({ msg: "Bug Created", variant: "success" });
+      mutate("api/bug/");
+      setShow(false);
     } catch (err) {
       setToast({
         msg: err,

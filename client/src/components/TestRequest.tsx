@@ -276,7 +276,7 @@ const TestRequest = (props: Props) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <CreateBug setShow={setShowBugModal} />
+            <CreateBug setShow={setShowBugModal} testRequest={data?.data} />
           </motion.div>
         )}
       </AnimatePresence>
@@ -301,7 +301,7 @@ const BugCard = ({ _id, comments, name, status, priority }: BugType) => {
         {/* Priority */}
         <div className="flex items-center gap-1">
           <FaExclamation className="text-violet-800 " />
-          <p className="font-semibold ">Priority</p>
+          <p className="font-semibold ">Severity</p>
         </div>
         <div className="font-medium capitalize flex gap-2">
           {priority === "high" ? (

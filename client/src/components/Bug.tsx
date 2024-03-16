@@ -25,6 +25,7 @@ import {
   testRequestColor,
 } from "./Dashboard";
 import { TiAttachment } from "react-icons/ti";
+import { PiStepsDuotone } from "react-icons/pi";
 
 type Props = {};
 
@@ -37,10 +38,7 @@ const TestRequest = (props: Props) => {
 
   const { data, error, isValidating } = useSWR(
     ["api/bug/", id as string],
-    fetcher,
-    {
-      dedupingInterval: 10000, //10s
-    }
+    fetcher
   );
 
   useEffect(() => {
@@ -52,6 +50,9 @@ const TestRequest = (props: Props) => {
       <main className="min-h-[calc(100vh-4.5rem)] gap-3 bg-gray-50   flex flex-col p-6 lg:px-14">
         {/* Card */}
         <div className="flex flex-col gap-3 bg-white overflow-hidden p-6 shadow-lg rounded-md relative">
+          <div className="absolute opacity-5 rotate-45 top-1 right-3 ">
+            <FaBug className="text-[35rem] text-primary" />
+          </div>
           <div className="flex items-center justify-between">
             {/* Name */}
             <h3 className="text-4xl font-semibold">{data?.data.name}</h3>
@@ -81,49 +82,60 @@ const TestRequest = (props: Props) => {
               {data?.data.updatedAt?.split("T")[0]}
             </div>
           </div>
+          {/* Priority */}
+          <div className="font-medium  text-lg capitalize items-center flex gap-2">
+            {data?.data.priority === "high" ? (
+              <FcHighPriority className="text-xl" />
+            ) : data?.data.priority === "medium" ? (
+              <FcMediumPriority className="text-xl" />
+            ) : (
+              <FcLowPriority className="text-xl" />
+            )}
+            <p>{`${data?.data.priority} Severity Level `}</p>
+          </div>
           <div className="flex items-center justify-between  gap-8">
-            <div className="flex flex-col gap-3">
-              {/* Comments */}
-              <p className="text-lg font-medium text-gray-700">
-                {data?.data.comments}
-              </p>
-              <div className="flex gap-2 items-start justify-between">
-                <div className="grid grid-cols-[auto,1fr] items-center gap-y-1 gap-x-4">
-                  {/* Priority */}
-                  <div className="flex items-center gap-1 text-lg">
-                    <FaExclamation className="text-red-600 " />
-                    <p className="font-semibold ">Priority</p>
-                  </div>
-                  <div className="font-medium  text-lg capitalize items-center flex gap-2">
-                    {data?.data.priority === "high" ? (
-                      <FcHighPriority className="text-xl" />
-                    ) : data?.data.priority === "medium" ? (
-                      <FcMediumPriority className="text-xl" />
-                    ) : (
-                      <FcLowPriority className="text-xl" />
-                    )}
-                    <p>{data?.data.priority}</p>
-                  </div>
-                </div>
+            <div className="flex flex-col ">
+              {/* Summary */}
+              <textarea
+                value={data?.data.summary}
+                readOnly
+                className="text-lg outline-none resize-none w-full font-medium  h-max text-gray-700"
+              ></textarea>
+              {/* Steps */}
+              <div className="flex gap-2  mb-2 items-center">
+                <PiStepsDuotone className="text-3xl text-green-400" />
+                <h3 className="text-lg font-semibold">Steps To Reproduce</h3>
               </div>
+              <pre className="text-lg font-medium font- text-gray-700">
+                {data?.data.stepsToReproduce}
+              </pre>
+              <textarea
+                value={data?.data.stepsToReproduce}
+                readOnly
+                className="text-lg outline-none resize-none w-full font-medium  h-full text-gray-700"
+              ></textarea>
               {/* Attachments */}
-              <div className="flex gap-2 mt-6 items-center">
+              <div className="flex gap-2 mt-6 mb-2 items-center">
                 <TiAttachment className="text-3xl text-fuchsia-400" />
-                <h3 className="text-lg font-semibold">Attachment</h3>
+                <h3 className="text-lg font-semibold">Attachments</h3>
               </div>
-              {data?.data.image ? (
-                <Link
-                  href={data?.data.image}
-                  target="_blank"
-                  className="relative w-60 h-40 rounded-md shadow-lg border"
-                >
-                  <Image
-                    alt="attachment"
-                    fill
-                    src={data?.data.image}
-                    className="object-cover"
-                  />
-                </Link>
+              {data?.data.images && data.data.images.length > 0 ? (
+                <div className="flex flex-wrap gap-6 items-center">
+                  {data.data.images.map((img) => (
+                    <Link
+                      href={img}
+                      target="_blank"
+                      className="relative w-60 h-40 rounded-md shadow-lg border bg-white"
+                    >
+                      <Image
+                        alt="attachment"
+                        fill
+                        src={img}
+                        className="object-cover "
+                      />
+                    </Link>
+                  ))}
+                </div>
               ) : (
                 <p>No Attachment</p>
               )}
@@ -151,9 +163,6 @@ const TestRequest = (props: Props) => {
                 </div>
               </div>
             </div> */}
-          </div>
-          <div className="absolute opacity-5 rotate-45 top-1 right-3 ">
-            <FaBug className="text-[35rem] text-primary" />
           </div>
         </div>
       </main>

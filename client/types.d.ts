@@ -21,8 +21,11 @@ interface BugType {
   _id: string;
   name: string;
   status: string;
-  image: string;
-  comments: string;
+  images: string[];
+  feature?: string;
+  stepsToReproduce?: string;
+  summary?: string;
+  comments?: string;
   priority: string;
   testRequestId?: TestRequestType | undefined;
   createdAt?: string; // 2024-03-15T13:17:56.183Z
