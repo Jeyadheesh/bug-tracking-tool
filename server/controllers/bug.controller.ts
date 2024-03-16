@@ -3,14 +3,15 @@ import { BugModel } from "../models/BugModel";
 
 export const createBug = async (req: Request, res: Response) => {
   try {
-    const { name, comments, testRequestId, status, priority, image } = req.body;
+    const { name, comments, testRequestId, status, priority, images } =
+      req.body;
     const bug = await BugModel.create({
       name,
       comments,
       testRequestId,
       status,
       priority,
-      image,
+      images,
     });
     console.log(bug);
     res.status(201).json(bug);

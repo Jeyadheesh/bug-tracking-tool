@@ -93,7 +93,7 @@ export const loginCustomer = async (req: Request, res: Response) => {
     };
 
     res.cookie("bugTracker", token, cookieOptions);
-    res.send({ message: "Logged In" });
+    res.send({ message: "Logged In", loggedUser: user });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });

@@ -20,7 +20,9 @@ const BugSchema = new mongoose.Schema(
       required: true,
     },
     priority: String, // opt
-    image: String, // opt
+    images: {
+      type: [String],
+    }, // opt
   },
   {
     timestamps: true,
