@@ -19,7 +19,7 @@ export const createTestRequest = async (req: Request, res: Response) => {
       projectManagerId: project?._id,
     });
     console.log(testRequest);
-    res.status(201).json(testRequest);
+    res.status(201).json({ message: "Test Request created" });
   } catch (error) {
     res.status(400).send(error.message);
   }

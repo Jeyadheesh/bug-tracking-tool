@@ -50,3 +50,14 @@ interface ProjectManagerType extends UserType {
 interface CustomerType extends UserType {
   role?: "customer";
 }
+
+interface NotificationType {
+  _id: string;
+  title: string;
+  message: string;
+  senderId: string;
+  receiverId: string;
+  isSeen: boolean;
+  createdAt?: string; // 2024-03-15T13:17:56.183Z
+  updatedAt?: string; // 2024-03-15T13:17:56.183Z
+}

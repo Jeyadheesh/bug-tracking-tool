@@ -20,13 +20,14 @@ const TestRequestSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      required: true,
+      // required: true,
+      default: "under-review",
     },
     comments: {
       type: String,
       required: true,
     },
-    credientials: {
+    credentials: {
       type: {
         email: String,
         password: String,
@@ -36,7 +37,7 @@ const TestRequestSchema = new mongoose.Schema(
     clientId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "UserModel",
-      required: true,
+      // required: true,
     },
   },
   {
