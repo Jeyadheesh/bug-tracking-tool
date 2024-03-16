@@ -103,7 +103,10 @@ const Navbar = (props: Props) => {
 
             {[1, 2, 32, 3, 24, 2].map((d, i) => {
               return (
-                <div className="cursor-pointer hover:bg-gray-50 transition-all  flex flex-col *:pt-1 *:border-b *:border-b-gray-300">
+                <div
+                  key={i}
+                  className="cursor-pointer hover:bg-gray-50 transition-all  flex flex-col *:pt-1 *:border-b *:border-b-gray-300"
+                >
                   <div>
                     <div className="flex gap-1">
                       <h1 className=" font-semibold">Title</h1>
