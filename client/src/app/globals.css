@@ -62,3 +62,15 @@
     background-position: 100% 50%;
   }
 }
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #dddfe0;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-track {
+  background-color: transparent;
+  border-radius: 10px;
+}
