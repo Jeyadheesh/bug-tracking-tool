@@ -4,6 +4,7 @@ import { MdOutlineMail, MdOutlinePassword } from "react-icons/md";
 import InputTextFiled from "./InputTextFiled";
 import axios from "axios";
 import useToast from "@/store/useToast";
+import Button from "./Button";
 
 type Props = {
   setMode: (mode: "login") => void;
@@ -101,8 +102,6 @@ const Register = ({ setMode }: Props) => {
     }
   };
 
-  console.log(email);
-
   return (
     <div className="w-full flex flex-col gap-4 justify-center items-center ">
       <h4 className="font-semibold text-2xl">
@@ -173,12 +172,10 @@ const Register = ({ setMode }: Props) => {
         </>
       )}
 
-      <button
-        onClick={nextTab}
-        className="w-full  px-10 py-2 active:scale-95 transition-all rounded-lg font-semibold bg-gradient-to-br from-primary to-primary-varient text-white "
-      >
+      <Button className="w-full  " onClick={nextTab}>
         {tab === 0 || tab === 1 ? `Verify Email` : "Register"}
-      </button>
+      </Button>
+
       <div className="flex gap-1 items-center">
         <p className="text-lg">Already have a account?</p>
         <p
