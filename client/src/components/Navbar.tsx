@@ -11,15 +11,21 @@ import { CgLogOut } from "react-icons/cg";
 import { MdLogout } from "react-icons/md";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { AnimatePresence, motion } from "framer-motion";
+import { sendNotification } from "@/utils/sendNotification";
+import useNotification from "@/hooks/useNotification";
 
 type Props = {};
 
 const Navbar = (props: Props) => {
-  const [showNotification, setShowNotification] = useState(true);
+  const [showNotification, setShowNotification] = useState(false);
+  const [isNotificationLoading, setIsNotificationLoading] = useState(false);
+  const [notifications, setNotifications] = useState<NotificationType[]>([]);
   const { setToast } = useToast();
   const setUser = useUser((state) => state.setUser);
+  const user = useUser((state) => state.user);
   const pathname = usePathname();
   const route = useRouter();
+  const { sendNotification } = useNotification();
 
   const fetcher = async (url: string) => {
     const { data: resData } = await axios.get<UserType | undefined>(
@@ -29,13 +35,13 @@ const Navbar = (props: Props) => {
       }
     );
     if (resData?._id && pathname === "/") {
-      route.push("/dashboard");
+      route.replace("/dashboard");
       setUser(resData);
       return resData;
     } else if (resData?._id && pathname !== "/") {
       setUser(resData);
       return resData;
-    } else route.push("/");
+    } else route.replace("/");
 
     return resData;
   };
@@ -58,24 +64,48 @@ const Navbar = (props: Props) => {
     }
   };
 
+  const getNotification = async () => {
+    try {
+      const { data: notificationData } = await axios.get<NotificationType[]>(
+        `http://localhost:9000/api/notification/getByReceiverId/${user?._id}`
+      );
+      console.log(notificationData);
+      setNotifications(notificationData);
+      notificationData.some((notification) => !notification.isSeen) &&
+        setIsNotificationLoading(true);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const updateIsSeen = async (id: string) => {
+    try {
+      const { data } = await axios.put(
+        "http://localhost:9000/api/notification/updateIsSeen",
+        { id }
+      );
+      console.log(data);
+      getNotification();
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  useEffect(() => {
+    getNotification();
+    // sendNotification(
+    //   "title",
+    //   "message",
+    //   user?._id || "",
+    //   "65f30ff3ff32896b8946059e"
+    // );
+  }, [user]);
+
   return (
     <nav className="relative px-6  h-[4.5rem] border-b flex justify-between items-center">
       <Toast />
       {/* LOGO */}
       <h1 className="text-2xl font-bold">TrackDown</h1>
-
-      <div className="flex gap-6">
-        <button
-          onClick={() => setShowNotification((prev) => !prev)}
-          className="relative"
-        >
-          <IoMdNotificationsOutline className="text-2xl" />
-          <span className="absolute -top-[0.2rem] -right-[0.2rem] bg-primary text-white rounded-full w-2.5 h-2.5 flex justify-center items-center text-xs "></span>
-        </button>
-        <h1 onClick={handleLogout} className="cursor-pointer">
-          Logout
-        </h1>
-      </div>
 
       {/* Modal */}
       <AnimatePresence mode="popLayout">
@@ -87,10 +117,12 @@ const Navbar = (props: Props) => {
             // transition={{ originX: 0, originY: 0 }}
             className="overflow-y-auto origin-top-right absolute top-14 right-24 w-80 h-96 bg-white shadow-lg  rounded-lg p-4"
           >
+            {/* Need Loader */}
+
+            {/* Notification */}
             <h1 className="text-xl font-semibold border-b border-gray-300 pb-2">
               Notifications
             </h1>
-
             {false && (
               <div className="flex h-full justify-center items-center flex-col gap-2">
                 <div className="flex gap-2 items-center">
@@ -100,22 +132,26 @@ const Navbar = (props: Props) => {
                 </div>
               </div>
             )}
-
-            {[1, 2, 32, 3, 24, 2].map((d, i) => {
+            {notifications.map((notification, i) => {
               return (
                 <div
                   key={i}
                   className="cursor-pointer hover:bg-gray-50 transition-all  flex flex-col *:pt-1 *:border-b *:border-b-gray-300"
                 >
                   <div>
-                    <div className="flex gap-1">
-                      <h1 className=" font-semibold">Title</h1>
+                    <div className="flex gap-2">
+                      <h1 className=" font-semibold">{notification.title}</h1>
                       <span className="text-xs text-gray-400 my-auto">
                         by name
                       </span>
+                      {!notification.isSeen && (
+                        <span className="bg-primary text-xs px-1 text-gray-100 rounded-full my-auto h-2 w-2"></span>
+                      )}
                     </div>
                     <p className="text-sm pb-2">
-                      asdfja sdfjsad fkasdjf sajdfksajd dsf asdjf;a jsd;fkasjdf
+                      {notification.message.length > 50
+                        ? `${notification.message.slice(0, 50)}...`
+                        : notification.message}
                     </p>
                   </div>
                 </div>
@@ -127,6 +163,17 @@ const Navbar = (props: Props) => {
 
       {/* Action Buttons */}
       <div className="flex items-center gap-6">
+        {data?._id && (
+          <button
+            onClick={() => setShowNotification((prev) => !prev)}
+            className="relative hover:bg-black/20 rounded-full p-1.5 transition-all"
+          >
+            <IoMdNotificationsOutline className="text-[1.3rem]" />
+            {isNotificationLoading && (
+              <span className="absolute top-[0.1rem] right-[0.1rem] bg-primary text-white rounded-full w-2.5 h-2.5 flex justify-center items-center text-xs "></span>
+            )}
+          </button>
+        )}
         <h1 className="capitalize">{data?.name || ""}</h1>
         {/* Action Buttons */}
         {data?._id && (
