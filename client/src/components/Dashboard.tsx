@@ -3,7 +3,7 @@ import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { FaUserShield } from "react-icons/fa6";
+import { FaUser, FaUserShield } from "react-icons/fa6";
 import { FiLink } from "react-icons/fi";
 import { IoFlagSharp } from "react-icons/io5";
 import { MdOutlineAdd } from "react-icons/md";
@@ -163,6 +163,8 @@ const RequestCard = ({
   status,
   url,
   testerId,
+  summary,
+  clientId,
 }: TestRequestType) => {
   return (
     <Link
@@ -172,9 +174,17 @@ const RequestCard = ({
       <h4 className="text-2xl font-semibold text-gray-800 hover:underline underline-offset-2 w-max">
         {name}
       </h4>
-      {/* Comments */}
-      <p className="text-sm text-gray-500 ">{comments.message}</p>
+      {/* Summary */}
+      <p className="text-sm text-gray-500 ">{`${summary?.slice(0, 30) || " "}${
+        summary && summary.length > 30 ? "..." : ""
+      }`}</p>
       <div className="grid grid-cols-[auto,1fr] items-center gap-y-2 gap-x-4">
+        {/* Customer */}
+        <div className="flex items-center gap-1">
+          <FaUser className="text-teal-500 text-sm" />
+          <p className="font-semibold ">Customer</p>
+        </div>
+        <p className="text-sm font-medium">{clientId?.name || "-"}</p>
         {/* Tester */}
         <div className="flex items-center gap-1">
           <FaUserShield className="text-violet-800" />

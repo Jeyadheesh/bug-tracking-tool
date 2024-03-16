@@ -5,10 +5,10 @@ interface TestRequestType {
   name: string;
   status: string;
   url: string;
-  comments: {
-    name: string;
-    image: string;
-    message: string;
+  comments?: {
+    name?: string;
+    image?: string;
+    message?: string;
   };
   testerId?: TesterType | undefined;
   projectManagerId?: ProjectManagerType | undefined;
@@ -30,10 +30,10 @@ interface BugType {
   feature?: string;
   stepsToReproduce?: string;
   summary?: string;
-  comments: {
-    name: string;
-    image: string;
-    message: string;
+  comments?: {
+    name?: string;
+    image?: string;
+    message?: string;
   };
   priority: string;
   testRequestId?: TestRequestType | undefined;

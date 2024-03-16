@@ -26,11 +26,14 @@ import {
 } from "./Dashboard";
 import { TiAttachment } from "react-icons/ti";
 import { PiStepsDuotone } from "react-icons/pi";
+import { LuWorkflow } from "react-icons/lu";
+import useToast from "@/store/useToast";
 
 type Props = {};
 
 const TestRequest = (props: Props) => {
   const { id } = useParams();
+  const setToast = useToast((state) => state.setToast);
 
   const fetcher = ([url, id]: string[]) => {
     return axios.get<BugType>(`http://localhost:9000/${url}/${id}`);
@@ -43,6 +46,7 @@ const TestRequest = (props: Props) => {
 
   useEffect(() => {
     // Toast
+    error && setToast({ msg: error, variant: "error" });
   }, [error]);
 
   return (
@@ -94,28 +98,30 @@ const TestRequest = (props: Props) => {
             <p>{`${data?.data.priority} Severity Level `}</p>
           </div>
           <div className="flex items-center justify-between  gap-8">
-            <div className="flex flex-col ">
+            <div className="flex flex-col gap-4">
               {/* Summary */}
-              <textarea
-                value={data?.data.summary}
-                readOnly
-                className="text-lg outline-none resize-none w-full font-medium  h-max text-gray-700"
-              ></textarea>
+              <p className="text-lg font-medium  whitespace-pre-wrap text-gray-700">
+                {data?.data.summary}
+              </p>
               {/* Steps */}
-              <div className="flex gap-2  mb-2 items-center">
+              <div className="flex gap-2  items-center">
                 <PiStepsDuotone className="text-3xl text-green-400" />
                 <h3 className="text-lg font-semibold">Steps To Reproduce</h3>
               </div>
-              <pre className="text-lg font-medium font- text-gray-700">
-                {data?.data.stepsToReproduce}
-              </pre>
-              <textarea
-                value={data?.data.stepsToReproduce}
-                readOnly
-                className="text-lg outline-none resize-none w-full font-medium  h-full text-gray-700"
-              ></textarea>
+              <p className="text-lg font-medium  whitespace-pre-wrap text-gray-700">
+                {data?.data.stepsToReproduce || "-"}
+              </p>
+              {/* Workflow */}
+              <div className="flex gap-2  items-center">
+                <LuWorkflow className="text-3xl text-blue-400" />
+                <h3 className="text-lg font-semibold">Workflow</h3>
+              </div>
+              <p className="text-lg font-medium  whitespace-pre-wrap text-gray-700">
+                {data?.data.feature || "-"}
+              </p>
+
               {/* Attachments */}
-              <div className="flex gap-2 mt-6 mb-2 items-center">
+              <div className="flex gap-2  items-center">
                 <TiAttachment className="text-3xl text-fuchsia-400" />
                 <h3 className="text-lg font-semibold">Attachments</h3>
               </div>
@@ -137,7 +143,7 @@ const TestRequest = (props: Props) => {
                   ))}
                 </div>
               ) : (
-                <p>No Attachment</p>
+                <p className="text-lg">No Attachment</p>
               )}
             </div>
             {/* Tester  */}

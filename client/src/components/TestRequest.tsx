@@ -105,12 +105,15 @@ const TestRequest = (props: Props) => {
               {data?.data.updatedAt?.split("T")[0]}
             </div>
           </div>
-          <div className="flex items-center justify-between  gap-8">
+          <div className="flex  justify-between  gap-8">
             <div className="flex flex-col gap-3">
-              {/* Comments */}
+              {/* Summary */}
               <p className="text-lg font-medium text-gray-700">
-                {data?.data.comments?.message}
+                {data?.data.summary}
               </p>
+              <h3 className="text-lg font-medium">
+                Test Request URL & Credentials
+              </h3>
               <div className="flex gap-2 items-start justify-between">
                 {/* Show URL , Credentials */}
                 <div className="grid grid-cols-[auto,1fr] items-center gap-y-1 gap-x-4">
@@ -218,6 +221,28 @@ const TestRequest = (props: Props) => {
                   </p>
                 </div>
               </div>
+              {/* Customer */}
+              <div className="flex flex-col gap-2">
+                <div className="flex gap-4 items-center text-lg">
+                  {/* <FaUserTie className="text-red-500 text-xl" /> */}
+                  <p className="font-semibold ">Customer</p>
+                </div>
+                <div className="flex gap-2 items-center">
+                  {data?.data.clientId?.img && (
+                    <div className="w-10 h-10 relative rounded-full border border-gray-900 ">
+                      <Image
+                        alt="DP"
+                        src={data?.data.clientId?.img}
+                        fill
+                        className="object-cover rounded-full "
+                      />
+                    </div>
+                  )}
+                  <p className=" ">
+                    {data?.data.clientId?.name || "Not Assigned"}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
           <div className="absolute opacity-5 z-0 select-none  -rotate-12 top-5 right-[20%] ">
@@ -293,6 +318,7 @@ const BugCard = ({
   status,
   priority,
   keyy,
+  summary,
 }: BugType & { keyy: number }) => {
   return (
     <Link
@@ -303,9 +329,11 @@ const BugCard = ({
       <h4 className="text-2xl font-semibold text-gray-800 hover:underline underline-offset-2 w-max">
         {name}
       </h4>
-      {/* Comments */}
-      <p className="text-sm text-gray-500 ">{comments?.message}</p>
-      <div className="grid grid-cols-[auto,1fr] items-center gap-y-2 gap-x-4">
+      {/* Summ */}
+      <p className="text-sm text-gray-500 ">{`${summary?.slice(0, 30) || " "}${
+        summary && summary.length > 30 ? "..." : ""
+      }`}</p>
+      <div className="grid mt-auto grid-cols-[auto,1fr] items-center gap-y-2 gap-x-4">
         {/* Priority */}
         <div className="flex items-center gap-1">
           <FaExclamation className="text-violet-800 " />
