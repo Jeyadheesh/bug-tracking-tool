@@ -2,7 +2,6 @@ import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { FaBug } from "react-icons/fa";
 import { FaUserShield } from "react-icons/fa6";
 import { FiLink } from "react-icons/fi";
 import { IoFlagSharp } from "react-icons/io5";
@@ -23,16 +22,13 @@ const Dashboard = (props: Props) => {
   const [showCreate, setShowCreate] = useState(false);
   const user = useUser((state) => state.user);
 
-  const fetcher = ([url]: string[]) => {
+  const fetcher = ([url]: any[]) => {
     return axios.get<TestRequestType[]>(`http://localhost:9000/${url}`);
   };
 
   const { data, error, isValidating } = useSWR(
     ["api/test-request", user?._id],
-    fetcher,
-    {
-      dedupingInterval: 50000, // 50 seconds
-    }
+    fetcher
   );
 
   useEffect(() => {
@@ -76,12 +72,14 @@ const Dashboard = (props: Props) => {
                   : `You Don't Have Any Open Test Requests`}
               </h5>
               {user?.role === "customer" && (
-                <button
-                  onClick={() => setShowCreate(true)}
-                  className=" w-max px-10 py-2 active:scale-95 transition-all rounded-lg font-semibold bg-gradient-to-br from-primary to-primary-varient text-white "
-                >
-                  Create New Test Request
-                </button>
+                <>
+                  <button
+                    onClick={() => setShowCreate(true)}
+                    className=" w-max px-10 py-2 active:scale-95 transition-all rounded-lg font-semibold bg-gradient-to-br from-primary to-primary-varient text-white "
+                  >
+                    Create New Test Request
+                  </button>
+                </>
               )}
             </div>
           ) : (

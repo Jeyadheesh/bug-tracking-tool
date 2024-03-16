@@ -9,6 +9,7 @@ import { BsFillSafe2Fill } from "react-icons/bs";
 import axios from "axios";
 import useToast from "@/store/useToast";
 import useUser from "@/store/useUser";
+import { mutate } from "swr";
 
 type Props = {
   setShow: (show: boolean) => void;
@@ -40,9 +41,8 @@ const NewRequest = ({ setShow }: Props) => {
         variant: "success",
       });
       setShow(false);
+      mutate(["api/test-request", user?._id]);
     } catch (err) {
-      console.log(err);
-
       // Toast
       setToast({ msg: err.response.data, variant: "error" });
     }
