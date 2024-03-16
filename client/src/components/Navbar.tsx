@@ -26,7 +26,7 @@ const Navbar = (props: Props) => {
   const pathname = usePathname();
   const route = useRouter();
   const { sendNotification } = useNotification();
-  const refEle = useRef(null);
+  const refEle = useRef<HTMLDivElement | null>(null);
 
   const fetcher = async (url: string) => {
     const { data: resData } = await axios.get<UserType | undefined>(
@@ -47,6 +47,7 @@ const Navbar = (props: Props) => {
     return resData;
   };
   const { data, isLoading } = useSWR("/api/me", fetcher);
+  // console.log(data);
 
   const handleLogout = async () => {
     try {
@@ -95,7 +96,7 @@ const Navbar = (props: Props) => {
   };
 
   useEffect(() => {
-    getNotification();
+    user && getNotification();
     // sendNotification(
     //   "title",
     //   "message",
@@ -106,13 +107,11 @@ const Navbar = (props: Props) => {
 
   useEffect(() => {
     const handleClickOutside = (event: any) => {
-      console.log(refEle.current, event.target);
-
       if (refEle.current && !refEle.current.contains(event.target as Node)) {
-        console.log("clicked outside");
+        // console.log("clicked outside");
         setShowNotification(false);
       }
-      console.log("clicked inside");
+      // console.log("clicked inside");
     };
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -128,8 +127,8 @@ const Navbar = (props: Props) => {
       <h1 className="text-2xl font-bold">TrackDown</h1>
 
       {/* Modal */}
-      <AnimatePresence mode="popLayout">
-        {showNotification && (
+      {showNotification && (
+        <AnimatePresence>
           <motion.div
             ref={refEle}
             initial={{ opacity: 0, scale: 0 }}
@@ -144,49 +143,50 @@ const Navbar = (props: Props) => {
             <h1 className="text-xl font-semibold border-b border-gray-300 pb-2">
               Notifications
             </h1>
-            {false && (
-              <div className="flex h-full justify-center items-center flex-col gap-2">
+            {notifications.length <= 0 ? (
+              <div className="flex mt-[48%] justify-center items-center flex-col gap-2">
                 <div className="flex gap-2 items-center">
                   <h1 className="font-semibold">
                     You Don't Have Any Notifications
                   </h1>
                 </div>
               </div>
-            )}
-            {notifications.map((notification, i) => {
-              return (
-                <div
-                  key={i}
-                  className="cursor-pointer hover:bg-gray-50 transition-all  flex flex-col *:pt-1 *:border-b *:border-b-gray-300"
-                >
-                  <div>
-                    <div
-                      className={`${
-                        !notification.isSeen ? "font-semibold" : "font-normal"
-                      } flex gap-2`}
-                    >
-                      <h1 className={""}>{notification.title}</h1>
-                      <span className=" text-xs text-gray-400 my-auto">
-                        by name
-                      </span>
-                      {/* {!notification.isSeen && (
+            ) : (
+              notifications.map((notification, i) => {
+                return (
+                  <div
+                    key={i}
+                    className="cursor-pointer hover:bg-gray-50 transition-all  flex flex-col *:pt-1 *:border-b *:border-b-gray-300"
+                  >
+                    <div>
+                      <div
+                        className={`${
+                          !notification.isSeen ? "font-semibold" : "font-normal"
+                        } flex gap-2`}
+                      >
+                        <h1 className={""}>{notification.title}</h1>
+                        <span className=" text-xs text-gray-400 my-auto">
+                          by name
+                        </span>
+                        {/* {!notification.isSeen && (
                         <span className="bg-primary text-xs px-1 text-gray-100 rounded-full my-auto h-2 w-2"></span>
                       )} */}
+                      </div>
+                      <p className="text-sm pb-2 ">
+                        {notification.message.length > 50
+                          ? `${notification.message.slice(0, 50)}...`
+                          : notification.message}
+                      </p>
                     </div>
-                    <p className="text-sm pb-2 ">
-                      {notification.message.length > 50
-                        ? `${notification.message.slice(0, 50)}...`
-                        : notification.message}
-                    </p>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })
+            )}
           </motion.div>
-        )}
-      </AnimatePresence>
+        </AnimatePresence>
+      )}
 
-      {/* Action Buttons */}
+      {/* Notification Button */}
       <div className="flex items-center gap-6">
         {user?._id && (
           <button
