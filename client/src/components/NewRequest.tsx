@@ -32,14 +32,18 @@ const NewRequest = ({ setShow }: Props) => {
         name.trim() === "" ||
         URL.trim() === "" ||
         email.trim() === "" ||
-        password.trim() === "" ||
-        comments.trim() === ""
+        password.trim() === ""
       )
-        return setToast({ msg: "All Fields Required", variant: "error" });
+        return setToast({ msg: "Enter all required field", variant: "error" });
 
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email))
         return setToast({ msg: "Invalid Email", variant: "error" });
+
+      // url regex
+      const urlRegex = /^(https?:\/\/)?([\w\d]+\.)?[\w\d]+\.\w+$/;
+      if (!urlRegex.test(URL))
+        return setToast({ msg: "Invalid URL", variant: "error" });
 
       const { data } = await axios.post(
         `http://localhost:9000/api/test-request`,
@@ -85,14 +89,14 @@ const NewRequest = ({ setShow }: Props) => {
             {/* Name Field */}
             <InputTextFiled
               icon={<BiRename className="text-primary text-xl" />}
-              placeholder="Enter Test Request Name"
+              placeholder="Enter Test Request Name *"
               setValue={setName}
               value={name}
             />
             {/* URL Field */}
             <InputTextFiled
               icon={<FiLink className="text-primary text-xl" />}
-              placeholder="Enter URL"
+              placeholder="Enter URL *"
               setValue={setURL}
               value={URL}
               type="url"
@@ -124,7 +128,7 @@ const NewRequest = ({ setShow }: Props) => {
             {/* Email Field */}
             <InputTextFiled
               icon={<MdOutlineMail className="text-primary text-xl" />}
-              placeholder="Enter Email"
+              placeholder="Enter Email *"
               setValue={setEmail}
               value={email}
               type="email"
@@ -132,7 +136,7 @@ const NewRequest = ({ setShow }: Props) => {
             {/* Password Field */}
             <InputTextFiled
               icon={<MdOutlinePassword className="text-primary text-xl" />}
-              placeholder="Enter Password"
+              placeholder="Enter Password *"
               setValue={setPassword}
               value={password}
               type="password"

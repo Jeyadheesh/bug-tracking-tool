@@ -13,12 +13,14 @@ import { IoMdNotificationsOutline } from "react-icons/io";
 import { AnimatePresence, motion } from "framer-motion";
 import { sendNotification } from "@/utils/sendNotification";
 import useNotification from "@/hooks/useNotification";
+import Loader from "./Loader";
 
 type Props = {};
 
 const Navbar = (props: Props) => {
   const [showNotification, setShowNotification] = useState(false);
-  const [isNotificationLoading, setIsNotificationLoading] = useState(false);
+  const [isNotificationLoading, setIsNotificationLoading] = useState(true);
+  const [isNotification, setIsNotification] = useState(false);
   const [notifications, setNotifications] = useState<NotificationType[]>([]);
   const { setToast } = useToast();
   const setUser = useUser((state) => state.setUser);
@@ -47,6 +49,7 @@ const Navbar = (props: Props) => {
     return resData;
   };
   const { data, isLoading } = useSWR("/api/me", fetcher);
+  // console.log(data);
 
   const handleLogout = async () => {
     try {
@@ -68,22 +71,30 @@ const Navbar = (props: Props) => {
 
   const getNotification = async () => {
     try {
+      setIsNotificationLoading(true);
       const { data: notificationData } = await axios.get<NotificationType[]>(
         `http://localhost:9000/api/notification/getByReceiverId/${user?._id}`
       );
       setNotifications(notificationData);
       notificationData.some((notification) => !notification.isSeen) &&
-        setIsNotificationLoading(true);
+        setIsNotification(true);
+
+      setIsNotificationLoading(false);
     } catch (error) {
       console.log(error.message);
     }
   };
 
-  const updateIsSeen = async (id: string) => {
+  // const { data: notificationData, isLoading:isNotificationLoading } = useSWR(
+  //   ``,
+  //   getNotification
+  // );
+
+  const updateIsSeen = async () => {
     try {
-      const { data } = await axios.put(
-        "http://localhost:9000/api/notification/updateIsSeen",
-        { id }
+      const { data } = await axios.patch(
+        "http://localhost:9000/api/notification/updateIsSeenAll",
+        { receiverId: user?._id }
       );
       getNotification();
     } catch (error) {
@@ -92,7 +103,7 @@ const Navbar = (props: Props) => {
   };
 
   useEffect(() => {
-    getNotification();
+    user && getNotification();
     // sendNotification(
     //   "title",
     //   "message",
@@ -103,8 +114,6 @@ const Navbar = (props: Props) => {
 
   useEffect(() => {
     const handleClickOutside = (event: any) => {
-      console.log(refEle.current, event.target);
-
       if (refEle.current && !refEle.current.contains(event.target as Node)) {
         setShowNotification(false);
       }
@@ -123,8 +132,8 @@ const Navbar = (props: Props) => {
       <h1 className="text-2xl font-bold">TrackDown</h1>
 
       {/* Modal */}
-      <AnimatePresence mode="popLayout">
-        {showNotification && (
+      {showNotification && (
+        <AnimatePresence>
           <motion.div
             ref={refEle}
             initial={{ opacity: 0, scale: 0 }}
@@ -139,57 +148,65 @@ const Navbar = (props: Props) => {
             <h1 className="text-xl font-semibold border-b border-gray-300 pb-2">
               Notifications
             </h1>
-            {false && (
-              <div className="flex h-full justify-center items-center flex-col gap-2">
+            {isNotificationLoading ? (
+              <div className="mx-auto w-fit mt-[45%]">
+                <Loader size="lg" type="primary" />
+              </div>
+            ) : notifications.length <= 0 ? (
+              <div className="flex mt-[48%] justify-center items-center flex-col gap-2">
                 <div className="flex gap-2 items-center">
                   <h1 className="font-semibold">
                     You Don't Have Any Notifications
                   </h1>
                 </div>
               </div>
-            )}
-            {notifications.map((notification, i) => {
-              return (
-                <div
-                  key={i}
-                  className="cursor-pointer hover:bg-gray-50 transition-all  flex flex-col *:pt-1 *:border-b *:border-b-gray-300"
-                >
-                  <div>
-                    <div
-                      className={`${
-                        !notification.isSeen ? "font-semibold" : "font-normal"
-                      } flex gap-2`}
-                    >
-                      <h1 className={""}>{notification.title}</h1>
-                      <span className=" text-xs text-gray-400 my-auto">
-                        by name
-                      </span>
-                      {/* {!notification.isSeen && (
+            ) : (
+              notifications.map((notification, i) => {
+                return (
+                  <div
+                    key={i}
+                    className="cursor-pointer hover:bg-gray-50 transition-all  flex flex-col *:pt-1 *:border-b *:border-b-gray-300"
+                  >
+                    <div>
+                      <div
+                        className={`${
+                          !notification.isSeen ? "font-semibold" : "font-normal"
+                        } flex gap-2`}
+                      >
+                        <h1 className={""}>{notification.title}</h1>
+                        <span className=" text-xs text-gray-400 my-auto">
+                          by name
+                        </span>
+                        {/* {!notification.isSeen && (
                         <span className="bg-primary text-xs px-1 text-gray-100 rounded-full my-auto h-2 w-2"></span>
                       )} */}
+                      </div>
+                      <p className="text-sm pb-2 ">
+                        {notification.message.length > 50
+                          ? `${notification.message.slice(0, 50)}...`
+                          : notification.message}
+                      </p>
                     </div>
-                    <p className="text-sm pb-2 ">
-                      {notification.message.length > 50
-                        ? `${notification.message.slice(0, 50)}...`
-                        : notification.message}
-                    </p>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })
+            )}
           </motion.div>
-        )}
-      </AnimatePresence>
+        </AnimatePresence>
+      )}
 
-      {/* Action Buttons */}
+      {/* Notification Button */}
       <div className="flex items-center gap-6">
         {user?._id && (
           <button
-            onClick={() => setShowNotification((prev) => !prev)}
+            onClick={() => {
+              setShowNotification((prev) => !prev);
+              updateIsSeen();
+            }}
             className="relative hover:bg-black/20 rounded-full p-1.5 transition-all"
           >
             <IoMdNotificationsOutline className="text-[1.3rem]" />
-            {isNotificationLoading && (
+            {isNotification && (
               <span className="absolute top-[0.1rem] right-[0.1rem] bg-primary text-white rounded-full w-2.5 h-2.5 flex justify-center items-center text-xs "></span>
             )}
           </button>

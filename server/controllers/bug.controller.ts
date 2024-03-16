@@ -3,16 +3,18 @@ import { BugModel } from "../models/BugModel";
 
 export const createBug = async (req: Request, res: Response) => {
   try {
-    const { name, comments, testRequestId, status, priority, images } =
-      req.body;
-    const bug = await BugModel.create({
+    const {
       name,
       comments,
       testRequestId,
       status,
       priority,
       images,
-    });
+      summary,
+      feature,
+      stepsToReproduce,
+    } = req.body;
+    const bug = await BugModel.create(req.body);
     console.log(bug);
     res.status(201).json(bug);
   } catch (error) {
@@ -61,7 +63,7 @@ export const updateBugDetails = async (req: Request, res: Response) => {
     const { id, name, comments, status, priority, image } = req.body;
     const bug = await BugModel.findByIdAndUpdate(
       id,
-      { $set: { name, comments, status, priority, image } },
+      { $set: req.body },
       { new: true }
     );
     console.log(bug);

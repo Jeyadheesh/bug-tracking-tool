@@ -45,7 +45,7 @@ export const updateIsSeen = async (req: Request, res: Response) => {
 
 export const updateIsSeenAll = async (req: Request, res: Response) => {
   try {
-    const { receiverId } = req.params;
+    const { receiverId } = req.body;
     const notification = await NotificationModel.updateMany(
       { receiverId },
       { $set: { isSeen: true } }

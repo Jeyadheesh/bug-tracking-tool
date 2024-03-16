@@ -21,18 +21,20 @@ const TestRequestSchema = new mongoose.Schema(
     status: {
       type: String,
       // required: true,
-      default: "under-review",
+      default: "under review",
     },
     comments: {
-      type: String,
-      required: true,
+      type: {
+        name: String,
+        image: String,
+        message: String,
+      },
     },
     credentials: {
       type: {
         email: String,
         password: String,
       },
-      required: true,
     },
     clientId: {
       type: mongoose.Schema.Types.ObjectId,
