@@ -8,6 +8,7 @@ interface TestRequestType {
   comments: string;
   testerId?: TesterType | undefined;
   projectManagerId?: ProjectManagerType | undefined;
+  clientId?: CustomerType | undefined;
   credientials?: {
     email: string;
     password: string;
@@ -44,4 +45,8 @@ interface TesterType extends UserType {
 
 interface ProjectManagerType extends UserType {
   role?: "projectManager";
+}
+
+interface CustomerType extends UserType {
+  role?: "customer";
 }

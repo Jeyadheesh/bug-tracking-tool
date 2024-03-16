@@ -7,6 +7,8 @@ import { BiRename } from "react-icons/bi";
 import { LiaCommentSolid } from "react-icons/lia";
 import { BsFillSafe2Fill } from "react-icons/bs";
 import axios from "axios";
+import useToast from "@/store/useToast";
+import useUser from "@/store/useUser";
 
 type Props = {
   setShow: (show: boolean) => void;
@@ -19,17 +21,30 @@ const NewRequest = ({ setShow }: Props) => {
   const [password, setPassword] = useState("");
   const [comments, setComments] = useState("");
 
+  const setToast = useToast((state) => state.setToast);
+  const user = useUser((state) => state.user);
+
   const handleCreateRequest = async () => {
     try {
       await axios.post(`http://localhost:9000/api/test-request`, {
         name,
         url: URL,
-        credentials: { email, password },
+        credientials: { email, password },
         comments,
+        clientId: user?._id,
+        status: "request under review",
       });
       // Toast
+      setToast({
+        msg: "Test Request Created",
+        variant: "success",
+      });
+      setShow(false);
     } catch (err) {
+      console.log(err);
+
       // Toast
+      setToast({ msg: err.response.data, variant: "error" });
     }
   };
 

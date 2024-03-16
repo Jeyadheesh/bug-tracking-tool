@@ -11,132 +11,78 @@ import useSWR from "swr";
 import NewRequest from "./NewRequest";
 import CardBg from "../assets/test-request-bg.jpg";
 import Image from "next/image";
+import useUser from "@/store/useUser";
 
 type Props = {};
 
 const Dashboard = (props: Props) => {
-  const [openTestRequests, setOpenTestRequests] = useState<TestRequestType[]>([
-    {
-      _id: "65f44a841c0a6c138c24c75e",
-      comments:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos, pariatur!",
-      name: "Test Request 1",
-      status: "request under review",
-      url: "https://react-icons.github.io/react-icons/search/#q=flag",
-      testerId: undefined,
-    },
-  ]);
-  const [closedRequests, setClosedRequests] = useState<TestRequestType[]>([
-    {
-      _id: "65f44a841c0a6c138c24c75e",
-      comments:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos, pariatur!",
-      name: "Test Request 1",
-      status: "testing completed",
-      url: "https://react-icons.github.io/react-icons/search/#q=flag",
-      testerId: {
-        name: "P. Ramanujam",
-        _id: "65f4489baa6f72212e3dce26",
-        email: "ram@gmail.com",
-      },
-    },
-    {
-      _id: "65f44a841c0a6c138c24c75e",
-      comments:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos, pariatur!",
-      name: "Test Request 1",
-      status: "testing completed",
-      url: "https://react-icons.github.io/react-icons/search/#q=flag",
-      testerId: {
-        name: "P. Ramanujam",
-        _id: "65f4489baa6f72212e3dce26",
-        email: "ram@gmail.com",
-      },
-    },
-    {
-      _id: "65f44a841c0a6c138c24c75e",
-      comments:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos, pariatur!",
-      name: "Test Request 1",
-      status: "testing completed",
-      url: "https://react-icons.github.io/react-icons/search/#q=flag",
-      testerId: {
-        name: "P. Ramanujam",
-        _id: "65f4489baa6f72212e3dce26",
-        email: "ram@gmail.com",
-      },
-    },
-    {
-      _id: "65f44a841c0a6c138c24c75e",
-      comments:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos, pariatur!",
-      name: "Test Request 1",
-      status: "testing completed",
-      url: "https://react-icons.github.io/react-icons/search/#q=flag",
-      testerId: {
-        name: "P. Ramanujam",
-        _id: "65f4489baa6f72212e3dce26",
-        email: "ram@gmail.com",
-      },
-    },
-    {
-      _id: "65f44a841c0a6c138c24c75e",
-      comments:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos, pariatur!",
-      name: "Test Request 1",
-      status: "testing completed",
-      url: "https://react-icons.github.io/react-icons/search/#q=flag",
-      testerId: {
-        name: "P. Ramanujam",
-        _id: "65f4489baa6f72212e3dce26",
-        email: "ram@gmail.com",
-      },
-    },
-  ]);
+  const [openTestRequests, setOpenTestRequests] = useState<TestRequestType[]>(
+    []
+  );
+  const [closedRequests, setClosedRequests] = useState<TestRequestType[]>([]);
   const [showCreate, setShowCreate] = useState(false);
+  const user = useUser((state) => state.user);
 
-  const fetcher = (url: string) => {
+  const fetcher = ([url]: string[]) => {
     return axios.get<TestRequestType[]>(`http://localhost:9000/${url}`);
   };
 
-  const { data, error, isValidating } = useSWR("api/test-request", fetcher, {
-    dedupingInterval: 50000, // 50 seconds
-  });
+  const { data, error, isValidating } = useSWR(
+    ["api/test-request", user?._id],
+    fetcher,
+    {
+      dedupingInterval: 50000, // 50 seconds
+    }
+  );
 
   useEffect(() => {
     if (data) {
       const completed: TestRequestType[] = [];
       const open: TestRequestType[] = [];
-      data?.data.forEach((test) =>
-        test.status.toLowerCase() === "testing completed"
-          ? completed.push(test)
-          : open.push(test)
-      );
-      // setOpenTestRequests(open);
-      // setClosedRequests(completed);
+      data?.data
+        .filter((testRequest) =>
+          user?.role === "customer"
+            ? testRequest.clientId?._id === user._id
+            : testRequest._id
+        )
+        .forEach((testRequest) =>
+          testRequest.status.toLowerCase() === "testRequesting completed"
+            ? completed.push(testRequest)
+            : open.push(testRequest)
+        );
+      setOpenTestRequests(open);
+      setClosedRequests(completed);
     }
 
     if (error) {
     }
-  }, [data]);
+  }, [data, user]);
 
   return (
     <>
       <main className="min-h-[calc(100vh-4.5rem)] gap-8 bg-gray-50  flex flex-col p-6 px-10">
         {/* OPEN TEST REQUEST */}
         <div className="flex flex-col gap-4">
-          <h4 className="text-2xl font-semibold">Open Test Requests</h4>
+          <h4 className="text-2xl font-semibold">
+            {user?.role === "tester"
+              ? `Assigned Test Requests`
+              : `Open Test Requests`}
+          </h4>
           {openTestRequests.length === 0 ? (
-            <div className="border-2 rounded-lg p-6 py-10 bg-white  border-dashed bg-primary-varient/5 border-primary flex flex-col gap-3 justify-center items-center">
+            <div className="shadow-lg rounded-lg p-6 py-10 bg-white  border-dashed  flex flex-col gap-3 justify-center items-center">
               <h5 className="font-semibold text-xl">
-                You Don't Have Any Open Test Requests
+                {user?.role === "tester"
+                  ? `You Don't Have Any Assigned Test Requests`
+                  : `You Don't Have Any Open Test Requests`}
               </h5>
-              <button
-                onClick={() => setShowCreate(true)}
-                className=" w-max px-10 py-2 active:scale-95 transition-all rounded-lg font-semibold bg-gradient-to-br from-primary to-primary-varient text-white "
-              >
-                Create New Test Request
-              </button>
+              {user?.role === "customer" && (
+                <button
+                  onClick={() => setShowCreate(true)}
+                  className=" w-max px-10 py-2 active:scale-95 transition-all rounded-lg font-semibold bg-gradient-to-br from-primary to-primary-varient text-white "
+                >
+                  Create New Test Request
+                </button>
+              )}
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -144,20 +90,22 @@ const Dashboard = (props: Props) => {
                 <RequestCard key={i} {...test} />
               ))}
               {/* Add New Request */}
-              <div className="p-6 rounded-md bg-gray-100 hover:scale-95 transition-all shadow-lg flex flex-col justify-center cursor-not-allowed items-center">
-                <MdOutlineAdd className="text-6xl text-gray-600  " />
-                <p className="font-semibold text-gray-500 text-center">{`You can have only one open request at a time`}</p>
-              </div>
+              {user?.role === "customer" && (
+                <div className="p-6 rounded-md bg-gray-100 hover:scale-95 transition-all shadow-lg flex flex-col justify-center cursor-not-allowed items-center">
+                  <MdOutlineAdd className="text-6xl text-gray-600  " />
+                  <p className="font-semibold text-gray-500 text-center">{`You can have only one open request at a time`}</p>
+                </div>
+              )}
             </div>
           )}
         </div>
         {/* CLOSED TEST REQUEST */}
         <div className="flex flex-col gap-4">
-          <h4 className="text-2xl font-semibold">Closed Test Requests</h4>
+          <h4 className="text-2xl font-semibold">Completed Test Requests</h4>
           {closedRequests.length === 0 ? (
-            <div className=" rounded-lg p-6 py-10 bg-white  flex flex-col gap-3 justify-center items-center">
+            <div className="shadow-lg rounded-lg p-6 py-10 bg-white  flex flex-col gap-3 justify-center items-center">
               <h5 className="font-semibold text-xl">
-                You Don't Have Any Closed Test Requests
+                You Don't Have Any Completed Test Requests
               </h5>
             </div>
           ) : (
