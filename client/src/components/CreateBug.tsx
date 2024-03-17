@@ -88,7 +88,7 @@ const CreateBug = ({ setShow, testRequest }: Props) => {
       setShow(false);
     } catch (err) {
       setToast({
-        msg: err,
+        msg: err?.response?.data,
         variant: "error",
       });
     } finally {

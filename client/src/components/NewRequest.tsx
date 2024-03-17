@@ -1,16 +1,14 @@
-import React, { useState } from "react";
-import { motion } from "framer-motion";
-import { MdOutlineMail, MdOutlinePassword } from "react-icons/md";
-import InputTextFiled from "./InputTextFiled";
-import { FiLink } from "react-icons/fi";
-import { BiRename } from "react-icons/bi";
-import { LiaCommentSolid } from "react-icons/lia";
-import { BsFillSafe2Fill } from "react-icons/bs";
-import axios from "axios";
 import useToast from "@/store/useToast";
 import useUser from "@/store/useUser";
+import axios from "axios";
+import { motion } from "framer-motion";
+import { useState } from "react";
+import { BiRename } from "react-icons/bi";
+import { BsFillSafe2Fill, BsTextParagraph } from "react-icons/bs";
+import { FiLink } from "react-icons/fi";
+import { MdOutlineMail, MdOutlinePassword } from "react-icons/md";
 import { mutate } from "swr";
-import { set } from "zod";
+import InputTextFiled from "./InputTextFiled";
 import { sendNotification } from "@/utils/sendNotification";
 
 type Props = {
@@ -22,7 +20,7 @@ const NewRequest = ({ setShow }: Props) => {
   const [URL, setURL] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [comments, setComments] = useState("");
+  const [summary, setSummary] = useState("");
 
   const setToast = useToast((state) => state.setToast);
   const user = useUser((state) => state.user);
@@ -52,11 +50,7 @@ const NewRequest = ({ setShow }: Props) => {
           name,
           url: URL,
           credientials: { email, password },
-          comments: {
-            name: user?.name,
-            image: user?.img,
-            message: comments,
-          },
+          summary,
           clientId: user?._id,
           status: "request under review",
         }
@@ -85,7 +79,7 @@ const NewRequest = ({ setShow }: Props) => {
   return (
     <main
       onClick={() => setShow(false)}
-      className="w-full h-screen fixed top-0 bg-2  left-0 bg-white backdrop-blur-sm flex justify-center items-center "
+      className="w-full h-screen fixed top-0   left-0 bg-white/70 backdrop-blur-sm flex justify-center items-center "
     >
       <motion.div
         onClick={(e) => e.stopPropagation()}
@@ -112,16 +106,16 @@ const NewRequest = ({ setShow }: Props) => {
               value={URL}
               type="url"
             />
-            {/* Comments Field */}
+            {/* Summary Field */}
             <div className="flex items-center rounded-lg w-full border-2  px-2 py-1 gap-2">
-              <LiaCommentSolid className="text-primary text-xl" />
+              <BsTextParagraph className="text-primary text-xl" />
 
               <textarea
                 rows={1}
                 className="w-full p-1 outline-0 resize-none"
-                placeholder={"Enter Comments"}
-                value={comments}
-                onChange={(e) => setComments(e.target.value)}
+                placeholder={"Enter Summary"}
+                value={summary}
+                onChange={(e) => setSummary(e.target.value)}
               />
             </div>
             <h3 className="text-left font-semibold mr-auto">

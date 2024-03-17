@@ -75,7 +75,7 @@ export const updateTestRequestDetails = async (req: Request, res: Response) => {
     const testRequest = await TestRequestModel.findByIdAndUpdate(
       rest.id,
       {
-        $set: { rest },
+        $set: rest,
         $push: { comments: comments },
       },
       { new: true }
