@@ -66,7 +66,9 @@ const NewRequest = ({ setShow }: Props) => {
         "Test Request Aquired",
         `New Test Request Created by ${user?.name}`,
         user?._id as string,
-        process.env.NEXT_PUBLIC_PROJECTMANAGER_ID as string // projectManagerId 65f44854aa6f72212e3dce24
+        process.env.NEXT_PUBLIC_PROJECTMANAGER_ID as string, // projectManagerId 65f44854aa6f72212e3dce24
+        process.env.NEXT_PUBLIC_PROJECTMANAGER_NAME as string, // projectManagerName
+        process.env.NEXT_PUBLIC_PROJECTMANAGER_EMAIL as string // projectManagerEmail
       );
       setShow(false);
       mutate(["api/test-request", user?._id]);

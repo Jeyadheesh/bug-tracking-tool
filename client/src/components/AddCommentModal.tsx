@@ -8,12 +8,18 @@ import axios from "axios";
 import { useParams } from "next/navigation";
 import useToast from "@/store/useToast";
 import useUser from "@/store/useUser";
+import { sendNotification } from "@/utils/sendNotification";
 
 type Props = {
   setShow: (val: boolean) => void;
   currentStatus: BugColorType;
   tempStatus?: BugColorType;
   setCurrentStatus: (status: BugColorType) => void;
+  receiverData: {
+    id: string;
+    email: string;
+    name: string;
+  };
 };
 
 const AddCommentModal = ({
@@ -21,6 +27,7 @@ const AddCommentModal = ({
   currentStatus,
   setCurrentStatus,
   tempStatus,
+  receiverData,
 }: Props) => {
   const [comments, setComments] = useState("");
   const { id } = useParams();
@@ -54,6 +61,14 @@ const AddCommentModal = ({
         },
       });
       setToast({ msg: "Status Updated", variant: "success" });
+      sendNotification(
+        "Bug Status Updated",
+        `Bug Status Updated from ${currentStatus} to ${tempStatus}`,
+        user?._id!,
+        receiverData.id,
+        receiverData.name,
+        receiverData.email
+      );
       //   Updates new status if successful
       setCurrentStatus(tempStatus!);
       setShow(false);
@@ -71,7 +86,7 @@ const AddCommentModal = ({
         onClick={(e) => e.stopPropagation()}
         animate={{ y: 0 }}
         initial={{ y: 200 }}
-        className="flex  bg-white   gap-2 w-4/12 rounded-xl overflow-hidden shadow-xl p-5 "
+        className="flex  bg-white z-40  gap-2 w-4/12 rounded-xl overflow-hidden shadow-xl p-5 "
       >
         <div className=" w-full flex flex-col gap-4 justify-center ">
           <h4 className="font-semibold text-2xl text-center">Update Status</h4>

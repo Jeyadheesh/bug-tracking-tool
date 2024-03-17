@@ -41,7 +41,7 @@ const Login = ({ setMode }: Props) => {
       if (data.message === "Logged In") {
         setToast({ msg: "Logged In", variant: "success" });
         setUser(data.loggedUser);
-        return route.push("/dashboard");
+        return route.replace("/dashboard");
       } else {
         setToast({ msg: data.message, variant: "error" });
       }

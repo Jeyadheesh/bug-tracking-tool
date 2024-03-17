@@ -37,7 +37,20 @@ const TestRequest = (props: Props) => {
     fetcher
   );
 
-  console.log(data?.data);
+  // console.log(data?.data);
+
+  const receiverData =
+    user?.role === "tester"
+      ? {
+          id: data?.data.testRequestId?.clientId?._id as string,
+          email: data?.data.testRequestId?.clientId?.email as string,
+          name: data?.data.testRequestId?.clientId?.name as string,
+        }
+      : {
+          id: data?.data.testRequestId?.testerId?._id as string,
+          email: data?.data.testRequestId?.testerId?.email as string,
+          name: data?.data.testRequestId?.testerId?.name as string,
+        };
 
   useEffect(() => {
     // Toast
@@ -46,7 +59,7 @@ const TestRequest = (props: Props) => {
 
   return (
     <>
-      <main className="min-h-[calc(100vh-4.5rem)] gap-3 bg-gray-50   flex flex-col p-6 lg:px-14">
+      <main className="min-h-[calc(100vh-4.5rem)] gap-3 bg-gray-50  flex flex-col p-6 lg:px-14">
         {/* Card */}
         <div className="flex flex-col gap-3 bg-white overflow-hidden p-6 shadow-lg rounded-md relative">
           <div className="absolute opacity-5 rotate-45 top-1 right-3 ">
@@ -59,11 +72,7 @@ const TestRequest = (props: Props) => {
             <BugStatus
               testRequest={data?.data.testRequestId}
               status={data?.data.status}
-              receiverId={
-                user?.role === "tester"
-                  ? (data?.data.testRequestId?.clientId as unknown as string)
-                  : (data?.data.testRequestId?.testerId as unknown as string)
-              }
+              receiverData={receiverData}
             />
           </div>
           {/* Date */}
@@ -124,11 +133,12 @@ const TestRequest = (props: Props) => {
               </div>
               {data?.data.images && data.data.images.length > 0 ? (
                 <div className="flex flex-wrap gap-6 items-center">
-                  {data.data.images.map((img) => (
+                  {data.data.images.map((img, i) => (
                     <Link
+                      key={i}
                       href={img}
                       target="_blank"
-                      className="relative w-60 h-40 rounded-md shadow-lg border overflow-hidden bg-white"
+                      className="relative z-0 w-60 h-40 rounded-md shadow-lg border overflow-hidden bg-white"
                     >
                       {img.includes(".mp4") ? (
                         <video

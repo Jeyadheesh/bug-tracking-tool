@@ -10,10 +10,14 @@ import { sendNotification } from "@/utils/sendNotification";
 type Props = {
   status?: string;
   testRequest?: TestRequestType;
-  receiverId?: string;
+  receiverData: {
+    id: string;
+    email: string;
+    name: string;
+  };
 };
 
-const BugStatus = ({ status, receiverId, testRequest }: Props) => {
+const BugStatus = ({ status, receiverData, testRequest }: Props) => {
   const user = useUser((state) => state.user);
   const [showDropdown, setShowDropdown] = useState(false);
   const [showComment, setShowComment] = useState(false);
@@ -123,7 +127,7 @@ const BugStatus = ({ status, receiverId, testRequest }: Props) => {
 
   return (
     <>
-      <div onClick={(e) => e.stopPropagation()} className="relative">
+      <div onClick={(e) => e.stopPropagation()} className="relative z-50">
         <div
           onClick={() => canUpdate() && handleDropdown()}
           className={`text-lg select-none flex gap-1 items-center cursor-pointer  ${
@@ -167,6 +171,7 @@ const BugStatus = ({ status, receiverId, testRequest }: Props) => {
               currentStatus={updatedStatus}
               setCurrentStatus={setUpdatedStatus}
               tempStatus={tempStatus}
+              receiverData={receiverData}
             />
           </motion.div>
         )}

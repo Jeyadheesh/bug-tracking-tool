@@ -35,6 +35,7 @@ const AssignTester = ({ setShow, testRequest }: Props) => {
   //     createdAt: "2024-03-15T13:07:40.030Z",
   //   },
   // ]);
+  console.log(data?.data);
 
   useEffect(() => {
     if (error) {
@@ -42,7 +43,7 @@ const AssignTester = ({ setShow, testRequest }: Props) => {
     }
   }, [error]);
 
-  const handleAssign = (id: string) => {
+  const handleAssign = (id: string, name: string, email: string) => {
     setLoading(true);
     axios
       .patch(`http://localhost:9000/api/test-request/edit-details`, {
@@ -55,7 +56,9 @@ const AssignTester = ({ setShow, testRequest }: Props) => {
           "Tester Assigned",
           `You have been assigned to a new test request`,
           user?._id as string,
-          id
+          id,
+          name,
+          email
         );
         setShow(false);
         mutate(["api/test-request", testRequest?._id]);
@@ -109,7 +112,9 @@ const AssignTester = ({ setShow, testRequest }: Props) => {
                     <h3 className="">{test.email}</h3>
                     <Button
                       loading={loading}
-                      onClick={() => handleAssign(test._id)}
+                      onClick={() =>
+                        handleAssign(test._id, test.name!, test.email)
+                      }
                     >
                       Assign
                     </Button>

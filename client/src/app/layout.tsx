@@ -21,9 +21,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <Head>
+      {/* <Head>
         <link rel="shortcut icon" href="/favicon.ico" />
-      </Head>
+      </Head> */}
       <body className={outfit.className}>
         <Navbar />
         {children}

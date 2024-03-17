@@ -4,7 +4,9 @@ export const sendNotification = async (
   title: string,
   message: string,
   senderId: string,
-  receiverId: string
+  receiverId: string,
+  name: string,
+  email: string
 ) => {
   try {
     const { data: notificationData } = await axios.post(
@@ -14,6 +16,8 @@ export const sendNotification = async (
         message,
         senderId,
         receiverId,
+        name,
+        email,
       }
     );
     console.log(notificationData);

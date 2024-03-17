@@ -18,7 +18,7 @@ export const registerCustomer = async (req: Request, res: Response) => {
     if (!existingCustomer) {
       return res.status(400).send({ message: "Verify the Email First" });
     }
-    console.log(existingCustomer);
+    // console.log(existingCustomer);
 
     if (existingCustomer?.password) {
       return res.status(400).send({ message: "User already exists" });
@@ -75,11 +75,15 @@ export const loginCustomer = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
-    console.log(process.env.JWT_SECRET_KEY);
+    // console.log(process.env.JWT_SECRET_KEY);
 
-    const token = jwt.sign({ email ,userId:user._id}, process.env.JWT_SECRET_KEY, {
-      expiresIn: process.env.JWT_EXPIRE_TIME,
-    });
+    const token = jwt.sign(
+      { email, userId: user._id },
+      process.env.JWT_SECRET_KEY,
+      {
+        expiresIn: process.env.JWT_EXPIRE_TIME,
+      }
+    );
 
     const cookieOptions: CookieOptions = {
       expires: new Date(
@@ -110,7 +114,7 @@ export const updateCustomer = async (req: Request, res: Response) => {
       { $set: { name, password: hashpass, img } },
       { new: true }
     );
-    console.log(customer);
+    // console.log(customer);
     res.send({ message: "User Updated" });
   } catch (error) {
     res.status(400).send(error.message);
@@ -128,7 +132,7 @@ export const getUser = async (req: Request, res: Response) => {
 };
 
 export const test = async (req: Request, res: Response) => {
-  console.log(req.body.name);
+  // console.log(req.body.name);
   res.send("Test");
 };
 
@@ -141,7 +145,7 @@ export const sendOtp = async (req: Request, res: Response) => {
       email: email,
     });
 
-    console.log(existingCustomer);
+    // console.log(existingCustomer);
     if (existingCustomer?.password && existingCustomer?.isVerified) {
       return res.send({ message: "User Exists" });
     }
@@ -169,7 +173,7 @@ export const sendOtp = async (req: Request, res: Response) => {
       email: email,
       otp: otp,
     });
-    console.log(customer);
+    // console.log(customer);
 
     const status = await SendOtpMail(email, otp);
     return res.send({ message: status });

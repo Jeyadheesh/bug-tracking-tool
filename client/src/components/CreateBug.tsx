@@ -77,12 +77,14 @@ const CreateBug = ({ setShow, testRequest }: Props) => {
         testRequestId: testRequest?._id,
       });
       setToast({ msg: "Bug Created", variant: "success" });
-      // console.log(testRequest?.clientId, user?._id);
+      console.log(testRequest?.clientId);
       sendNotification(
         "Bug Created",
         `New Bug Created by ${user?.name}`,
         user?._id as string,
-        testRequest?.clientId?._id as string
+        testRequest?.clientId?._id as string,
+        testRequest?.clientId?.name as string,
+        testRequest?.clientId?.email as string
       );
       mutate(["api/bug/test-request/", testRequest?._id]);
       setShow(false);

@@ -15,7 +15,7 @@ export const createBug = async (req: Request, res: Response) => {
       stepsToReproduce,
     } = req.body;
     const bug = await BugModel.create(req.body);
-    console.log(bug);
+    // console.log(bug);
     res.status(201).json(bug);
   } catch (error) {
     res.status(400).send(error.message);
@@ -25,8 +25,11 @@ export const createBug = async (req: Request, res: Response) => {
 export const getBugById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const bug = await BugModel.findById(id).populate("testRequestId");
-    console.log(bug);
+    const bug = await BugModel.findById(id).populate({
+      path: "testRequestId",
+      populate: { path: "clientId testerId" },
+    });
+    // console.log(bug);
     res.status(200).json(bug);
   } catch (error) {
     res.status(400).send(error.message);
@@ -36,7 +39,7 @@ export const getBugById = async (req: Request, res: Response) => {
 export const getAllBug = async (req: Request, res: Response) => {
   try {
     const bug = await BugModel.find().populate("testRequestId");
-    console.log(bug);
+    // console.log(bug);
     res.status(200).json(bug);
   } catch (error) {
     res.status(400).send(error.message);
@@ -45,10 +48,10 @@ export const getAllBug = async (req: Request, res: Response) => {
 
 export const getAllBugOfTestRequest = async (req: Request, res: Response) => {
   try {
-    const bug = await BugModel.find({ testRequestId: req.params.id }).populate(
-      "testRequestId"
-    );
-    console.log(bug);
+    const bug = await BugModel.find({ testRequestId: req.params.id })
+      .populate("testRequestId")
+      .sort({ createdAt: -1 });
+    // console.log(bug);
     res.status(200).json(bug);
   } catch (error) {
     res.status(400).send(error.message);
@@ -73,7 +76,7 @@ export const updateBugStatus = async (req: Request, res: Response) => {
 export const updateBugDetails = async (req: Request, res: Response) => {
   try {
     const { comments, ...rest } = req.body;
-    console.log(rest);
+    // console.log(rest);
 
     const bug = await BugModel.findByIdAndUpdate(
       rest.id,
@@ -94,7 +97,7 @@ export const deleteBug = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const bug = await BugModel.findByIdAndDelete(id);
-    console.log(bug);
+    // console.log(bug);
     res.status(200).json({ message: "Bug deleted" });
   } catch (error) {
     res.status(400).send(error.message);

@@ -1,16 +1,18 @@
 import { Request, Response } from "express";
 import { NotificationModel } from "../models/NotificationModel";
+import { sendMail } from "../utils/nodeMailer";
 
 export const createNotification = async (req: Request, res: Response) => {
   try {
-    const { title, message, senderId, receiverId } = req.body;
+    const { title, message, senderId, receiverId, name, email } = req.body;
     const notification = await NotificationModel.create({
       title,
       message,
       senderId,
       receiverId,
     });
-    console.log(notification);
+    sendMail(name, email, message, title);
+    // console.log(notification);
     res.status(201).json(notification);
   } catch (error) {
     res.status(400).send(error.message);
@@ -23,7 +25,7 @@ export const getByReceiverId = async (req: Request, res: Response) => {
     const notifications = await NotificationModel.find({ receiverId }).sort({
       createdAt: -1,
     });
-    console.log(notifications);
+    // console.log(notifications);
     res.status(200).json(notifications);
   } catch (error) {
     res.status(400).send(error.message);
@@ -38,7 +40,7 @@ export const updateIsSeen = async (req: Request, res: Response) => {
       { $set: { isSeen: true } },
       { new: true }
     );
-    console.log(notification);
+    // console.log(notification);
     res.status(200).json({ message: "Notification status updated" });
   } catch (error) {
     res.status(400).send(error.message);
@@ -52,7 +54,7 @@ export const updateIsSeenAll = async (req: Request, res: Response) => {
       { receiverId },
       { $set: { isSeen: true } }
     );
-    console.log(notification);
+    // console.log(notification);
     res.status(200).json({ message: "All notifications status updated" });
   } catch (error) {
     res.status(400).send(error.message);

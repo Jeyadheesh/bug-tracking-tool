@@ -83,14 +83,18 @@ export const MailInTable = (productData: any, productStatus: string): void => {
 export const sendMail = (
   name: string,
   email: string,
-  message: string
+  message: string,
+  title: string
 ): void => {
+  console.log(email, name);
+
   let response = {
     body: {
       name: name,
       intro: message,
       action: {
-        instructions: "You can check your message by clicking the button :",
+        instructions:
+          "You can see the details of the notification by clicking the button below",
         button: {
           color: "#A033CE",
           text: "Go to website",
@@ -105,7 +109,7 @@ export const sendMail = (
   let content = {
     from: process.env.EMAIL,
     to: email,
-    subject: "From TrackDown",
+    subject: title,
     html: mail,
   };
 
