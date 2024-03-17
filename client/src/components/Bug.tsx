@@ -45,6 +45,8 @@ const TestRequest = (props: Props) => {
     fetcher
   );
 
+  console.log(data?.data.testRequestId?.testerId);
+
   useEffect(() => {
     // Toast
     error && setToast({ msg: error, variant: "error" });
@@ -62,7 +64,12 @@ const TestRequest = (props: Props) => {
             {/* Name */}
             <h3 className="text-4xl font-semibold">{data?.data.name}</h3>
             {/* Status */}
-            <BugStatus status={data?.data.status} />
+            <BugStatus
+              status={data?.data.status}
+              receiverId={
+                data?.data.testRequestId?.testerId as unknown as string
+              }
+            />
           </div>
           {/* Date */}
           <div className="gap-6 flex items-center font-semibold text-gray-500 ">

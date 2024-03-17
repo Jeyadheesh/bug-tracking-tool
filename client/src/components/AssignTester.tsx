@@ -5,6 +5,8 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import useSWR, { mutate } from "swr";
 import Button from "./Button";
+import { sendNotification } from "@/utils/sendNotification";
+import useUser from "@/store/useUser";
 
 type Props = {
   setShow: (val: boolean) => void;
@@ -12,6 +14,7 @@ type Props = {
 };
 
 const AssignTester = ({ setShow, testRequest }: Props) => {
+  const user = useUser((state) => state.user);
   const setToast = useToast((state) => state.setToast);
 
   const fetcher = (url: string) => {
@@ -48,6 +51,12 @@ const AssignTester = ({ setShow, testRequest }: Props) => {
       })
       .then(() => {
         setToast({ msg: "Tester Assigned", variant: "success" });
+        sendNotification(
+          "Tester Assigned",
+          `You have been assigned to a new test request`,
+          user?._id as string,
+          id
+        );
         setShow(false);
         mutate(["api/test-request", testRequest?._id]);
       })

@@ -272,7 +272,7 @@ const TestRequest = (props: Props) => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {bugs?.data.map((bug, i) => (
-                <BugCard keyy={i} {...bug} />
+                <BugCard {...bug} />
               ))}
             </div>
           )}
@@ -314,12 +314,11 @@ const BugCard = ({
   name,
   status,
   priority,
-  keyy,
   summary,
-}: BugType & { keyy: number }) => {
+}: BugType) => {
   return (
     <Link
-      key={keyy}
+      key={_id}
       href={`/bug/${_id}`}
       className="p-6 relative shadow-lg  bg-white  flex flex-col gap-2 rounded-md cursor-pointer hover:scale-95 transition-all "
     >

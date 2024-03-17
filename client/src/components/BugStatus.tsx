@@ -5,12 +5,14 @@ import { motion } from "framer-motion";
 import useToast from "@/store/useToast";
 import axios from "axios";
 import { useParams } from "next/navigation";
+import { sendNotification } from "@/utils/sendNotification";
 
 type Props = {
   status?: string;
+  receiverId?: string;
 };
 
-const BugStatus = ({ status }: Props) => {
+const BugStatus = ({ status, receiverId }: Props) => {
   const user = useUser((state) => state.user);
   const { id } = useParams();
   const [showDropdown, setShowDropdown] = useState(false);
@@ -73,6 +75,12 @@ const BugStatus = ({ status }: Props) => {
         status,
       });
       setToast({ msg: "Status Updated", variant: "success" });
+      sendNotification(
+        "Bug Status Updated",
+        `Bug Status Updated from ${updatedStatus} to ${status}`,
+        user?._id as string,
+        receiverId as string
+      );
     } catch (err) {
       setToast({ msg: err, variant: "error" });
       setUpdatedStatus(updatedStatus);
@@ -130,8 +138,9 @@ const BugStatus = ({ status }: Props) => {
       {/* DROPDOWN */}
       {showDropdown && (
         <motion.div className="flex flex-col gap-2 p-2 rounded-md shadow-lg absolute top-full right-0 translate-y-2 bg-white">
-          {acceptedStatuses.map((stat) => (
+          {acceptedStatuses.map((stat, i) => (
             <h3
+              key={i}
               onClick={() => {
                 setUpdatedStatus(stat);
                 handleUpdateStatus(stat);
