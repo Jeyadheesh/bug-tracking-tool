@@ -32,6 +32,11 @@ interface TestRequest {
   tempStatus?: TestRequestColorType;
   setCurrentStatus: (status: TestRequestColorType) => void;
   type: "testRequest";
+  receiverData: {
+    id: string;
+    email: string;
+    name: string;
+  };
 }
 
 type Props = {
