@@ -53,27 +53,27 @@ const GetStarted = ({ setShow }: Props) => {
         <div className="flex flex-col gap-2  items-center  w-full ">
           <h3 className="font-semibold text-3xl">TrackDown</h3>
           <div className="relative h-80 flex justify-center w-full overflow-hidden">
-            <AnimatePresence>
-              <motion.div
-                key={carousalIndex}
-                initial={{ x: 300, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                exit={{ x: -300, opacity: 0 }}
-                className="flex flex-col gap-2  items-center bg-white absolute "
-              >
-                <div className="relative w-60 h-60">
-                  {/* <Image
-                    fill
-                    className="w-full hidden h-full object-contain"
-                    src={carousalData[carousalIndex].url}
-                    alt={carousalData[carousalIndex].title}
-                  /> */}
-                </div>
-                <h5 className="font-medium text-xl ">
-                  {carousalData[carousalIndex].title}
-                </h5>
-              </motion.div>
-            </AnimatePresence>
+            {/* <AnimatePresence> */}
+            <motion.div
+              key={carousalIndex}
+              initial={{ x: 300, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: -300, opacity: 0 }}
+              className="flex flex-col gap-2  items-center bg-white absolute "
+            >
+              <div className="relative w-60 h-60">
+                <Image
+                  fill
+                  className="w-full h-full object-contain"
+                  src={carousalData[carousalIndex].url}
+                  alt={carousalData[carousalIndex].title}
+                />
+              </div>
+              <h5 className="font-medium text-xl ">
+                {carousalData[carousalIndex].title}
+              </h5>
+            </motion.div>
+            {/* </AnimatePresence> */}
           </div>
         </div>
         {/* Content */}

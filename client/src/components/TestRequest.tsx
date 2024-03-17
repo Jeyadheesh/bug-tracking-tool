@@ -53,6 +53,8 @@ const TestRequest = (props: Props) => {
     }
   );
 
+  // console.log(data?.data);
+
   useEffect(() => {
     // Toast
   }, [error]);
@@ -319,7 +321,7 @@ const BugCard = ({
 }: BugType) => {
   return (
     <Link
-      key={_id}
+      key={_id + name}
       href={`/bug/${_id}`}
       className="p-6 relative shadow-lg  bg-white  flex flex-col gap-2 rounded-md cursor-pointer hover:scale-95 transition-all "
     >

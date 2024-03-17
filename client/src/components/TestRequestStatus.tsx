@@ -27,6 +27,7 @@ const TestRequestStatus = ({ status, receiverId, testRequest }: Props) => {
     TestRequestColorType[]
   >([]);
   const setToast = useToast((state) => state.setToast);
+  console.log(testRequest);
 
   //   checks whether the current user can update the status
   const canUpdate = (showToast = true) => {
@@ -137,6 +138,9 @@ const TestRequestStatus = ({ status, receiverId, testRequest }: Props) => {
               currentStatus={updatedStatus}
               setCurrentStatus={setUpdatedStatus}
               tempStatus={tempStatus}
+              name={testRequest?.name}
+              customerData={testRequest?.clientId}
+              testerData={testRequest?.testerId}
             />
           </motion.div>
         )}

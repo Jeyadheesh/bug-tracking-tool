@@ -24,11 +24,13 @@ const UserSchema = new mongoose.Schema({
   otp: String,
   createdAt: {
     type: Date,
-    default: new Date(Date.now()), // current time
+    default: Date.now, // current time when the document is created
   },
   otpExpiredAt: {
     type: Date,
-    default: new Date(Date.now() + 5 * 60 * 1000), // 5 minutes
+    default: function () {
+      return new Date(Date.now() + 5 * 60 * 1000); // 5 minutes from createdAt
+    },
   },
 });
 

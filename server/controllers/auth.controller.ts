@@ -200,7 +200,7 @@ export const verifyOtp = async (req: Request, res: Response) => {
       return res.send({ message: "OTP Expired or Invalid Email" });
     }
 
-    if (customer.otpExpiredAt < new Date(Date.now())) {
+    if (customer.otpExpiredAt < new Date()) {
       await UserModel.deleteOne({ email });
       return res.send({ message: "OTP Expired" });
     }

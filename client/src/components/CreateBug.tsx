@@ -213,7 +213,7 @@ const CreateBug = ({ setShow, testRequest }: Props) => {
             </>
           )}
           <Button
-            loading={loading}
+            loading={btnLoading}
             onClick={async () => {
               await handleCreateBug();
               setBtnLoading(false);

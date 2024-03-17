@@ -6,7 +6,7 @@ type Props = {
 };
 
 const Comments = ({ comments }: Props) => {
-  console.log(comments);
+  // console.log(comments);
 
   return (
     <>
@@ -18,7 +18,10 @@ const Comments = ({ comments }: Props) => {
           <div className="grid grid-cols-1  gap-4">
             {comments.map((comment, i) =>
               comment ? (
-                <div className="flex flex-col gap-2 p-6 shadow-lg rounded-md bg-white  ">
+                <div
+                  key={i}
+                  className="flex flex-col gap-2 p-6 shadow-lg rounded-md bg-white  "
+                >
                   <div className="flex gap-2 items-center" key={i}>
                     {/* DP */}
                     {comment.image ? (

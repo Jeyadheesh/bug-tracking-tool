@@ -43,6 +43,8 @@ interface TestRequest {
 type Props = {
   setShow: (val: boolean) => void;
   name?: string;
+  customerData?: CustomerType;
+  testerData?: TesterType;
 } & (Bug | TestRequest);
 
 const AddCommentModal = ({
@@ -53,7 +55,10 @@ const AddCommentModal = ({
   type,
   receiverData,
   name,
+  customerData,
+  testerData,
 }: Props) => {
+  console.log(customerData, testerData);
   const [comments, setComments] = useState("");
   const { id } = useParams();
   const setToast = useToast((state) => state.setToast);
@@ -101,7 +106,7 @@ const AddCommentModal = ({
       );
       setToast({ msg: "Status Updated", variant: "success" });
       mutate([`api/${type === "bug" ? "bug" : "test-request"}`, id as string]);
-      type === "bug" &&
+      if (type === "bug") {
         sendNotification(
           `Bug: ${name}`,
           `${currentStatus} → ${tempStatus}`,
@@ -110,6 +115,42 @@ const AddCommentModal = ({
           receiverData.name,
           receiverData.email
         );
+      } else {
+        sendNotification(
+          `Test Request: ${name}`,
+          `${currentStatus} → ${tempStatus}`,
+          user?._id!,
+          testerData?._id!,
+          testerData?.name!,
+          testerData?.email!
+        );
+        sendNotification(
+          `Test Request: ${name}`,
+          `${currentStatus} → ${tempStatus}`,
+          user?._id!,
+          customerData?._id!,
+          customerData?.name!,
+          customerData?.email!
+        );
+      }
+
+      type === "bug"
+        ? sendNotification(
+            `Bug: ${name}`,
+            `${currentStatus} → ${tempStatus}`,
+            user?._id!,
+            receiverData.id,
+            receiverData.name,
+            receiverData.email
+          )
+        : sendNotification(
+            `Test Request: ${name}`,
+            `${currentStatus} → ${tempStatus}`,
+            user?._id!,
+            receiverData?.id!,
+            receiverData?.name!,
+            receiverData?.email!
+          );
       //   Updates new status if successful
       // @ts-ignore
       setCurrentStatus(tempStatus!);
