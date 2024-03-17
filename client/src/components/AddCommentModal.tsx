@@ -27,21 +27,20 @@ const AddCommentModal = ({
   const setToast = useToast((state) => state.setToast);
   const user = useUser((state) => state.user);
 
+  const isCommentRequired = [
+    "need more info",
+    "fixed",
+    "not reproducible",
+    "invalid",
+    "under triage",
+    "validated and closed",
+  ].includes(tempStatus!);
+
   //   Updates the bug status in db
   const handleUpdateStatus = async () => {
     try {
       // Check whether comment is mandetory
-      if (
-        [
-          "need more info",
-          "fixed",
-          "not reproducible",
-          "invalid",
-          "under triage",
-          "validated and closed",
-        ].includes(tempStatus!) &&
-        comments.trim().length <= 2
-      ) {
+      if (isCommentRequired && comments.trim().length <= 2) {
         return setToast({ msg: "Enter a Valid Comment", variant: "error" });
       }
       await axios.patch(`http://localhost:9000/api/bug/edit-details`, {
@@ -102,7 +101,7 @@ const AddCommentModal = ({
             <textarea
               rows={3}
               className="w-full p-1 outline-0 resize-none"
-              placeholder={"Enter Comment"}
+              placeholder={`Enter Comment ${isCommentRequired ? "*" : ""}`}
               value={comments}
               onChange={(e) => setComments(e.target.value)}
             />
