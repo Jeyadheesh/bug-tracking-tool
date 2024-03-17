@@ -13,10 +13,10 @@ const Comments = ({ comments }: Props) => {
           <div className="flex items-center justify-between">
             <h3 className="text-3xl font-semibold">{`Comments`}</h3>
           </div>
-          <div className="grid grid-cols-1 p-6 shadow-lg rounded-md bg-white gap-4">
+          <div className="grid grid-cols-1  gap-4">
             {comments.map((comment, i) =>
               comment ? (
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2 p-6 shadow-lg rounded-md bg-white  ">
                   <div className="flex gap-2 items-center" key={i}>
                     {/* DP */}
                     {comment.image ? (
