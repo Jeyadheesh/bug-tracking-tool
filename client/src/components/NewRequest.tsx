@@ -69,7 +69,7 @@ const NewRequest = ({ setShow }: Props) => {
         variant: "success",
       });
       sendNotification(
-        "Test Request Aquired",
+        `New Test Request: ${name}`,
         `New Test Request Created by ${user?.name}`,
         user?._id as string,
         process.env.NEXT_PUBLIC_PROJECTMANAGER_ID as string, // projectManagerId 65f44854aa6f72212e3dce24
@@ -88,8 +88,8 @@ const NewRequest = ({ setShow }: Props) => {
 
   return (
     <main
+      className="w-full  flex justify-center items-center "
       onClick={() => setShow(false)}
-      className="w-full h-screen fixed top-0 z-50  left-0 bg-white/70 backdrop-blur-sm flex justify-center items-center "
     >
       <motion.div
         onClick={(e) => e.stopPropagation()}

@@ -33,7 +33,7 @@ interface TestRequest {
   tempStatus?: TestRequestColorType;
   setCurrentStatus: (status: TestRequestColorType) => void;
   type: "testRequest";
-  receiverData: {
+  receiverData?: {
     id: string;
     email: string;
     name: string;
@@ -42,6 +42,7 @@ interface TestRequest {
 
 type Props = {
   setShow: (val: boolean) => void;
+  name?: string;
 } & (Bug | TestRequest);
 
 const AddCommentModal = ({
@@ -51,6 +52,7 @@ const AddCommentModal = ({
   tempStatus,
   type,
   receiverData,
+  name,
 }: Props) => {
   const [comments, setComments] = useState("");
   const { id } = useParams();
@@ -101,8 +103,8 @@ const AddCommentModal = ({
       mutate([`api/${type === "bug" ? "bug" : "test-request"}`, id as string]);
       type === "bug" &&
         sendNotification(
-          "Bug Status Updated",
-          `Bug Status Updated from ${currentStatus} to ${tempStatus}`,
+          `Bug: ${name}`,
+          `${currentStatus} → ${tempStatus}`,
           user?._id!,
           receiverData.id,
           receiverData.name,
@@ -122,7 +124,7 @@ const AddCommentModal = ({
   return (
     <main
       onClick={() => setShow(false)}
-      className="w-full h-screen fixed top-0  z-50 left-0 bg-white/70 backdrop-blur-sm flex justify-center items-center "
+      className="w-full  flex justify-center items-center "
     >
       <motion.div
         onClick={(e) => e.stopPropagation()}

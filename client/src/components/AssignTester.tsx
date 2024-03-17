@@ -24,18 +24,6 @@ const AssignTester = ({ setShow, testRequest }: Props) => {
   const [loading, setLoading] = useState(false);
 
   const { data, error, isValidating } = useSWR("api/free-testers", fetcher);
-  // const [tester, setTester] = useState<TesterType[]>([
-  //   {
-  //     _id: "65f4489baa6f72212e3dce26",
-  //     name: "tester1",
-  //     email: "tester1@gmail.com",
-  //     role: "tester",
-  //     isVerified: true,
-  //     img: "https://firebasestorage.googleapis.com/v0/b/pokemondetectorapp.appspot.com/o/tester.png?alt=media&token=f708246a-c988-4081-81e6-a6d03835dcc1",
-  //     createdAt: "2024-03-15T13:07:40.030Z",
-  //   },
-  // ]);
-  console.log(data?.data);
 
   useEffect(() => {
     if (error) {
@@ -53,8 +41,8 @@ const AssignTester = ({ setShow, testRequest }: Props) => {
       .then(() => {
         setToast({ msg: "Tester Assigned", variant: "success" });
         sendNotification(
-          "Tester Assigned",
-          `You have been assigned to a new test request`,
+          `Assigned: ${testRequest?.name}`,
+          `You have been assigned to ${testRequest?.name}`,
           user?._id as string,
           id,
           name,
@@ -71,8 +59,8 @@ const AssignTester = ({ setShow, testRequest }: Props) => {
 
   return (
     <main
+      className="w-full  flex justify-center items-center "
       onClick={() => setShow(false)}
-      className="w-full h-screen fixed top-0 z-50  left-0 bg-white/70 backdrop-blur-sm flex justify-center items-center "
     >
       <motion.div
         onClick={(e) => e.stopPropagation()}

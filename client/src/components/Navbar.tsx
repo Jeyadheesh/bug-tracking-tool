@@ -49,7 +49,6 @@ const Navbar = (props: Props) => {
     return resData;
   };
   const { data, isLoading } = useSWR("/api/me", fetcher);
-  // console.log(data);
 
   const handleLogout = async () => {
     try {
@@ -70,8 +69,6 @@ const Navbar = (props: Props) => {
   };
 
   const getNotification = async () => {
-    console.log("getNotification");
-
     try {
       setIsNotificationLoading(true);
       const { data: notificationData } = await axios.get<NotificationType[]>(
@@ -123,6 +120,8 @@ const Navbar = (props: Props) => {
 
   useEffect(() => {
     const handleClickOutside = (event: any) => {
+      if (event.target.id === "bell") return;
+
       if (refEle.current && !refEle.current.contains(event.target as Node)) {
         setShowNotification(false);
       }
@@ -148,14 +147,12 @@ const Navbar = (props: Props) => {
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0 }}
           // transition={{ originX: 0, originY: 0 }}
-          className="z-[1000] overflow-y-auto origin-top-right absolute top-14 right-24 w-80 h-96 bg-white shadow-lg  rounded-lg p-4"
+          className="z-[1000] overflow-y-auto origin-top-right absolute top-14 right-24 w-80 h-96 bg-white shadow-lg  rounded-lg "
         >
           {/* Need Loader */}
 
           {/* Notification */}
-          <h1 className="text-xl font-semibold border-b border-gray-300 pb-2">
-            Notifications
-          </h1>
+          <h1 className="text-xl font-semibold p-4">Notifications</h1>
           {isNotificationLoading ? (
             <div className="mx-auto w-fit mt-[45%]">
               <Loader size="lg" type="primary" />
@@ -173,14 +170,14 @@ const Navbar = (props: Props) => {
               return (
                 <div
                   key={i}
-                  className="cursor-pointer hover:bg-gray-50 transition-all  flex flex-col *:pt-1 *:border-b *:border-b-gray-300"
+                  className="cursor-pointer hover:bg-gray-50 transition-all last:border-b-0 px-4  flex flex-col *:pt-1 *:border-b *:border-b-gray-300"
                 >
                   <div
                   // className={`${!notification.isSeen ? "font-semibold" : ""}`}
                   >
                     <div
                       className={`${
-                        !notification.isSeen ? "font-semibold" : "font-normal"
+                        !notification.isSeen ? "font-semibold" : "font-medium"
                       } flex gap-2`}
                     >
                       {/* <span className=" text-xs text-gray-400 my-auto">
@@ -192,7 +189,7 @@ const Navbar = (props: Props) => {
                       )}
                     </div>
                     <p
-                      className={`${
+                      className={`capitalize ${
                         !notification.isSeen ? "font-medium" : "font-normal"
                       } text-sm pb-2 `}
                     >
@@ -212,13 +209,14 @@ const Navbar = (props: Props) => {
       <div className="flex items-center gap-6">
         {user?._id && (
           <button
+            id="bell"
             onClick={async () => {
-              setShowNotification((prev) => !prev);
+              setShowNotification((e) => !e);
               await updateIsSeen();
             }}
             className="relative hover:bg-black/20 rounded-full p-1.5 transition-all"
           >
-            <IoMdNotificationsOutline className="text-[1.3rem]" />
+            <IoMdNotificationsOutline id="bell" className="text-[1.3rem]" />
             {isNotification && (
               <span className="absolute top-[0.1rem] right-[0.1rem] bg-primary text-white rounded-full w-2.5 h-2.5 flex justify-center items-center text-xs "></span>
             )}
