@@ -6,6 +6,7 @@ import { config } from "dotenv";
 import jwt from "jsonwebtoken";
 import { UserModel } from "./models/UserModel";
 import { TestRequestModel } from "./models/TestRequestModel";
+import { sendMail } from "./utils/nodeMailer";
 
 config({ path: ".env" });
 const port = process.env.PORT || 9000;
@@ -95,6 +96,12 @@ app.use("/api/notification", require("./routes/notification.routes"));
 app.use("/api/tester", require("./routes/tester.routes"));
 app.use("/api/product-manager", require("./routes/product-manager.routes"));
 
+sendMail(
+  "Roshan",
+  "nkroshankumar@gmail.com",
+  "Tester Assigned",
+  "You have been assigned to a new test request"
+);
 app.listen(port, () => {
   console.log(`Server Running at ${port}`);
 });

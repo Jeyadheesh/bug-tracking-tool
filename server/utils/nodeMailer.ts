@@ -1,5 +1,5 @@
-import nodemailer from "nodemailer";
-import Mailgen from "mailgen";
+import nodemailer, { SendMailOptions } from "nodemailer";
+import Mailgen, { ContentBody } from "mailgen";
 import { config } from "dotenv";
 config({ path: ".env" });
 // console.log(process.env.EMAIL, process.env.EPASSWORD);
@@ -15,7 +15,7 @@ let mailConfig = {
 // console.log("Email", process.env.EMAIL);
 let transporter = nodemailer.createTransport(mailConfig);
 
-let mailGenerator = new Mailgen({
+let mailGenerator: Mailgen = new Mailgen({
   theme: "default", //cerberus , salted
   product: {
     name: "TrackDown",
@@ -88,7 +88,7 @@ export const sendMail = (
 ): void => {
   console.log(email, name);
 
-  let response = {
+  let response: Mailgen.Content = {
     body: {
       name: name,
       intro: message,
@@ -96,7 +96,7 @@ export const sendMail = (
         instructions:
           "You can see the details of the notification by clicking the button below",
         button: {
-          color: "#A033CE",
+          color: "#10b981",
           text: "Go to website",
           link: process.env.CLIENT_PORT + "/dashboard",
         },

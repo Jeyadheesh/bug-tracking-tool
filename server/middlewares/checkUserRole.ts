@@ -66,3 +66,48 @@ export const checkProjectManager = (
     res.status(403).send({ message: "You are not authorized" });
   }
 };
+
+export const checkProjectManagerAndTester = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { role } = req.body;
+  console.log(role);
+
+  if (role === "projectManager" || role === "tester") {
+    return next();
+  } else {
+    res.status(403).send({ message: "You are not authorized" });
+  }
+};
+
+export const checkProjectManagerAndCustomer = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { role } = req.body;
+  console.log(role);
+
+  if (role === "projectManager" || role === "customer") {
+    return next();
+  } else {
+    res.status(403).send({ message: "You are not authorized" });
+  }
+};
+
+export const checkTesterAndCustomer = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { role } = req.body;
+  console.log(role);
+
+  if (role === "tester" || role === "customer") {
+    return next();
+  } else {
+    res.status(403).send({ message: "You are not authorized" });
+  }
+};
