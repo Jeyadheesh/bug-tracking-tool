@@ -1,33 +1,23 @@
 "use client";
 
+import useToast from "@/store/useToast";
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { CiCalendarDate } from "react-icons/ci";
-import { FaExclamation } from "react-icons/fa";
 import { FaBug } from "react-icons/fa6";
 import {
   FcHighPriority,
   FcLowPriority,
   FcMediumPriority,
 } from "react-icons/fc";
-import { FiLink } from "react-icons/fi";
-import { IoFlagSharp } from "react-icons/io5";
-import { MdOutlineMail, MdOutlinePassword } from "react-icons/md";
-import { RiEdit2Line } from "react-icons/ri";
-import useSWR from "swr";
-import {
-  BugColorType,
-  TestRequestColorType,
-  bugColor,
-  testRequestColor,
-} from "./Dashboard";
-import { TiAttachment } from "react-icons/ti";
-import { PiStepsDuotone } from "react-icons/pi";
 import { LuWorkflow } from "react-icons/lu";
-import useToast from "@/store/useToast";
+import { PiStepsDuotone } from "react-icons/pi";
+import { RiEdit2Line } from "react-icons/ri";
+import { TiAttachment } from "react-icons/ti";
+import useSWR from "swr";
 import BugStatus from "./BugStatus";
 
 type Props = {};
@@ -47,7 +37,7 @@ const TestRequest = (props: Props) => {
 
   useEffect(() => {
     // Toast
-    error && setToast({ msg: error, variant: "error" });
+    error && setToast({ msg: error?.response?.data, variant: "error" });
   }, [error]);
 
   return (
@@ -62,7 +52,10 @@ const TestRequest = (props: Props) => {
             {/* Name */}
             <h3 className="text-4xl font-semibold">{data?.data.name}</h3>
             {/* Status */}
-            <BugStatus status={data?.data.status} />
+            <BugStatus
+              testRequest={data?.data.testRequestId}
+              status={data?.data.status}
+            />
           </div>
           {/* Date */}
           <div className="gap-6 flex items-center font-semibold text-gray-500 ">

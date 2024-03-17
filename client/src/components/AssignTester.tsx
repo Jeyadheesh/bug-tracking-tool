@@ -35,7 +35,7 @@ const AssignTester = ({ setShow, testRequest }: Props) => {
 
   useEffect(() => {
     if (error) {
-      setToast({ msg: error, variant: "error" });
+      setToast({ msg: error?.response?.data, variant: "error" });
     }
   }, [error]);
 
@@ -52,7 +52,7 @@ const AssignTester = ({ setShow, testRequest }: Props) => {
         mutate(["api/test-request", testRequest?._id]);
       })
       .catch((err: any) => {
-        setToast({ msg: err, variant: "error" });
+        setToast({ msg: err?.response?.data, variant: "error" });
       })
       .finally(() => setLoading(false));
   };
