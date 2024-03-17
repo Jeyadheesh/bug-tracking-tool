@@ -34,6 +34,7 @@ const CreateBug = ({ setShow, testRequest }: Props) => {
   const [loading, setLoading] = useState(false);
   const setToast = useToast((state) => state.setToast);
   const user = useUser((state) => state.user);
+  const [btnLoading, setBtnLoading] = useState(false);
 
   function filterImageVideoFiles(files: File[]) {
     const filteredFiles = [];
@@ -58,9 +59,18 @@ const CreateBug = ({ setShow, testRequest }: Props) => {
   };
 
   const handleCreateBug = async () => {
+    setBtnLoading(true);
     try {
       setLoading(true);
       let links: string[] | undefined;
+      if (
+        name.trim() === "" ||
+        summary.trim() === "" ||
+        workflow.trim() === "" ||
+        steps.trim() === ""
+      ) {
+        return setToast({ msg: "Enter all required fields", variant: "error" });
+      }
       if (attachments) {
         // upload images to s3
         links = await uploadToS3(attachments);
@@ -88,6 +98,7 @@ const CreateBug = ({ setShow, testRequest }: Props) => {
       );
       mutate(["api/bug/test-request/", testRequest?._id]);
       setShow(false);
+      setBtnLoading(false);
     } catch (err) {
       setToast({
         msg: err?.response?.data,
@@ -95,6 +106,7 @@ const CreateBug = ({ setShow, testRequest }: Props) => {
       });
     } finally {
       setLoading(false);
+      setBtnLoading(false);
     }
   };
 
@@ -114,7 +126,7 @@ const CreateBug = ({ setShow, testRequest }: Props) => {
           {/* Name Field */}
           <InputTextFiled
             icon={<BiBug className="text-primary text-xl" />}
-            placeholder="Enter Bug Name"
+            placeholder="Enter Bug Name *"
             setValue={setName}
             value={name}
           />
@@ -149,7 +161,7 @@ const CreateBug = ({ setShow, testRequest }: Props) => {
             <textarea
               rows={2}
               className="w-full p-1 outline-0 resize-none"
-              placeholder={"Enter Summary"}
+              placeholder={"Enter Summary *"}
               value={summary}
               onChange={(e) => setSummary(e.target.value)}
             />
@@ -160,7 +172,7 @@ const CreateBug = ({ setShow, testRequest }: Props) => {
             <textarea
               rows={2}
               className="w-full p-1 outline-0 resize-none"
-              placeholder={"Enter Workflow"}
+              placeholder={"Enter Workflow *"}
               value={workflow}
               onChange={(e) => setWorkflow(e.target.value)}
             />
@@ -171,7 +183,7 @@ const CreateBug = ({ setShow, testRequest }: Props) => {
             <textarea
               rows={2}
               className="w-full p-1 outline-0 resize-none"
-              placeholder={"Enter Steps To Reproduce"}
+              placeholder={"Enter Steps To Reproduce *"}
               value={steps}
               onChange={(e) => setSteps(e.target.value)}
             />
@@ -203,7 +215,10 @@ const CreateBug = ({ setShow, testRequest }: Props) => {
           )}
           <Button
             loading={loading}
-            onClick={handleCreateBug}
+            onClick={async () => {
+              await handleCreateBug();
+              setBtnLoading(false);
+            }}
             className="w-full"
           >
             Raise a bug

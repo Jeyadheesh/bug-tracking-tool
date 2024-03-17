@@ -56,6 +56,7 @@ const AddCommentModal = ({
   const { id } = useParams();
   const setToast = useToast((state) => state.setToast);
   const user = useUser((state) => state.user);
+  const [btnLoading, setBtnLoading] = useState(false);
 
   const isCommentRequired =
     type === "bug"
@@ -73,6 +74,7 @@ const AddCommentModal = ({
 
   //   Updates the bug & test request status in db
   const handleUpdateStatus = async () => {
+    setBtnLoading(true);
     try {
       // Check whether comment is mandetory
       if (isCommentRequired && comments.trim().length <= 2) {
@@ -110,8 +112,10 @@ const AddCommentModal = ({
       // @ts-ignore
       setCurrentStatus(tempStatus!);
       setShow(false);
+      setBtnLoading(false);
     } catch (err) {
       setToast({ msg: err?.response?.data, variant: "error" });
+      setBtnLoading(false);
     }
   };
 
@@ -163,7 +167,14 @@ const AddCommentModal = ({
               onChange={(e) => setComments(e.target.value)}
             />
           </div>
-          <Button className="w-full" onClick={handleUpdateStatus}>
+          <Button
+            className="w-full"
+            loading={btnLoading}
+            onClick={async () => {
+              await handleUpdateStatus();
+              setBtnLoading(false);
+            }}
+          >
             Update Status
           </Button>
         </div>

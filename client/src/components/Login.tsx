@@ -13,6 +13,7 @@ type Props = {
 };
 
 const Login = ({ setMode }: Props) => {
+  const [btnLoading, setBtnLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { toast, setToast } = useToast();
@@ -20,6 +21,7 @@ const Login = ({ setMode }: Props) => {
   const { setUser } = useUser();
 
   const handleLogin = async () => {
+    setBtnLoading(true);
     try {
       if (email.trim() === "" || password.trim() === "")
         return setToast({
@@ -45,9 +47,11 @@ const Login = ({ setMode }: Props) => {
       } else {
         setToast({ msg: data.message, variant: "error" });
       }
+      setBtnLoading(false);
     } catch (error) {
       console.log(error.response.data);
       setToast({ msg: error.response.data.message, variant: "error" });
+      setBtnLoading(false);
     }
   };
 
@@ -72,7 +76,14 @@ const Login = ({ setMode }: Props) => {
           type="password"
         />
       </>
-      <Button className="w-full" onClick={handleLogin}>
+      <Button
+        className="w-full"
+        onClick={async () => {
+          await handleLogin();
+          setBtnLoading(false);
+        }}
+        loading={btnLoading}
+      >
         Login
       </Button>
 

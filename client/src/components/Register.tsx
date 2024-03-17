@@ -18,9 +18,11 @@ const Register = ({ setMode }: Props) => {
   const [username, setUsername] = useState("");
   const [OTP, setOTP] = useState("");
   const { toast, setToast } = useToast();
+  const [btnLoading, setBtnLoading] = useState(false);
 
   const nextTab = async () => {
     try {
+      setBtnLoading(true);
       if (tab == 0) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (email === "" || !emailRegex.test(email))
@@ -47,8 +49,8 @@ const Register = ({ setMode }: Props) => {
           setToast({ msg: data.message, variant: "error" });
         }
       } else if (tab == 1) {
-        if (OTP === "")
-          return setToast({ msg: "OTP Required", variant: "error" });
+        if (OTP === "" || email === "")
+          return setToast({ msg: "OTP and Email Required", variant: "error" });
         console.log("Verify OTP");
         const { data } = await axios.post(
           "http://localhost:9000/api/auth/verify-otp",
@@ -96,9 +98,11 @@ const Register = ({ setMode }: Props) => {
           setToast({ msg: data.message, variant: "error" });
         }
       }
+      setBtnLoading(false);
     } catch (error) {
       console.log(error.response.data);
       setToast({ msg: error.response.data.message, variant: "error" });
+      setBtnLoading(false);
     }
   };
 
@@ -172,7 +176,14 @@ const Register = ({ setMode }: Props) => {
         </>
       )}
 
-      <Button className="w-full  " onClick={nextTab}>
+      <Button
+        className="w-full  "
+        loading={btnLoading}
+        onClick={async () => {
+          await nextTab();
+          setBtnLoading(false);
+        }}
+      >
         {tab === 0 || tab === 1 ? `Verify Email` : "Register"}
       </Button>
 

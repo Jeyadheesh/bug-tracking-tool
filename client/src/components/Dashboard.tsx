@@ -12,6 +12,7 @@ import NewRequest from "./NewRequest";
 import CardBg from "../assets/test-request-bg.jpg";
 import Image from "next/image";
 import useUser from "@/store/useUser";
+import Button from "./Button";
 
 type Props = {};
 
@@ -19,6 +20,7 @@ const Dashboard = (props: Props) => {
   const [openTestRequests, setOpenTestRequests] = useState<TestRequestType[]>(
     []
   );
+  const [btnLoading, setBtnLoading] = useState(false);
   const [closedRequests, setClosedRequests] = useState<TestRequestType[]>([]);
   const [showCreate, setShowCreate] = useState(false);
   const user = useUser((state) => state.user);
@@ -76,12 +78,13 @@ const Dashboard = (props: Props) => {
               </h5>
               {user?.role === "customer" && (
                 <>
-                  <button
+                  <Button
+                    loading={btnLoading}
                     onClick={() => setShowCreate(true)}
                     className=" w-max px-10 py-2 active:scale-95 transition-all rounded-lg font-semibold bg-gradient-to-br from-primary to-primary-varient text-white "
                   >
                     Create New Test Request
-                  </button>
+                  </Button>
                 </>
               )}
             </div>

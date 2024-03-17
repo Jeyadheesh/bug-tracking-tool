@@ -140,7 +140,7 @@ export const sendOtp = async (req: Request, res: Response) => {
   try {
     const { email } = req.body;
     let otp = Math.floor(1000 + Math.random() * 9000).toString();
-    // console.log(otp);
+    console.log(otp);
     const existingCustomer = await UserModel.findOne({
       email: email,
     });

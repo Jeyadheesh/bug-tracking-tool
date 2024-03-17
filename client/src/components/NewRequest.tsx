@@ -10,6 +10,7 @@ import { MdOutlineMail, MdOutlinePassword } from "react-icons/md";
 import { mutate } from "swr";
 import InputTextFiled from "./InputTextFiled";
 import { sendNotification } from "@/utils/sendNotification";
+import Button from "./Button";
 
 type Props = {
   setShow: (show: boolean) => void;
@@ -21,11 +22,13 @@ const NewRequest = ({ setShow }: Props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [summary, setSummary] = useState("");
+  const [btnLoading, setBtnLoading] = useState(false);
 
   const setToast = useToast((state) => state.setToast);
   const user = useUser((state) => state.user);
 
   const handleCreateRequest = async () => {
+    setBtnLoading(true);
     try {
       if (
         name.trim() === "" ||
@@ -35,15 +38,18 @@ const NewRequest = ({ setShow }: Props) => {
       )
         return setToast({ msg: "Enter all required field", variant: "error" });
 
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const emailRegex =
+        /^([a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.[a-zA-Z]{2,})$/;
       if (!emailRegex.test(email))
         return setToast({ msg: "Invalid Email", variant: "error" });
 
       // url regex
-      const urlRegex = /^(https?:\/\/)?([\w\d]+\.)?[\w\d]+\.\w+$/;
+      const urlRegex =
+        /^((http|https):\/\/)?(www\.)?([a-zA-Z0-9-]+)(\.[a-zA-Z]{2,})(:\d+)?(\/[\w#!:.?+=&%@!\-\/])?$/;
+
       if (!urlRegex.test(URL))
         return setToast({ msg: "Invalid URL", variant: "error" });
-
+      // return setToast({ msg: "okay", variant: "error" });
       const { data } = await axios.post(
         `http://localhost:9000/api/test-request`,
         {
@@ -72,9 +78,11 @@ const NewRequest = ({ setShow }: Props) => {
       );
       setShow(false);
       mutate(["api/test-request", user?._id]);
+      setBtnLoading(false);
     } catch (err) {
       // Toast
       setToast({ msg: err.response.data, variant: "error" });
+      setBtnLoading(false);
     }
   };
 
@@ -150,12 +158,16 @@ const NewRequest = ({ setShow }: Props) => {
             />
           </>
 
-          <button
-            onClick={handleCreateRequest}
+          <Button
+            loading={btnLoading}
+            onClick={async () => {
+              await handleCreateRequest();
+              setBtnLoading(false);
+            }}
             className="w-full  px-10 py-2 active:scale-95 transition-all rounded-lg font-semibold bg-gradient-to-br from-primary to-primary-varient text-white "
           >
             Create New Test Request
-          </button>
+          </Button>
         </div>
       </motion.div>
     </main>
