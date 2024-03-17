@@ -4,8 +4,16 @@ import { Request, Response } from "express";
 
 export const createTestRequest = async (req: Request, res: Response) => {
   try {
-    const { name, url, testerId, status, comments, clientId, credentials } =
-      req.body;
+    const {
+      name,
+      url,
+      testerId,
+      status,
+      comments,
+      clientId,
+      credentials,
+      summary,
+    } = req.body;
     // Get Project Manager
     const project = await UserModel.findOne({ role: "projectManager" });
     const testRequest = await TestRequestModel.create({
@@ -16,6 +24,7 @@ export const createTestRequest = async (req: Request, res: Response) => {
       comments,
       clientId,
       credentials,
+      summary,
       projectManagerId: project?._id,
     });
     // console.log(testRequest);

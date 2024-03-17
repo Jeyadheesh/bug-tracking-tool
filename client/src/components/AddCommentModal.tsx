@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { LiaCommentSolid } from "react-icons/lia";
-import { BugColorType, bugColor } from "./Dashboard";
+import {
+  BugColorType,
+  TestRequestColorType,
+  bugColor,
+  testRequestColor,
+} from "./Dashboard";
 import { ImArrowRight2 } from "react-icons/im";
 import Button from "./Button";
 import axios from "axios";
@@ -10,8 +15,7 @@ import useToast from "@/store/useToast";
 import useUser from "@/store/useUser";
 import { sendNotification } from "@/utils/sendNotification";
 
-type Props = {
-  setShow: (val: boolean) => void;
+interface Bug {
   currentStatus: BugColorType;
   tempStatus?: BugColorType;
   setCurrentStatus: (status: BugColorType) => void;
@@ -20,13 +24,26 @@ type Props = {
     email: string;
     name: string;
   };
-};
+  type: "bug";
+}
+
+interface TestRequest {
+  currentStatus: TestRequestColorType;
+  tempStatus?: TestRequestColorType;
+  setCurrentStatus: (status: TestRequestColorType) => void;
+  type: "testRequest";
+}
+
+type Props = {
+  setShow: (val: boolean) => void;
+} & (Bug | TestRequest);
 
 const AddCommentModal = ({
   setShow,
   currentStatus,
   setCurrentStatus,
   tempStatus,
+  type,
   receiverData,
 }: Props) => {
   const [comments, setComments] = useState("");
@@ -34,32 +51,44 @@ const AddCommentModal = ({
   const setToast = useToast((state) => state.setToast);
   const user = useUser((state) => state.user);
 
-  const isCommentRequired = [
-    "need more info",
-    "fixed",
-    "not reproducible",
-    "invalid",
-    "under triage",
-    "validated and closed",
-  ].includes(tempStatus!);
+  const isCommentRequired =
+    type === "bug"
+      ? [
+          "need more info",
+          "fixed",
+          "not reproducible",
+          "invalid",
+          "under triage",
+          "validated and closed",
+        ].includes(tempStatus!)
+      : tempStatus === "testing blocked" ||
+        (tempStatus === "testing in progress" &&
+          currentStatus === "testing blocked");
 
-  //   Updates the bug status in db
+  //   Updates the bug & test request status in db
   const handleUpdateStatus = async () => {
     try {
       // Check whether comment is mandetory
       if (isCommentRequired && comments.trim().length <= 2) {
         return setToast({ msg: "Enter a Valid Comment", variant: "error" });
       }
-      await axios.patch(`http://localhost:9000/api/bug/edit-details`, {
-        id: id as string,
-        status: tempStatus,
-        comments: {
-          name: user?.name,
-          image: user?.img,
-          message: comments,
-          status: `${currentStatus} → ${tempStatus}`,
-        },
-      });
+      await axios.patch(
+        `http://localhost:9000/api/${
+          type === "testRequest" ? "test-request" : "bug"
+        }/edit-details`,
+        {
+          id: id as string,
+          status: tempStatus,
+          comments: comments.trim()
+            ? {
+                name: user?.name,
+                image: user?.img,
+                message: comments,
+                status: `${currentStatus} → ${tempStatus}`,
+              }
+            : undefined,
+        }
+      );
       setToast({ msg: "Status Updated", variant: "success" });
       sendNotification(
         "Bug Status Updated",
@@ -70,6 +99,7 @@ const AddCommentModal = ({
         receiverData.email
       );
       //   Updates new status if successful
+      // @ts-ignore
       setCurrentStatus(tempStatus!);
       setShow(false);
     } catch (err) {
@@ -80,7 +110,7 @@ const AddCommentModal = ({
   return (
     <main
       onClick={() => setShow(false)}
-      className="w-full h-screen fixed top-0   left-0 bg-white/70 backdrop-blur-sm flex justify-center items-center "
+      className="w-full h-screen fixed top-0  z-50 left-0 bg-white/70 backdrop-blur-sm flex justify-center items-center "
     >
       <motion.div
         onClick={(e) => e.stopPropagation()}
@@ -96,7 +126,9 @@ const AddCommentModal = ({
           <div className="flex items-center justify-around">
             <h3
               className={`text-lg select-none cursor-pointer  ${
-                bugColor[currentStatus as BugColorType]
+                type === "bug"
+                  ? bugColor[currentStatus as BugColorType]
+                  : testRequestColor[currentStatus as TestRequestColorType]
               } w-max p-1 capitalize font-medium rounded-md px-4 `}
             >
               {currentStatus}
@@ -104,8 +136,10 @@ const AddCommentModal = ({
             <ImArrowRight2 className="text-xl" />
 
             <h3
-              className={`text-lg select-none cursor-pointer  ${
-                bugColor[tempStatus as BugColorType]
+              className={`text-lg select-none cursor-pointer   ${
+                type === "bug"
+                  ? bugColor[tempStatus as BugColorType]
+                  : testRequestColor[tempStatus as TestRequestColorType]
               } w-max p-1 capitalize font-medium rounded-md px-4 `}
             >
               {tempStatus}

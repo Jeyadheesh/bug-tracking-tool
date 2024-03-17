@@ -49,7 +49,7 @@ const NewRequest = ({ setShow }: Props) => {
         {
           name,
           url: URL,
-          credientials: { email, password },
+          credentials: { email, password },
           summary,
           clientId: user?._id,
           status: "request under review",
@@ -81,7 +81,7 @@ const NewRequest = ({ setShow }: Props) => {
   return (
     <main
       onClick={() => setShow(false)}
-      className="w-full h-screen fixed top-0   left-0 bg-white/70 backdrop-blur-sm flex justify-center items-center "
+      className="w-full h-screen fixed top-0 z-50  left-0 bg-white/70 backdrop-blur-sm flex justify-center items-center "
     >
       <motion.div
         onClick={(e) => e.stopPropagation()}
@@ -109,11 +109,11 @@ const NewRequest = ({ setShow }: Props) => {
               type="url"
             />
             {/* Summary Field */}
-            <div className="flex items-center rounded-lg w-full border-2  px-2 py-1 gap-2">
-              <BsTextParagraph className="text-primary text-xl" />
+            <div className="flex items-start rounded-lg w-full border-2  px-2 py-1 gap-2">
+              <BsTextParagraph className="text-primary text-xl mt-2" />
 
               <textarea
-                rows={1}
+                rows={2}
                 className="w-full p-1 outline-0 resize-none"
                 placeholder={"Enter Summary"}
                 value={summary}
