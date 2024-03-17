@@ -28,6 +28,7 @@ import { TiAttachment } from "react-icons/ti";
 import { PiStepsDuotone } from "react-icons/pi";
 import { LuWorkflow } from "react-icons/lu";
 import useToast from "@/store/useToast";
+import BugStatus from "./BugStatus";
 
 type Props = {};
 
@@ -61,13 +62,7 @@ const TestRequest = (props: Props) => {
             {/* Name */}
             <h3 className="text-4xl font-semibold">{data?.data.name}</h3>
             {/* Status */}
-            <h3
-              className={`text-lg  ${
-                bugColor[data?.data.status as BugColorType]
-              } w-max p-1 capitalize font-medium rounded-md px-4 `}
-            >
-              {data?.data.status}
-            </h3>
+            <BugStatus status={data?.data.status} />
           </div>
           {/* Date */}
           <div className="gap-6 flex items-center font-semibold text-gray-500 ">

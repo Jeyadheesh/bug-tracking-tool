@@ -154,6 +154,7 @@ export const bugColor = {
   invalid: "bg-red-100 text-red-500",
   fixed: "bg-green-100 text-green-500",
   "validated and closed": "bg-indigo-100 text-indigo-500",
+  closed: "bg-purple-100 text-purple-500",
 } as const;
 
 const RequestCard = ({
