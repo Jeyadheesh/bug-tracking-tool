@@ -28,7 +28,9 @@ const TestRequestSchema = new mongoose.Schema(
         name: String,
         image: String,
         message: String,
+        status: String,
       },
+      default: [],
     },
     credentials: {
       type: {

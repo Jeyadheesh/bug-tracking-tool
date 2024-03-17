@@ -9,6 +9,7 @@ import { FiLink } from "react-icons/fi";
 import { MdOutlineMail, MdOutlinePassword } from "react-icons/md";
 import { mutate } from "swr";
 import InputTextFiled from "./InputTextFiled";
+import { sendNotification } from "@/utils/sendNotification";
 
 type Props = {
   setShow: (show: boolean) => void;
@@ -61,6 +62,12 @@ const NewRequest = ({ setShow }: Props) => {
         msg: "Test Request Created",
         variant: "success",
       });
+      sendNotification(
+        "Test Request Aquired",
+        `New Test Request Created by ${user?.name}`,
+        user?._id as string,
+        process.env.NEXT_PUBLIC_PROJECTMANAGER_ID as string // projectManagerId 65f44854aa6f72212e3dce24
+      );
       setShow(false);
       mutate(["api/test-request", user?._id]);
     } catch (err) {

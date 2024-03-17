@@ -5,13 +5,15 @@ import { useEffect, useState } from "react";
 import { BiChevronDown } from "react-icons/bi";
 import AddCommentModal from "./AddCommentModal";
 import { BugColorType, bugColor } from "./Dashboard";
+import { sendNotification } from "@/utils/sendNotification";
 
 type Props = {
   status?: string;
   testRequest?: TestRequestType;
+  receiverId?: string;
 };
 
-const BugStatus = ({ status, testRequest }: Props) => {
+const BugStatus = ({ status, receiverId, testRequest }: Props) => {
   const user = useUser((state) => state.user);
   const [showDropdown, setShowDropdown] = useState(false);
   const [showComment, setShowComment] = useState(false);
@@ -134,8 +136,9 @@ const BugStatus = ({ status, testRequest }: Props) => {
         {/* DROPDOWN */}
         {showDropdown && (
           <motion.div className="flex flex-col gap-2 p-2 rounded-md shadow-lg absolute top-full right-0 translate-y-2 bg-white">
-            {acceptedStatuses.map((stat) => (
+            {acceptedStatuses.map((stat, i) => (
               <h3
+                key={i}
                 onClick={() => {
                   setTempStatus(stat);
                   setShowComment(true);

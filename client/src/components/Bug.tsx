@@ -35,6 +35,8 @@ const TestRequest = (props: Props) => {
     fetcher
   );
 
+  console.log(data?.data.testRequestId?.testerId);
+
   useEffect(() => {
     // Toast
     error && setToast({ msg: error?.response?.data, variant: "error" });
@@ -55,6 +57,9 @@ const TestRequest = (props: Props) => {
             <BugStatus
               testRequest={data?.data.testRequestId}
               status={data?.data.status}
+              receiverId={
+                data?.data.testRequestId?.testerId as unknown as string
+              }
             />
           </div>
           {/* Date */}

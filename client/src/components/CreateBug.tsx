@@ -17,6 +17,7 @@ import useToast from "@/store/useToast";
 import axios from "axios";
 import { mutate } from "swr";
 import useUser from "@/store/useUser";
+import { sendNotification } from "@/utils/sendNotification";
 
 type Props = {
   setShow: (val: false) => void;
@@ -76,6 +77,13 @@ const CreateBug = ({ setShow, testRequest }: Props) => {
         testRequestId: testRequest?._id,
       });
       setToast({ msg: "Bug Created", variant: "success" });
+      // console.log(testRequest?.clientId, user?._id);
+      sendNotification(
+        "Bug Created",
+        `New Bug Created by ${user?.name}`,
+        user?._id as string,
+        testRequest?.clientId?._id as string
+      );
       mutate(["api/bug/test-request/", testRequest?._id]);
       setShow(false);
     } catch (err) {
