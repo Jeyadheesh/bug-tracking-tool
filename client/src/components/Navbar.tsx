@@ -14,6 +14,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { sendNotification } from "@/utils/sendNotification";
 import useNotification from "@/hooks/useNotification";
 import Loader from "./Loader";
+import Link from "next/link";
 
 type Props = {};
 
@@ -137,7 +138,9 @@ const Navbar = (props: Props) => {
     <nav className="relative px-6  h-[4.5rem] border-b flex justify-between items-center">
       <Toast />
       {/* LOGO */}
-      <h1 className="text-2xl font-bold">TrackDown</h1>
+      <Link href={`${user?._id ? "/dashboard" : "/"}`}>
+        <h1 className="text-2xl font-bold">TrackDown</h1>
+      </Link>
 
       {/* Modal */}
       {showNotification && (
