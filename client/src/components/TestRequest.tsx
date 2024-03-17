@@ -1,6 +1,8 @@
 "use client";
 
+import useUser from "@/store/useUser";
 import axios from "axios";
+import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -18,20 +20,13 @@ import { IoFlagSharp } from "react-icons/io5";
 import { MdOutlineMail, MdOutlinePassword } from "react-icons/md";
 import { RiEdit2Line } from "react-icons/ri";
 import useSWR from "swr";
-import {
-  BugColorType,
-  TestRequestColorType,
-  bugColor,
-  testRequestColor,
-} from "./Dashboard";
 import CardBg from "../assets/test-request-bg.jpg";
-import useUser from "@/store/useUser";
-import { AnimatePresence, motion } from "framer-motion";
 import AssignTester from "./AssignTester";
 import Button from "./Button";
-import CreateBug from "./CreateBug";
-import TestRequestStatus from "./TestRequestStatus";
 import Comments from "./Comments";
+import CreateBug from "./CreateBug";
+import { BugColorType, bugColor } from "./Dashboard";
+import TestRequestStatus from "./TestRequestStatus";
 
 type Props = {};
 
@@ -47,10 +42,7 @@ const TestRequest = (props: Props) => {
 
   const { data, error, isValidating } = useSWR(
     ["api/test-request", id as string],
-    fetcher,
-    {
-      dedupingInterval: 10000, //10s
-    }
+    fetcher
   );
 
   useEffect(() => {

@@ -1,20 +1,16 @@
 "use client";
-import React, { use, useEffect, useRef, useState } from "react";
-import Toast from "./Toast";
-import useSWR, { mutate } from "swr";
-import axios from "axios";
-import { usePathname, useRouter } from "next/navigation";
 import useToast from "@/store/useToast";
 import useUser from "@/store/useUser";
-import { BiLogOut, BiLogOutCircle } from "react-icons/bi";
-import { CgLogOut } from "react-icons/cg";
-import { MdLogout } from "react-icons/md";
-import { IoMdNotificationsOutline } from "react-icons/io";
-import { AnimatePresence, motion } from "framer-motion";
-import { sendNotification } from "@/utils/sendNotification";
-import useNotification from "@/hooks/useNotification";
-import Loader from "./Loader";
+import axios from "axios";
+import { motion } from "framer-motion";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { IoMdNotificationsOutline } from "react-icons/io";
+import { MdLogout } from "react-icons/md";
+import useSWR, { mutate } from "swr";
+import Loader from "./Loader";
+import Toast from "./Toast";
 
 type Props = {};
 
@@ -28,7 +24,6 @@ const Navbar = (props: Props) => {
   const user = useUser((state) => state.user);
   const pathname = usePathname();
   const route = useRouter();
-  const { sendNotification } = useNotification();
   const refEle = useRef<HTMLDivElement | null>(null);
 
   const fetcher = async (url: string) => {
@@ -86,20 +81,12 @@ const Navbar = (props: Props) => {
     }
   };
 
-  // const { data: notificationData, isLoading:isNotificationLoading } = useSWR(
-  //   ``,
-  //   getNotification
-  // );
-
   const updateIsSeen = async () => {
     try {
       const { data } = await axios.patch(
         "http://localhost:9000/api/notification/updateIsSeenAll",
         { receiverId: user?._id }
       );
-      console.log(data);
-
-      // getNotification();
     } catch (error) {
       console.log(error.message);
     }
@@ -107,12 +94,6 @@ const Navbar = (props: Props) => {
 
   useEffect(() => {
     user && getNotification();
-    // sendNotification(
-    //   "title",
-    //   "message asdfjaks dfaskdjf adskfjsad fdsajkghaoidpgasnd gasdigasdjglk;as dgsdagsdhgsakdnka dskfajsdlf askdfksdjfa dfkasj df",
-    //   "65f30ff3ff32896b8946059e",
-    //   user?._id || ""
-    // );
   }, [user]);
 
   useEffect(() => {
@@ -149,7 +130,6 @@ const Navbar = (props: Props) => {
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0 }}
-          // transition={{ originX: 0, originY: 0 }}
           className="z-[1000] overflow-y-auto origin-top-right absolute top-14 right-24 w-80 h-96 bg-white shadow-lg  rounded-lg "
         >
           {/* Need Loader */}

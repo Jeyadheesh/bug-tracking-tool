@@ -6,8 +6,6 @@ type Props = {
 };
 
 const Comments = ({ comments }: Props) => {
-  console.log(comments);
-
   return (
     <>
       {comments && comments.length > 0 && (
