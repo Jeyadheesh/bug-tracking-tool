@@ -148,7 +148,7 @@ const Navbar = (props: Props) => {
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0 }}
           // transition={{ originX: 0, originY: 0 }}
-          className="z-50 overflow-y-auto origin-top-right absolute top-14 right-24 w-80 h-96 bg-white shadow-lg  rounded-lg p-4"
+          className="z-[1000] overflow-y-auto origin-top-right absolute top-14 right-24 w-80 h-96 bg-white shadow-lg  rounded-lg p-4"
         >
           {/* Need Loader */}
 

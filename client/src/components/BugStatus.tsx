@@ -160,6 +160,7 @@ const BugStatus = ({ status, receiverData, testRequest }: Props) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            className="w-full h-screen fixed top-0  z-50 left-0 bg-whit backdrop-blur-sm flex justify-center items-center"
           >
             <AddCommentModal
               setShow={setShowComment}
