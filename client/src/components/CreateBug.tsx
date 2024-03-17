@@ -135,6 +135,7 @@ const CreateBug = ({ setShow, testRequest }: Props) => {
             <div className="flex justify-between items-center mt-1 ">
               {["low", "medium", "high"].map((lvl) => (
                 <div
+                  key={lvl}
                   onClick={() => setPriority(lvl)}
                   className={`flex items-center border-2 cursor-pointer py-2 hover:scale-95 transition-all rounded-md w-32 flex-col justify-center font-medium text-sm  ${
                     priority === lvl
@@ -207,7 +208,9 @@ const CreateBug = ({ setShow, testRequest }: Props) => {
               <h3 className="font-semibold">Attached Files</h3>
               <div className="-mt-3 max-h-[5rem] overflow-auto">
                 {attachments?.map((att) => (
-                  <p className="text-sm">{att.name}</p>
+                  <p key={att.name} className="text-sm">
+                    {att.name}
+                  </p>
                 ))}
               </div>
             </>

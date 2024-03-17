@@ -41,6 +41,13 @@ const BugStatus = ({ status, receiverData, testRequest, name }: Props) => {
           variant: "error",
         });
       return false;
+    } else if (testRequest && testRequest.status === "testing completed") {
+      showToast &&
+        setToast({
+          msg: `Testing Completed`,
+          variant: "error",
+        });
+      return false;
     } else if (user?.role === "tester") {
       // checks whether test request in blocked
       if (testRequest && testRequest.status === "testing blocked") {

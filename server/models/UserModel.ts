@@ -20,7 +20,10 @@ const UserSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  img: String, // opt
+  img: {
+    type: String,
+    default: "https://cdn-icons-png.flaticon.com/256/9368/9368192.png",
+  }, // opt
   otp: String,
   createdAt: {
     type: Date,
