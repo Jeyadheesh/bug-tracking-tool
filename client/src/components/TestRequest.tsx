@@ -242,7 +242,6 @@ const TestRequest = (props: Props) => {
             </div>
           </div>
         </div>
-        <Comments comments={data?.data.comments} />
         {/* #####  END TEST REQUEST #### */}
         {/*  ###### BUGS ####### */}
         <section className="flex flex-col gap-4">
@@ -271,6 +270,7 @@ const TestRequest = (props: Props) => {
             </div>
           )}
         </section>
+        <Comments comments={data?.data.comments} />
       </main>
       {/* Assign Tester */}
       <AnimatePresence>
