@@ -285,6 +285,7 @@ const TestRequest = (props: Props) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            className="w-full h-screen fixed top-0 z-50  left-0 bg-white/70 backdrop-blur-sm flex justify-center items-center "
           >
             <AssignTester
               testRequest={data?.data}

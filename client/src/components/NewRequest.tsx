@@ -80,8 +80,8 @@ const NewRequest = ({ setShow }: Props) => {
 
   return (
     <main
+      className="w-full  flex justify-center items-center "
       onClick={() => setShow(false)}
-      className="w-full h-screen fixed top-0 z-50  left-0 bg-white/70 backdrop-blur-sm flex justify-center items-center "
     >
       <motion.div
         onClick={(e) => e.stopPropagation()}
