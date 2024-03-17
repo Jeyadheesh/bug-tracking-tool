@@ -95,14 +95,15 @@ const AddCommentModal = ({
         }
       );
       setToast({ msg: "Status Updated", variant: "success" });
-      sendNotification(
-        "Bug Status Updated",
-        `Bug Status Updated from ${currentStatus} to ${tempStatus}`,
-        user?._id!,
-        receiverData.id,
-        receiverData.name,
-        receiverData.email
-      );
+      type === "bug" &&
+        sendNotification(
+          "Bug Status Updated",
+          `Bug Status Updated from ${currentStatus} to ${tempStatus}`,
+          user?._id!,
+          receiverData.id,
+          receiverData.name,
+          receiverData.email
+        );
       //   Updates new status if successful
       // @ts-ignore
       setCurrentStatus(tempStatus!);
