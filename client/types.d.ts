@@ -9,7 +9,8 @@ interface TestRequestType {
     name?: string;
     image?: string;
     message?: string;
-  };
+    status?: string;
+  }[];
   testerId?: TesterType | undefined;
   projectManagerId?: ProjectManagerType | undefined;
   clientId?: CustomerType | undefined;
@@ -34,7 +35,8 @@ interface BugType {
     name?: string;
     image?: string;
     message?: string;
-  };
+    status?: string;
+  }[];
   priority: string;
   testRequestId?: TestRequestType | undefined;
   createdAt?: string; // 2024-03-15T13:17:56.183Z

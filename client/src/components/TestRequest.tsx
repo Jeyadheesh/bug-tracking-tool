@@ -31,6 +31,7 @@ import AssignTester from "./AssignTester";
 import Button from "./Button";
 import CreateBug from "./CreateBug";
 import TestRequestStatus from "./TestRequestStatus";
+import Comments from "./Comments";
 
 type Props = {};
 
@@ -247,6 +248,7 @@ const TestRequest = (props: Props) => {
             </div>
           </div>
         </div>
+        <Comments comments={data?.data.comments} />
         {/* #####  END TEST REQUEST #### */}
         {/*  ###### BUGS ####### */}
         <section className="flex flex-col gap-4">

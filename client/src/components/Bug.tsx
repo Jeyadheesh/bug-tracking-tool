@@ -20,6 +20,7 @@ import { TiAttachment } from "react-icons/ti";
 import useSWR from "swr";
 import BugStatus from "./BugStatus";
 import useUser from "@/store/useUser";
+import Comments from "./Comments";
 
 type Props = {};
 
@@ -33,11 +34,9 @@ const TestRequest = (props: Props) => {
   };
 
   const { data, error, isValidating } = useSWR(
-    ["api/bug/", id as string],
+    ["api/bug", id as string],
     fetcher
   );
-
-  // console.log(data?.data);
 
   const receiverData =
     user?.role === "tester"
@@ -138,7 +137,7 @@ const TestRequest = (props: Props) => {
                       key={i}
                       href={img}
                       target="_blank"
-                      className="relative z-0 w-60 h-40 rounded-md shadow-lg border overflow-hidden bg-white"
+                      className="relative z-0 w-60 h-40 hover:scale-95 transition-all rounded-md shadow-lg border overflow-hidden bg-white"
                     >
                       {img.includes(".mp4") ? (
                         <video
@@ -185,6 +184,7 @@ const TestRequest = (props: Props) => {
             </div> */}
           </div>
         </div>
+        <Comments comments={data?.data.comments} />
       </main>
     </>
   );
