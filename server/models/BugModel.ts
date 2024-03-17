@@ -7,11 +7,13 @@ const BugSchema = new mongoose.Schema(
       required: true,
     },
     comments: {
-      type: {
-        name: String,
-        image: String,
-        message: String,
-      },
+      type: [
+        {
+          name: String,
+          image: String,
+          message: String,
+        },
+      ],
       default: [],
     },
     testRequestId: {

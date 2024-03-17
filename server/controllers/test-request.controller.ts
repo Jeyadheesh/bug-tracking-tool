@@ -70,6 +70,7 @@ export const updateTestRequestStatus = async (req: Request, res: Response) => {
 export const updateTestRequestDetails = async (req: Request, res: Response) => {
   try {
     const { comments, ...rest } = req.body;
+    console.log(rest, comments);
 
     const testRequest = await TestRequestModel.findByIdAndUpdate(
       rest.id,
@@ -79,7 +80,7 @@ export const updateTestRequestDetails = async (req: Request, res: Response) => {
       },
       { new: true }
     );
-    console.log(testRequest);
+    // console.log(testRequest);
     res.status(200).json({ message: "Test Request details updated" });
   } catch (error) {
     res.status(400).send(error.message);

@@ -29,12 +29,14 @@ import { PiStepsDuotone } from "react-icons/pi";
 import { LuWorkflow } from "react-icons/lu";
 import useToast from "@/store/useToast";
 import BugStatus from "./BugStatus";
+import useUser from "@/store/useUser";
 
 type Props = {};
 
 const TestRequest = (props: Props) => {
   const { id } = useParams();
   const setToast = useToast((state) => state.setToast);
+  const user = useUser((state) => state.user);
 
   const fetcher = ([url, id]: string[]) => {
     return axios.get<BugType>(`http://localhost:9000/${url}/${id}`);
@@ -45,7 +47,7 @@ const TestRequest = (props: Props) => {
     fetcher
   );
 
-  console.log(data?.data.testRequestId?.testerId);
+  console.log(data?.data);
 
   useEffect(() => {
     // Toast
@@ -67,7 +69,9 @@ const TestRequest = (props: Props) => {
             <BugStatus
               status={data?.data.status}
               receiverId={
-                data?.data.testRequestId?.testerId as unknown as string
+                user?.role === "tester"
+                  ? (data?.data.testRequestId?.clientId as unknown as string)
+                  : (data?.data.testRequestId?.testerId as unknown as string)
               }
             />
           </div>

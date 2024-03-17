@@ -24,12 +24,14 @@ const TestRequestSchema = new mongoose.Schema(
       default: "under review",
     },
     comments: {
-      type: {
-        name: String,
-        image: String,
-        message: String,
-        status: String,
-      },
+      type: [
+        {
+          name: String,
+          image: String,
+          message: String,
+          status: String,
+        },
+      ],
       default: [],
     },
     credentials: {

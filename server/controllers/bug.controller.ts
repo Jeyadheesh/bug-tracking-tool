@@ -63,7 +63,7 @@ export const updateBugStatus = async (req: Request, res: Response) => {
       { $set: { status: status } },
       { new: true }
     );
-    console.log(bug);
+    // console.log(bug);
     res.status(200).json({ message: "Bug status updated" });
   } catch (error) {
     res.status(400).send(error.message);
@@ -73,6 +73,7 @@ export const updateBugStatus = async (req: Request, res: Response) => {
 export const updateBugDetails = async (req: Request, res: Response) => {
   try {
     const { comments, ...rest } = req.body;
+    console.log(rest, comments);
     const bug = await BugModel.findByIdAndUpdate(
       rest.id,
       {
@@ -81,7 +82,7 @@ export const updateBugDetails = async (req: Request, res: Response) => {
       },
       { new: true }
     );
-    console.log(bug);
+    // console.log(bug);
     res.status(200).json({ message: "Bug details updated" });
   } catch (error) {
     res.status(400).send(error.message);
