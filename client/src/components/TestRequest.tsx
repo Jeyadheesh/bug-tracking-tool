@@ -265,8 +265,8 @@ const TestRequest = (props: Props) => {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {bugs?.data.map((bug) => (
-                <BugCard {...bug} />
+              {bugs?.data.map((bug, i) => (
+                <BugCard key={i} {...bug} />
               ))}
             </div>
           )}
