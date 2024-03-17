@@ -30,6 +30,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import AssignTester from "./AssignTester";
 import Button from "./Button";
 import CreateBug from "./CreateBug";
+import TestRequestStatus from "./TestRequestStatus";
 
 type Props = {};
 
@@ -76,17 +77,17 @@ const TestRequest = (props: Props) => {
       <main className="min-h-[calc(100vh-4.5rem)] gap-3 bg-gray-50  flex flex-col p-6 lg:px-14">
         {/* Card */}
         <div className="flex flex-col relative gap-3 bg-white p-6 shadow-lg rounded-md">
+          <div className="absolute opacity-5 z-0 select-none  -rotate-12 top-5 right-[10%] ">
+            <Image alt="bg" src={CardBg} width={340} height={270} />
+          </div>
           <div className="flex items-center justify-between">
             {/* Name */}
             <h3 className="text-4xl font-semibold">{data?.data.name}</h3>
             {/* Status */}
-            <h3
-              className={`text-lg  ${
-                testRequestColor[data?.data.status as TestRequestColorType]
-              } w-max p-1 capitalize font-medium rounded-md px-4 `}
-            >
-              {data?.data.status}
-            </h3>
+            <TestRequestStatus
+              status={data?.data.status}
+              testRequest={data?.data}
+            />
           </div>
           {/* Date */}
           <div className="gap-6 flex items-center font-semibold text-gray-500 ">
@@ -108,7 +109,7 @@ const TestRequest = (props: Props) => {
           <div className="flex  justify-between  gap-8">
             <div className="flex flex-col gap-3">
               {/* Summary */}
-              <p className="text-lg font-medium text-gray-700">
+              <p className="text-lg font-medium  whitespace-pre-wrap text-gray-700">
                 {data?.data.summary}
               </p>
               <h3 className="text-lg font-medium">
@@ -144,7 +145,7 @@ const TestRequest = (props: Props) => {
                     <p
                       className={` text-lg underline-offset-2 font-medium text-ellipsis overflow-hidden whitespace-nowrap `}
                     >
-                      {data?.data.credientials?.email}
+                      {data?.data.credentials?.email}
                     </p>
                   ) : (
                     <p>{"-"}</p>
@@ -159,7 +160,7 @@ const TestRequest = (props: Props) => {
                     <p
                       className={` text-lg underline-offset-2 font-medium text-ellipsis overflow-hidden whitespace-nowrap `}
                     >
-                      {data?.data.credientials?.password}
+                      {data?.data.credentials?.password}
                     </p>
                   ) : (
                     <p>{"-"}</p>
@@ -168,7 +169,7 @@ const TestRequest = (props: Props) => {
               </div>
             </div>
             {/* ASSIGNED PEOPLE */}
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-6 z-10">
               {/* Tester */}
               <div className="flex flex-col gap-2">
                 <div className="flex gap-4 items-center text-lg">
@@ -191,12 +192,12 @@ const TestRequest = (props: Props) => {
                   </p>
                 </div>
                 {user?.role === "projectManager" && !data?.data.testerId && (
-                  <button
+                  <Button
+                    className="py-1.5"
                     onClick={() => setShowAssignModal(true)}
-                    className="px-6 py-1 bg-primary text-white font-semibold rounded-md"
                   >
                     Assign Tester
-                  </button>
+                  </Button>
                 )}
               </div>
               {/* Project Manager */}
@@ -245,9 +246,6 @@ const TestRequest = (props: Props) => {
               </div>
             </div>
           </div>
-          <div className="absolute opacity-5 z-0 select-none  -rotate-12 top-5 right-[20%] ">
-            <Image alt="bg" src={CardBg} width={340} height={270} />
-          </div>{" "}
         </div>
         {/* #####  END TEST REQUEST #### */}
         {/*  ###### BUGS ####### */}

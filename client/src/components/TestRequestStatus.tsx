@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { BiChevronDown } from "react-icons/bi";
 import AddCommentModal from "./AddCommentModal";
-import { BugColorType, bugColor } from "./Dashboard";
+import { TestRequestColorType, testRequestColor } from "./Dashboard";
 import { sendNotification } from "@/utils/sendNotification";
 
 type Props = {
@@ -13,68 +13,42 @@ type Props = {
   receiverId?: string;
 };
 
-const BugStatus = ({ status, receiverId, testRequest }: Props) => {
+const TestRequestStatus = ({ status, receiverId, testRequest }: Props) => {
   const user = useUser((state) => state.user);
   const [showDropdown, setShowDropdown] = useState(false);
   const [showComment, setShowComment] = useState(false);
-  const [updatedStatus, setUpdatedStatus] = useState<BugColorType>(
-    status as BugColorType
+  const [updatedStatus, setUpdatedStatus] = useState<TestRequestColorType>(
+    status as TestRequestColorType
   );
-  const [tempStatus, setTempStatus] = useState<BugColorType | undefined>(
-    undefined
-  );
-  const [acceptedStatuses, setAcceptedStatuses] = useState<BugColorType[]>([]);
+  const [tempStatus, setTempStatus] = useState<
+    TestRequestColorType | undefined
+  >(undefined);
+  const [acceptedStatuses, setAcceptedStatuses] = useState<
+    TestRequestColorType[]
+  >([]);
   const setToast = useToast((state) => state.setToast);
 
   //   checks whether the current user can update the status
   const canUpdate = (showToast = true) => {
-    if (user?.role === "projectManager") {
+    if (user?.role === "customer" || user?.role === "tester") {
+      return false;
+    } else if (["testing completed"].includes(updatedStatus)) {
       showToast &&
         setToast({
-          msg: "Project Manager Cannot Update Bug Status",
+          msg: `Test Request is Completed`,
           variant: "error",
         });
       return false;
-    } else if (["closed", "validated and closed"].includes(updatedStatus)) {
-      showToast &&
-        setToast({
-          msg: `Bug is closed`,
-          variant: "error",
-        });
-      return false;
-    } else if (user?.role === "tester") {
-      // checks whether test request in blocked
-      if (testRequest && testRequest.status === "testing blocked") {
+    } else if (user?.role === "projectManager") {
+      if (!testRequest?.testerId) {
         showToast &&
           setToast({
-            msg: `Test Request Is Blocked`,
+            msg: "Assign Tester",
             variant: "error",
           });
         return false;
-      } else if (
-        ["need more info", "fixed", "not reproducible", "invalid"].includes(
-          updatedStatus
-        )
-      ) {
-        return true;
       } else {
-        showToast &&
-          setToast({
-            msg: `Bug is assigned to customer`,
-            variant: "error",
-          });
-        return false;
-      }
-    } else if (user?.role === "customer") {
-      if (["under triage", "accepted"].includes(updatedStatus)) {
         return true;
-      } else {
-        showToast &&
-          setToast({
-            msg: `Bug is assigned to tester`,
-            variant: "error",
-          });
-        return false;
       }
     }
   };
@@ -86,24 +60,18 @@ const BugStatus = ({ status, receiverId, testRequest }: Props) => {
   //   displays the accepted status alone
   useEffect(() => {
     if (updatedStatus) {
-      switch (updatedStatus?.toLowerCase() as BugColorType) {
-        case "under triage":
+      switch (updatedStatus?.toLowerCase() as TestRequestColorType) {
+        case "request under review":
+          return setAcceptedStatuses(["request accepted"]);
+        case "request accepted":
+          return setAcceptedStatuses(["testing in progress"]);
+        case "testing in progress":
+          return setAcceptedStatuses(["testing blocked", "testing completed"]);
+        case "testing blocked":
           return setAcceptedStatuses([
-            "accepted",
-            "invalid",
-            "need more info",
-            "not reproducible",
+            "testing in progress",
+            "testing completed",
           ]);
-        case "accepted":
-          return setAcceptedStatuses(["need more info", "fixed"]);
-        case "fixed":
-          return setAcceptedStatuses(["validated and closed"]);
-        case "invalid":
-          return setAcceptedStatuses(["under triage", "closed"]);
-        case "need more info":
-          return setAcceptedStatuses(["under triage"]);
-        case "not reproducible":
-          return setAcceptedStatuses(["under triage", "closed"]);
         default:
           return setAcceptedStatuses([]);
       }
@@ -111,7 +79,7 @@ const BugStatus = ({ status, receiverId, testRequest }: Props) => {
   }, [updatedStatus]);
 
   useEffect(() => {
-    status && setUpdatedStatus(status as BugColorType);
+    status && setUpdatedStatus(status as TestRequestColorType);
   }, [status]);
 
   useEffect(() => {
@@ -123,11 +91,11 @@ const BugStatus = ({ status, receiverId, testRequest }: Props) => {
 
   return (
     <>
-      <div onClick={(e) => e.stopPropagation()} className="relative">
+      <div onClick={(e) => e.stopPropagation()} className="relative ">
         <div
           onClick={() => canUpdate() && handleDropdown()}
           className={`text-lg select-none flex gap-1 items-center cursor-pointer  ${
-            bugColor[updatedStatus as BugColorType]
+            testRequestColor[updatedStatus as TestRequestColorType]
           } w-max p-1 capitalize font-medium rounded-md px-4 `}
         >
           <h3>{updatedStatus}</h3>
@@ -135,7 +103,7 @@ const BugStatus = ({ status, receiverId, testRequest }: Props) => {
         </div>
         {/* DROPDOWN */}
         {showDropdown && (
-          <motion.div className="flex flex-col gap-2 p-2 rounded-md shadow-lg absolute top-full right-0 translate-y-2 bg-white">
+          <motion.div className="flex flex-col gap-2 p-2 z-20 rounded-md shadow-lg absolute top-full right-0 translate-y-2 bg-white">
             {acceptedStatuses.map((stat, i) => (
               <h3
                 key={i}
@@ -145,7 +113,7 @@ const BugStatus = ({ status, receiverId, testRequest }: Props) => {
                   setShowDropdown(false);
                 }}
                 className={`text-lg cursor-pointer select-none ${
-                  bugColor[stat as BugColorType]
+                  testRequestColor[stat as TestRequestColorType]
                 } w-full whitespace-nowrap p-1 capitalize hover:scale-x-[1.02] transition-all font-medium rounded-md px-4 `}
               >
                 {stat}
@@ -163,6 +131,7 @@ const BugStatus = ({ status, receiverId, testRequest }: Props) => {
             exit={{ opacity: 0 }}
           >
             <AddCommentModal
+              type="testRequest"
               setShow={setShowComment}
               currentStatus={updatedStatus}
               setCurrentStatus={setUpdatedStatus}
@@ -175,4 +144,4 @@ const BugStatus = ({ status, receiverId, testRequest }: Props) => {
   );
 };
 
-export default BugStatus;
+export default TestRequestStatus;

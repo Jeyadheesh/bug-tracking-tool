@@ -99,7 +99,7 @@ const CreateBug = ({ setShow, testRequest }: Props) => {
   return (
     <main
       onClick={() => setShow(false)}
-      className="w-full h-screen fixed top-0   left-0 bg-white/70 backdrop-blur-sm flex justify-center items-center "
+      className="w-full h-screen fixed top-0 z-50  left-0 bg-white/70 backdrop-blur-sm flex justify-center items-center "
     >
       <motion.div
         onClick={(e) => e.stopPropagation()}

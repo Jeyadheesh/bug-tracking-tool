@@ -13,7 +13,7 @@ interface TestRequestType {
   testerId?: TesterType | undefined;
   projectManagerId?: ProjectManagerType | undefined;
   clientId?: CustomerType | undefined;
-  credientials?: {
+  credentials?: {
     email: string;
     password: string;
   };

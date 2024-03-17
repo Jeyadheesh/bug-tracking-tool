@@ -29,11 +29,6 @@ const BugStatus = ({ status, receiverId, testRequest }: Props) => {
   //   checks whether the current user can update the status
   const canUpdate = (showToast = true) => {
     if (user?.role === "projectManager") {
-      showToast &&
-        setToast({
-          msg: "Project Manager Cannot Update Bug Status",
-          variant: "error",
-        });
       return false;
     } else if (["closed", "validated and closed"].includes(updatedStatus)) {
       showToast &&
@@ -135,7 +130,7 @@ const BugStatus = ({ status, receiverId, testRequest }: Props) => {
         </div>
         {/* DROPDOWN */}
         {showDropdown && (
-          <motion.div className="flex flex-col gap-2 p-2 rounded-md shadow-lg absolute top-full right-0 translate-y-2 bg-white">
+          <motion.div className="flex flex-col gap-2 p-2 z-10 rounded-md shadow-lg absolute top-full right-0 translate-y-2 bg-white">
             {acceptedStatuses.map((stat, i) => (
               <h3
                 key={i}
@@ -167,6 +162,7 @@ const BugStatus = ({ status, receiverId, testRequest }: Props) => {
               currentStatus={updatedStatus}
               setCurrentStatus={setUpdatedStatus}
               tempStatus={tempStatus}
+              type="bug"
             />
           </motion.div>
         )}
