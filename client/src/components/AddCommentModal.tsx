@@ -7,6 +7,7 @@ import Button from "./Button";
 import axios from "axios";
 import { useParams } from "next/navigation";
 import useToast from "@/store/useToast";
+import useUser from "@/store/useUser";
 
 type Props = {
   setShow: (val: boolean) => void;
@@ -24,6 +25,7 @@ const AddCommentModal = ({
   const [comments, setComments] = useState("");
   const { id } = useParams();
   const setToast = useToast((state) => state.setToast);
+  const user = useUser((state) => state.user);
 
   //   Updates the bug status in db
   const handleUpdateStatus = async () => {
@@ -42,9 +44,15 @@ const AddCommentModal = ({
       ) {
         return setToast({ msg: "Enter a Valid Comment", variant: "error" });
       }
-      await axios.patch(`http://localhost:9000/api/bug/`, {
+      await axios.patch(`http://localhost:9000/api/bug/edit-details`, {
         id: id as string,
         status: tempStatus,
+        comments: {
+          name: user?.name,
+          image: user?.img,
+          message: comments,
+          status: `${currentStatus} → ${tempStatus}`,
+        },
       });
       setToast({ msg: "Status Updated", variant: "success" });
       //   Updates new status if successful

@@ -73,10 +73,12 @@ export const updateBugStatus = async (req: Request, res: Response) => {
 export const updateBugDetails = async (req: Request, res: Response) => {
   try {
     const { comments, ...rest } = req.body;
+    console.log(rest);
+
     const bug = await BugModel.findByIdAndUpdate(
       rest.id,
       {
-        $set: { rest },
+        $set: rest,
         $push: { comments: comments },
       },
       { new: true }
