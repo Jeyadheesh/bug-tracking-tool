@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import Login from "./Login";
 import Register from "./Register";
+import Image from "next/image";
 
 type Props = {
   setShow: (val: boolean) => void;
