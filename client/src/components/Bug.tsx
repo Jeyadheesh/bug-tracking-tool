@@ -69,6 +69,7 @@ const TestRequest = (props: Props) => {
             <h3 className="text-4xl font-semibold">{data?.data.name}</h3>
             {/* Status */}
             <BugStatus
+              name={data?.data.name}
               testRequest={data?.data.testRequestId}
               status={data?.data.status}
               receiverData={receiverData}

@@ -63,7 +63,7 @@ const NewRequest = ({ setShow }: Props) => {
         variant: "success",
       });
       sendNotification(
-        "Test Request Aquired",
+        `New Test Request: ${name}`,
         `New Test Request Created by ${user?.name}`,
         user?._id as string,
         process.env.NEXT_PUBLIC_PROJECTMANAGER_ID as string, // projectManagerId 65f44854aa6f72212e3dce24

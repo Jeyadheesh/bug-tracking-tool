@@ -33,7 +33,7 @@ interface TestRequest {
   tempStatus?: TestRequestColorType;
   setCurrentStatus: (status: TestRequestColorType) => void;
   type: "testRequest";
-  receiverData: {
+  receiverData?: {
     id: string;
     email: string;
     name: string;
@@ -42,6 +42,7 @@ interface TestRequest {
 
 type Props = {
   setShow: (val: boolean) => void;
+  name?: string;
 } & (Bug | TestRequest);
 
 const AddCommentModal = ({
@@ -51,6 +52,7 @@ const AddCommentModal = ({
   tempStatus,
   type,
   receiverData,
+  name,
 }: Props) => {
   const [comments, setComments] = useState("");
   const { id } = useParams();
@@ -99,8 +101,8 @@ const AddCommentModal = ({
       mutate([`api/${type === "bug" ? "bug" : "test-request"}`, id as string]);
       type === "bug" &&
         sendNotification(
-          "Bug Status Updated",
-          `Bug Status Updated from ${currentStatus} to ${tempStatus}`,
+          `Bug: ${name}`,
+          `${currentStatus} → ${tempStatus}`,
           user?._id!,
           receiverData.id,
           receiverData.name,

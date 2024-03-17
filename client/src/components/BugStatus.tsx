@@ -5,10 +5,10 @@ import { useEffect, useState } from "react";
 import { BiChevronDown } from "react-icons/bi";
 import AddCommentModal from "./AddCommentModal";
 import { BugColorType, bugColor } from "./Dashboard";
-import { sendNotification } from "@/utils/sendNotification";
 
 type Props = {
   status?: string;
+  name?: string;
   testRequest?: TestRequestType;
   receiverData: {
     id: string;
@@ -17,7 +17,7 @@ type Props = {
   };
 };
 
-const BugStatus = ({ status, receiverData, testRequest }: Props) => {
+const BugStatus = ({ status, receiverData, testRequest, name }: Props) => {
   const user = useUser((state) => state.user);
   const [showDropdown, setShowDropdown] = useState(false);
   const [showComment, setShowComment] = useState(false);
@@ -163,6 +163,7 @@ const BugStatus = ({ status, receiverData, testRequest }: Props) => {
             className="w-full h-screen fixed top-0  z-50 left-0 bg-whit backdrop-blur-sm flex justify-center items-center"
           >
             <AddCommentModal
+              name={name}
               setShow={setShowComment}
               currentStatus={updatedStatus}
               setCurrentStatus={setUpdatedStatus}

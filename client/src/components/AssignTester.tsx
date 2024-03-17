@@ -53,8 +53,8 @@ const AssignTester = ({ setShow, testRequest }: Props) => {
       .then(() => {
         setToast({ msg: "Tester Assigned", variant: "success" });
         sendNotification(
-          "Tester Assigned",
-          `You have been assigned to a new test request`,
+          `Assigned: ${testRequest?.name}`,
+          `You have been assigned to ${testRequest?.name}`,
           user?._id as string,
           id,
           name,
