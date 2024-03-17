@@ -72,10 +72,13 @@ export const updateBugStatus = async (req: Request, res: Response) => {
 
 export const updateBugDetails = async (req: Request, res: Response) => {
   try {
-    const { id, name, comments, status, priority, image } = req.body;
+    const { comments, ...rest } = req.body;
     const bug = await BugModel.findByIdAndUpdate(
-      id,
-      { $set: req.body },
+      rest.id,
+      {
+        $set: { rest },
+        $push: { comments: comments },
+      },
       { new: true }
     );
     console.log(bug);

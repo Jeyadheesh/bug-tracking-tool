@@ -12,6 +12,7 @@ const BugSchema = new mongoose.Schema(
         image: String,
         message: String,
       },
+      default: [],
     },
     testRequestId: {
       type: mongoose.Schema.Types.ObjectId,

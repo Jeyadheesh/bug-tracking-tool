@@ -30,6 +30,7 @@ const TestRequestSchema = new mongoose.Schema(
         message: String,
         status: String,
       },
+      default: [],
     },
     credentials: {
       type: {
