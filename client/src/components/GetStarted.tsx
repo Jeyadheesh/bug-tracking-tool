@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { MdOutlineMail } from "react-icons/md";
-import Image from "next/image";
-import Register from "./Register";
+import { useEffect, useState } from "react";
 import Login from "./Login";
+import Register from "./Register";
 
 type Props = {
   setShow: (val: boolean) => void;

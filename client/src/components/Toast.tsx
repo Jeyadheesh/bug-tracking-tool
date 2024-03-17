@@ -9,8 +9,6 @@ const Toast = () => {
     showToast: state.showToast,
   }));
 
-  // console.log(msg, variant, showToast);
-
   return (
     <div
       className={`fixed bottom-4 left-1/2 z-[999] max-w-[90%] -translate-x-1/2 rounded-md border-2 bg-white px-2 py-1 text-center font-semibold capitalize shadow-xl transition-all md:px-5 md:py-3 ${

@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { BiChevronDown } from "react-icons/bi";
 import AddCommentModal from "./AddCommentModal";
 import { TestRequestColorType, testRequestColor } from "./Dashboard";
-import { sendNotification } from "@/utils/sendNotification";
 
 type Props = {
   status?: string;
