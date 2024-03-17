@@ -96,12 +96,12 @@ app.use("/api/notification", require("./routes/notification.routes"));
 app.use("/api/tester", require("./routes/tester.routes"));
 app.use("/api/product-manager", require("./routes/product-manager.routes"));
 
-sendMail(
-  "Roshan",
-  "nkroshankumar@gmail.com",
-  "Tester Assigned",
-  "You have been assigned to a new test request"
-);
+// sendMail(
+//   "Roshan",
+//   "nkroshankumar@gmail.com",
+//   "Tester Assigned",
+//   "You have been assigned to a new test request"
+// );
 app.listen(port, () => {
   console.log(`Server Running at ${port}`);
 });
