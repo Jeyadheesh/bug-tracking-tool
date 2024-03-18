@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import { useState } from "react";
 import BUG from "../assets/fix-bug1.png";
+import SS from "../assets/ss.png";
 import Button from "./Button";
 import GetStarted from "./GetStarted";
 
@@ -32,8 +33,13 @@ const LandingPage = (props: Props) => {
         </section>
         {/* Right Side */}
         <section className="">
-          <div className="w-[43rem] h-[32rem] relative scale-95">
-            <Image fill alt="hero_image" src={BUG}></Image>
+          <div className="w-[47rem] h-[26rem] relative scale-95 overflow-hidden rounded-lg shadow-xl">
+            <Image
+              fill
+              alt="hero_image"
+              className="object-cover"
+              src={SS}
+            ></Image>
           </div>
         </section>
       </main>
