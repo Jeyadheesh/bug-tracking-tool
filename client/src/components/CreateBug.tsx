@@ -87,14 +87,14 @@ const CreateBug = ({ setShow, testRequest }: Props) => {
         testRequestId: testRequest?._id,
       });
       setToast({ msg: "Bug Created", variant: "success" });
-      sendNotification(
-        `New Bug: ${name}`,
-        `Raised By ${user?.name}`,
-        user?._id as string,
-        testRequest?.clientId?._id as string,
-        testRequest?.clientId?.name as string,
-        testRequest?.clientId?.email as string
-      );
+      // sendNotification(
+      //   `New Bug: ${name}`,
+      //   `Raised By ${user?.name}`,
+      //   user?._id as string,
+      //   testRequest?.clientId?._id as string,
+      //   testRequest?.clientId?.name as string,
+      //   testRequest?.clientId?.email as string
+      // );
       mutate(["api/bug/test-request/", testRequest?._id]);
       setShow(false);
       setBtnLoading(false);

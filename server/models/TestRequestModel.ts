@@ -51,7 +51,7 @@ const TestRequestSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-
+export const TestRequestType = typeof TestRequestSchema;
 export const TestRequestModel = mongoose.model(
   "TestRequestModel",
   TestRequestSchema

@@ -1,4 +1,5 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
+import { resolveProjectReferencePath } from "typescript";
 
 const BugSchema = new mongoose.Schema(
   {

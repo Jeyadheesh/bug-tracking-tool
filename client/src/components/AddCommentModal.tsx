@@ -94,6 +94,10 @@ const AddCommentModal = ({
         {
           id: id as string,
           status: tempStatus,
+          currentStatus,
+          role: user?.role,
+          apiFor: "updateStatus",
+
           comments: comments.trim()
             ? {
                 name: user?.name,
@@ -107,31 +111,31 @@ const AddCommentModal = ({
       setToast({ msg: "Status Updated", variant: "success" });
       mutate([`api/${type === "bug" ? "bug" : "test-request"}`, id as string]);
       if (type === "bug") {
-        sendNotification(
-          `Bug: ${name}`,
-          `${currentStatus} → ${tempStatus}`,
-          user?._id!,
-          receiverData.id,
-          receiverData.name,
-          receiverData.email
-        );
+        // sendNotification(
+        //   `Bug: ${name}`,
+        //   `${currentStatus} → ${tempStatus}`,
+        //   user?._id!,
+        //   receiverData.id,
+        //   receiverData.name,
+        //   receiverData.email
+        // );
       } else {
-        sendNotification(
-          `Test Request: ${name}`,
-          `${currentStatus} → ${tempStatus}`,
-          user?._id!,
-          testerData?._id!,
-          testerData?.name!,
-          testerData?.email!
-        );
-        sendNotification(
-          `Test Request: ${name}`,
-          `${currentStatus} → ${tempStatus}`,
-          user?._id!,
-          customerData?._id!,
-          customerData?.name!,
-          customerData?.email!
-        );
+        // sendNotification(
+        //   `Test Request: ${name}`,
+        //   `${currentStatus} → ${tempStatus}`,
+        //   user?._id!,
+        //   testerData?._id!,
+        //   testerData?.name!,
+        //   testerData?.email!
+        // );
+        // sendNotification(
+        //   `Test Request: ${name}`,
+        //   `${currentStatus} → ${tempStatus}`,
+        //   user?._id!,
+        //   customerData?._id!,
+        //   customerData?.name!,
+        //   customerData?.email!
+        // );
       }
 
       type === "bug"

@@ -37,17 +37,18 @@ const AssignTester = ({ setShow, testRequest }: Props) => {
       .patch(`http://localhost:9000/api/test-request/edit-details`, {
         id: testRequest?._id,
         testerId: id,
+        apiFor: "assignTester",
       })
       .then(() => {
         setToast({ msg: "Tester Assigned", variant: "success" });
-        sendNotification(
-          `Assigned: ${testRequest?.name}`,
-          `You have been assigned to ${testRequest?.name}`,
-          user?._id as string,
-          id,
-          name,
-          email
-        );
+        // sendNotification(
+        //   `Assigned: ${testRequest?.name}`,
+        //   `You have been assigned to ${testRequest?.name}`,
+        //   user?._id as string,
+        //   id,
+        //   name,
+        //   email
+        // );
         setShow(false);
         mutate(["api/test-request", testRequest?._id]);
       })

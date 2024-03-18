@@ -1,6 +1,8 @@
-import { TestRequestModel } from "../models/TestRequestModel";
+import { TestRequestModel, TestRequestType } from "../models/TestRequestModel";
 import { UserModel } from "../models/UserModel";
 import { Request, Response } from "express";
+import { sendNotificationAndMail } from "../utils/sendNotification";
+import { ObjectId, Types } from "mongoose";
 
 export const createTestRequest = async (req: Request, res: Response) => {
   try {
@@ -13,6 +15,7 @@ export const createTestRequest = async (req: Request, res: Response) => {
       clientId,
       credentials,
       summary,
+      clientName,
     } = req.body;
     // Get Project Manager
     const project = await UserModel.findOne({ role: "projectManager" });
@@ -28,6 +31,14 @@ export const createTestRequest = async (req: Request, res: Response) => {
       projectManagerId: project?._id,
     });
     // console.log(testRequest);
+    sendNotificationAndMail(
+      `New Test Request: ${name}`,
+      `New Test Request Created by ${clientName}`,
+      clientId,
+      project?._id!,
+      project?.name!,
+      project?.email!
+    );
     res.status(201).json({ message: "Test Request created" });
   } catch (error) {
     res.status(400).send(error.message);
@@ -78,7 +89,7 @@ export const updateTestRequestStatus = async (req: Request, res: Response) => {
 
 export const updateTestRequestDetails = async (req: Request, res: Response) => {
   try {
-    const { comments, ...rest } = req.body;
+    const { comments, currentStatus, apiFor, ...rest } = req.body;
     // console.log(rest, comments);
 
     const testRequest = await TestRequestModel.findByIdAndUpdate(
@@ -88,7 +99,37 @@ export const updateTestRequestDetails = async (req: Request, res: Response) => {
         $push: { comments: comments },
       },
       { new: true }
-    );
+    )
+      .populate<{ testerId: any }>("testerId")
+      .populate<{ clientId: any }>("clientId");
+    console.log(testRequest);
+    if (apiFor === "assignTester") {
+      sendNotificationAndMail(
+        `Assigned: ${testRequest?.name}`,
+        `You have been assigned to ${testRequest?.name}`,
+        testRequest?.projectManagerId!,
+        testRequest?.testerId?._id!,
+        testRequest?.testerId?.name!,
+        testRequest?.testerId?.email!
+      );
+    } else if (apiFor === "updateStatus") {
+      sendNotificationAndMail(
+        `Test Request: ${testRequest?.name}`,
+        `${currentStatus} → ${rest.status}`,
+        testRequest?.projectManagerId!,
+        testRequest?.testerId?._id!,
+        testRequest?.testerId?.name!,
+        testRequest?.testerId?.email!
+      );
+      sendNotificationAndMail(
+        `Test Request: ${testRequest?.name}`,
+        `${currentStatus} → ${rest.status}`,
+        testRequest?.projectManagerId!, // need to change
+        testRequest?.clientId?._id!,
+        testRequest?.clientId?.name!,
+        testRequest?.clientId?.email!
+      );
+    }
     // console.log(testRequest);
     res.status(200).json({ message: "Test Request details updated" });
   } catch (error) {
