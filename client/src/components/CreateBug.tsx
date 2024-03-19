@@ -75,26 +75,25 @@ const CreateBug = ({ setShow, testRequest }: Props) => {
         // upload images to s3
         links = await uploadToS3(attachments);
       }
-      await axios.post(`http://localhost:9000/api/bug/`, {
-        name,
-        priority,
-        summary,
-        feature: workflow,
-        images: links || [],
-        stepsToReproduce: steps,
-        status: "under triage",
-        testerId: user?._id,
-        testRequestId: testRequest?._id,
-      });
+      await axios.post(
+        `http://localhost:9000/api/bug/`,
+        {
+          name,
+          priority,
+          summary,
+          feature: workflow,
+          images: links || [],
+          stepsToReproduce: steps,
+          status: "under triage",
+          testerId: user?._id,
+          testRequestId: testRequest?._id,
+        },
+        {
+          withCredentials: true,
+        }
+      );
       setToast({ msg: "Bug Created", variant: "success" });
-      // sendNotification(
-      //   `New Bug: ${name}`,
-      //   `Raised By ${user?.name}`,
-      //   user?._id as string,
-      //   testRequest?.clientId?._id as string,
-      //   testRequest?.clientId?.name as string,
-      //   testRequest?.clientId?.email as string
-      // );
+
       mutate(["api/bug/test-request/", testRequest?._id]);
       setShow(false);
       setBtnLoading(false);

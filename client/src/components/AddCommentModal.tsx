@@ -106,56 +106,14 @@ const AddCommentModal = ({
                 status: `${currentStatus} → ${tempStatus}`,
               }
             : undefined,
+        },
+        {
+          withCredentials: true,
         }
       );
       setToast({ msg: "Status Updated", variant: "success" });
       mutate([`api/${type === "bug" ? "bug" : "test-request"}`, id as string]);
-      if (type === "bug") {
-        // sendNotification(
-        //   `Bug: ${name}`,
-        //   `${currentStatus} → ${tempStatus}`,
-        //   user?._id!,
-        //   receiverData.id,
-        //   receiverData.name,
-        //   receiverData.email
-        // );
-      } else {
-        // sendNotification(
-        //   `Test Request: ${name}`,
-        //   `${currentStatus} → ${tempStatus}`,
-        //   user?._id!,
-        //   testerData?._id!,
-        //   testerData?.name!,
-        //   testerData?.email!
-        // );
-        // sendNotification(
-        //   `Test Request: ${name}`,
-        //   `${currentStatus} → ${tempStatus}`,
-        //   user?._id!,
-        //   customerData?._id!,
-        //   customerData?.name!,
-        //   customerData?.email!
-        // );
-      }
 
-      // type === "bug"
-      //   ? sendNotification(
-      //       `Bug: ${name}`,
-      //       `${currentStatus} → ${tempStatus}`,
-      //       user?._id!,
-      //       receiverData.id,
-      //       receiverData.name,
-      //       receiverData.email
-      //     )
-      //   : sendNotification(
-      //       `Test Request: ${name}`,
-      //       `${currentStatus} → ${tempStatus}`,
-      //       user?._id!,
-      //       receiverData?.id!,
-      //       receiverData?.name!,
-      //       receiverData?.email!
-      //     );
-      //   Updates new status if successful
       // @ts-ignore
       setCurrentStatus(tempStatus!);
       setShow(false);

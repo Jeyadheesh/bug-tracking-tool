@@ -1,5 +1,23 @@
 import { Request, Response } from "express";
 import { UserModel } from "../models/UserModel";
+import { TestRequestModel } from "../models/TestRequestModel";
+
+export const getFreeTesters = async (req: Request, res: Response) => {
+  // res.send("Tester");
+  try {
+    const uniqueTestersId = await TestRequestModel.find({
+      status: { $ne: "testing completed" },
+    }).distinct("testerId");
+
+    const freeTesters = await UserModel.find({
+      _id: { $nin: uniqueTestersId },
+      role: "tester",
+    });
+    res.send(freeTesters);
+  } catch (error) {
+    res.send(error.message);
+  }
+};
 
 export const getAllTester = async (req: Request, res: Response) => {
   try {

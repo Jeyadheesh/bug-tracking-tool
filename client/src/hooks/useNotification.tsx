@@ -20,6 +20,9 @@ const useNotification = () => {
           message,
           senderId,
           receiverId,
+        },
+        {
+          withCredentials: true,
         }
       );
       console.log(notificationData);

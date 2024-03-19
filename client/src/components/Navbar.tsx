@@ -68,7 +68,10 @@ const Navbar = (props: Props) => {
     try {
       setIsNotificationLoading(true);
       const { data: notificationData } = await axios.get<NotificationType[]>(
-        `http://localhost:9000/api/notification/getByReceiverId/${user?._id}`
+        `http://localhost:9000/api/notification/getByReceiverId/${user?._id}`,
+        {
+          withCredentials: true,
+        }
       );
       setNotifications(notificationData);
       notificationData.some((notification) => !notification.isSeen)
@@ -85,7 +88,10 @@ const Navbar = (props: Props) => {
     try {
       const { data } = await axios.patch(
         "http://localhost:9000/api/notification/updateIsSeenAll",
-        { receiverId: user?._id }
+        { receiverId: user?._id },
+        {
+          withCredentials: true,
+        }
       );
     } catch (error) {
       console.log(error.message);

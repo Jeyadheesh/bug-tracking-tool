@@ -26,7 +26,9 @@ const Dashboard = (props: Props) => {
   const user = useUser((state) => state.user);
 
   const fetcher = ([url]: any[]) => {
-    return axios.get<TestRequestType[]>(`http://localhost:9000/${url}`);
+    return axios.get<TestRequestType[]>(`http://localhost:9000/${url}`, {
+      withCredentials: true,
+    });
   };
 
   const { data, error, isValidating } = useSWR(

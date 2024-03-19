@@ -2,23 +2,6 @@ import { Request, Response } from "express";
 import { NotificationModel } from "../models/NotificationModel";
 import { sendMail } from "../utils/nodeMailer";
 
-export const createNotification = async (req: Request, res: Response) => {
-  try {
-    const { title, message, senderId, receiverId, name, email } = req.body;
-    const notification = await NotificationModel.create({
-      title,
-      message,
-      senderId,
-      receiverId,
-    });
-    sendMail(name, email, message, title);
-    // console.log(notification);
-    res.status(201).json(notification);
-  } catch (error) {
-    res.status(400).send(error.message);
-  }
-};
-
 export const getByReceiverId = async (req: Request, res: Response) => {
   try {
     const { receiverId } = req.params;

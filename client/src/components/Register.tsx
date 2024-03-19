@@ -32,6 +32,9 @@ const Register = ({ setMode }: Props) => {
           "http://localhost:9000/api/auth/send-otp",
           {
             email,
+          },
+          {
+            withCredentials: true,
           }
         );
 
@@ -57,6 +60,9 @@ const Register = ({ setMode }: Props) => {
           {
             email,
             otp: OTP,
+          },
+          {
+            withCredentials: true,
           }
         );
         // Email Verified
@@ -87,6 +93,9 @@ const Register = ({ setMode }: Props) => {
             email,
             password,
             name: username,
+          },
+          {
+            withCredentials: true,
           }
         );
         // Registered

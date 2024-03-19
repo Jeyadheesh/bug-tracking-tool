@@ -18,12 +18,17 @@ const AssignTester = ({ setShow, testRequest }: Props) => {
   const setToast = useToast((state) => state.setToast);
 
   const fetcher = (url: string) => {
-    return axios.get<TesterType[]>(`http://localhost:9000/${url}`);
+    return axios.get<TesterType[]>(`http://localhost:9000/${url}`, {
+      withCredentials: true,
+    });
   };
 
   const [loading, setLoading] = useState(false);
 
-  const { data, error, isValidating } = useSWR("api/free-testers", fetcher);
+  const { data, error, isValidating } = useSWR(
+    "api/tester/free-testers",
+    fetcher
+  );
 
   useEffect(() => {
     if (error) {
@@ -34,21 +39,20 @@ const AssignTester = ({ setShow, testRequest }: Props) => {
   const handleAssign = (id: string, name: string, email: string) => {
     setLoading(true);
     axios
-      .patch(`http://localhost:9000/api/test-request/edit-details`, {
-        id: testRequest?._id,
-        testerId: id,
-        apiFor: "assignTester",
-      })
+      .patch(
+        `http://localhost:9000/api/test-request/edit-details`,
+        {
+          id: testRequest?._id,
+          testerId: id,
+          apiFor: "assignTester",
+        },
+        {
+          withCredentials: true,
+        }
+      )
       .then(() => {
         setToast({ msg: "Tester Assigned", variant: "success" });
-        // sendNotification(
-        //   `Assigned: ${testRequest?.name}`,
-        //   `You have been assigned to ${testRequest?.name}`,
-        //   user?._id as string,
-        //   id,
-        //   name,
-        //   email
-        // );
+
         setShow(false);
         mutate(["api/test-request", testRequest?._id]);
       })

@@ -1,7 +1,7 @@
 import { TestRequestModel, TestRequestType } from "../models/TestRequestModel";
-import { UserModel } from "../models/UserModel";
+import { UserModel, UserType } from "../models/UserModel";
 import { Request, Response } from "express";
-import { sendNotificationAndMail } from "../utils/sendNotification";
+import { sendNotificationAndMail } from "../utils/sendNotificationAndMail";
 import mongoose, { ObjectId, Types } from "mongoose";
 
 export const createTestRequest = async (req: Request, res: Response) => {
@@ -100,14 +100,14 @@ export const updateTestRequestDetails = async (req: Request, res: Response) => {
       },
       { new: true }
     )
-      .populate<{ testerId: any }>("testerId")
-      .populate<{ clientId: any }>("clientId");
+      .populate<{ testerId: UserType }>("testerId")
+      .populate<{ clientId: UserType }>("clientId");
     console.log(testRequest);
     if (apiFor === "assignTester") {
       sendNotificationAndMail(
         `Assigned: ${testRequest?.name}`,
         `You have been assigned to ${testRequest?.name}`,
-        testRequest?.projectManagerId!,
+        testRequest?.projectManagerId! as Types.ObjectId,
         testRequest?.testerId?._id!,
         testRequest?.testerId?.name!,
         testRequest?.testerId?.email!
@@ -116,7 +116,7 @@ export const updateTestRequestDetails = async (req: Request, res: Response) => {
       sendNotificationAndMail(
         `Test Request: ${testRequest?.name}`,
         `${currentStatus} → ${rest.status}`,
-        testRequest?.projectManagerId!,
+        testRequest?.projectManagerId! as Types.ObjectId,
         testRequest?.testerId?._id!,
         testRequest?.testerId?.name!,
         testRequest?.testerId?.email!
@@ -124,7 +124,7 @@ export const updateTestRequestDetails = async (req: Request, res: Response) => {
       sendNotificationAndMail(
         `Test Request: ${testRequest?.name}`,
         `${currentStatus} → ${rest.status}`,
-        testRequest?.projectManagerId!, // need to change
+        testRequest?.projectManagerId! as Types.ObjectId, // need to change
         testRequest?.clientId?._id!,
         testRequest?.clientId?.name!,
         testRequest?.clientId?.email!
@@ -132,17 +132,6 @@ export const updateTestRequestDetails = async (req: Request, res: Response) => {
     }
     // console.log(testRequest);
     res.status(200).json({ message: "Test Request details updated" });
-  } catch (error) {
-    res.status(400).send(error.message);
-  }
-};
-
-export const deleteTestRequest = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    const resData = await TestRequestModel.findByIdAndDelete(id);
-    // console.log(resData);
-    res.status(200).json({ message: "Test Request deleted" });
   } catch (error) {
     res.status(400).send(error.message);
   }
