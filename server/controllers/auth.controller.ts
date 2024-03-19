@@ -78,7 +78,7 @@ export const loginCustomer = async (req: Request, res: Response) => {
     // console.log(process.env.JWT_SECRET_KEY);
 
     const token = jwt.sign(
-      { email, userId: user._id },
+      { email, userId: user._id, role: user.role },
       process.env.JWT_SECRET_KEY,
       {
         expiresIn: process.env.JWT_EXPIRE_TIME,
@@ -129,11 +129,6 @@ export const getUser = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(400).send(error.message);
   }
-};
-
-export const test = async (req: Request, res: Response) => {
-  // console.log(req.body.name);
-  res.send("Test");
 };
 
 export const sendOtp = async (req: Request, res: Response) => {
@@ -200,7 +195,7 @@ export const verifyOtp = async (req: Request, res: Response) => {
       return res.send({ message: "OTP Expired or Invalid Email" });
     }
 
-    if (customer.otpExpiredAt < new Date()) {
+    if (customer.otpExpiredAt! < new Date()) {
       await UserModel.deleteOne({ email });
       return res.send({ message: "OTP Expired" });
     }

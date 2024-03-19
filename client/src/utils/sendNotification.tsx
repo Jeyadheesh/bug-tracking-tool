@@ -18,6 +18,9 @@ export const sendNotification = async (
         receiverId,
         name,
         email,
+      },
+      {
+        withCredentials: true,
       }
     );
     console.log(notificationData);

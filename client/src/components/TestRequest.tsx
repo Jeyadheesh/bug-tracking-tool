@@ -37,7 +37,9 @@ const TestRequest = (props: Props) => {
   const [showBugModal, setShowBugModal] = useState(false);
 
   const fetcher = ([url, id]: string[]) => {
-    return axios.get<TestRequestType>(`http://localhost:9000/${url}/${id}`);
+    return axios.get<TestRequestType>(`http://localhost:9000/${url}/${id}`, {
+      withCredentials: true,
+    });
   };
 
   const { data, error, isValidating } = useSWR(
@@ -52,7 +54,9 @@ const TestRequest = (props: Props) => {
   }, [error]);
 
   const bugFetcher = ([url, id]: string[]) => {
-    return axios.get<BugType[]>(`http://localhost:9000/${url}${id}`);
+    return axios.get<BugType[]>(`http://localhost:9000/${url}${id}`, {
+      withCredentials: true,
+    });
   };
 
   const {

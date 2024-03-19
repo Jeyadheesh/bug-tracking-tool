@@ -23,63 +23,6 @@ let mailGenerator: Mailgen = new Mailgen({
   },
 });
 
-export const MailInTable = (productData: any, productStatus: string): void => {
-  let proccessData = productData.map((li: any) => {
-    return {
-      product: li.title,
-      quantity: li.quantity,
-      price: `$${li.quantity * li.price}`,
-    };
-  });
-
-  let response = {
-    body: {
-      name: productData[0].userName,
-      intro: productStatus,
-      action: {
-        instructions:
-          "To check your product details, please click the button :",
-        button: {
-          color: "#A033CE",
-          text: "Check Your Cart  🛒",
-          link: process.env.CLIENT_PORT + "/usercart",
-        },
-      },
-      table: {
-        data: proccessData,
-        columns: {
-          customWidth: {
-            item: "75%",
-            price: "15%",
-            quantity: "10%",
-          },
-          customAlignment: {
-            product: "left",
-            quantity: "center",
-            price: "center",
-          },
-        },
-      },
-    },
-  };
-
-  let mail = mailGenerator.generate(response);
-
-  let content = {
-    from: process.env.EMAIL,
-    to: productData[0].userEmail,
-    subject: "EBuddy Product Status 😄",
-    html: mail,
-  };
-
-  transporter.sendMail(content, (err, info) => {
-    if (err) console.log("Error to send mail", err);
-    else {
-      console.log("Email Sent");
-    }
-  });
-};
-
 export const sendMail = (
   name: string,
   email: string,

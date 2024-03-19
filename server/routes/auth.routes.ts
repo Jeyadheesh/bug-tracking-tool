@@ -3,24 +3,25 @@ import {
   getUser,
   registerCustomer,
   loginCustomer,
-  test,
   updateCustomer,
   sendOtp,
   verifyOtp,
   checkVerified,
   logout,
 } from "../controllers/auth.controller";
-import { checkCustomer } from "../middlewares/checkUserRole";
+import {
+  checkAllValidUsers,
+  checkCustomer,
+} from "../middlewares/checkUserRole";
 const router = express.Router();
 
 router.post("/register", registerCustomer);
 router.post("/login", loginCustomer);
-router.put("/updatecustomer", updateCustomer);
+router.put("/updatecustomer", checkCustomer, updateCustomer);
 router.post("/getcustomer", getUser);
 router.post("/send-otp", sendOtp);
 router.post("/verify-otp", verifyOtp);
-router.get("/test", checkCustomer, test);
 router.post("/checkVerified", checkVerified);
-router.get("/logout", logout);
+router.get("/logout", checkAllValidUsers, logout);
 
 module.exports = router;

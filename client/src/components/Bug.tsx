@@ -30,7 +30,9 @@ const TestRequest = (props: Props) => {
   const user = useUser((state) => state.user);
 
   const fetcher = ([url, id]: string[]) => {
-    return axios.get<BugType>(`http://localhost:9000/${url}/${id}`);
+    return axios.get<BugType>(`http://localhost:9000/${url}/${id}`, {
+      withCredentials: true,
+    });
   };
 
   const { data, error, isValidating } = useSWR(

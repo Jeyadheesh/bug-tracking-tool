@@ -1,4 +1,27 @@
 import mongoose from "mongoose";
+import { UserType } from "./UserModel";
+
+export interface TestRequestType extends mongoose.Document {
+  name: string;
+  url: string;
+  projectManagerId?: mongoose.Types.ObjectId | UserType;
+  testerId?: mongoose.Types.ObjectId | UserType;
+  status: string;
+  comments: {
+    name: string;
+    image: string;
+    message: string;
+    status: string;
+  }[];
+  credentials?: {
+    email: string;
+    password: string;
+  };
+  clientId: mongoose.Types.ObjectId | UserType;
+  summary?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 const TestRequestSchema = new mongoose.Schema(
   {
@@ -51,8 +74,8 @@ const TestRequestSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-
-export const TestRequestModel = mongoose.model(
+// export const TestRequestType = typeof TestRequestSchema;
+export const TestRequestModel = mongoose.model<TestRequestType>(
   "TestRequestModel",
   TestRequestSchema
 );

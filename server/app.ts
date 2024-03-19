@@ -5,8 +5,7 @@ import mongoose from "mongoose";
 import { config } from "dotenv";
 import jwt from "jsonwebtoken";
 import { UserModel } from "./models/UserModel";
-import { TestRequestModel } from "./models/TestRequestModel";
-import { sendMail } from "./utils/nodeMailer";
+import { getUserRole } from "./middlewares/getUserRole";
 
 config({ path: ".env" });
 const port = process.env.PORT || 9000;
@@ -43,23 +42,6 @@ app.get("/healthCheck", (req, res) => {
   }
 });
 
-app.get("/api/free-testers", async (req, res) => {
-  // res.send("Tester");
-  try {
-    const uniqueTestersId = await TestRequestModel.find({
-      status: { $ne: "testing completed" },
-    }).distinct("testerId");
-
-    const freeTesters = await UserModel.find({
-      _id: { $nin: uniqueTestersId },
-      role: "tester",
-    });
-    res.send(freeTesters);
-  } catch (error) {
-    res.send(error.message);
-  }
-});
-
 app.get("/api/me", async (req, res) => {
   try {
     if (req.cookies.bugTracker) {
@@ -88,6 +70,7 @@ app.get("/api/me", async (req, res) => {
   }
 });
 
+app.use(getUserRole);
 // Router
 app.use("/api/auth", require("./routes/auth.routes"));
 app.use("/api/test-request", require("./routes/test-request.routes"));
@@ -102,6 +85,7 @@ app.use("/api/product-manager", require("./routes/product-manager.routes"));
 //   "Tester Assigned",
 //   "You have been assigned to a new test request"
 // );
+
 app.listen(port, () => {
   console.log(`Server Running at ${port}`);
 });
