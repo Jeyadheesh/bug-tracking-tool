@@ -1,4 +1,15 @@
 import mongoose from "mongoose";
+import { UserType } from "./UserModel";
+
+export interface NotificationType extends mongoose.Document {
+  title: string;
+  message: string;
+  senderId: mongoose.Types.ObjectId | UserType;
+  receiverId: mongoose.Types.ObjectId | UserType;
+  isSeen?: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 const NotificationSchema = new mongoose.Schema(
   {
@@ -30,7 +41,7 @@ const NotificationSchema = new mongoose.Schema(
   }
 );
 
-export const NotificationModel = mongoose.model(
+export const NotificationModel = mongoose.model<NotificationType>(
   "Notification",
   NotificationSchema
 );
