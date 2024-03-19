@@ -2,7 +2,7 @@ import { TestRequestModel, TestRequestType } from "../models/TestRequestModel";
 import { UserModel } from "../models/UserModel";
 import { Request, Response } from "express";
 import { sendNotificationAndMail } from "../utils/sendNotification";
-import { ObjectId, Types } from "mongoose";
+import mongoose, { ObjectId, Types } from "mongoose";
 
 export const createTestRequest = async (req: Request, res: Response) => {
   try {

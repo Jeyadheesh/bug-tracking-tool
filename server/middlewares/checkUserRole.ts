@@ -111,3 +111,18 @@ export const checkTesterAndCustomer = (
     res.status(403).send({ message: "You are not authorized" });
   }
 };
+
+export const checkAllValidUsers = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { role } = req.body;
+  console.log(role);
+
+  if (role === "tester" || role === "customer" || role === "projectManager") {
+    return next();
+  } else {
+    res.status(403).send({ message: "You are not authorized" });
+  }
+};
